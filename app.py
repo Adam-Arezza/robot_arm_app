@@ -25,5 +25,5 @@ class App:
         print('Simulation!')
 
 if __name__ == "__main__":
-    app = App(ttk.Window(themename="darkly", size=(1200,800), title='Robot Arm Application'))
+    app = App(ttk.Window(themename="darkly", title='Robot Arm Application', size=(1200, 900)))
     app.run()

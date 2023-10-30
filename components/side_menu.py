@@ -4,13 +4,13 @@ class SideMenu:
     def __init__(self, parent, sim_cb):
         self.parent = parent
         self.sim_cb = sim_cb
-        self.frame = ttk.Frame(parent, 
-                               style='secondary.TFrame', 
-                               padding=10, 
-                               width=200, 
-                               height=1000,
+        self.frame = ttk.Frame(parent,  
+                               padding=10,
+                               style='secondary.TFrame',
+                               width=200,
                                name='menu_frame')
-        self.frame.pack(side='left', fill='both', expand=True)
+        self.frame.pack(side='left', fill='both', expand=False)
+        self.frame.pack_propagate(0)
         
         self.simulate_robot_btn = ttk.Button(self.frame, 
                                            text='Simulate',
@@ -32,7 +32,6 @@ class SideMenu:
         self.load_robot_btn.pack(side='top', fill='x')
         self.save_robot_btn.pack(side='top', pady=8, fill='x')
         self.save_routine_btn.pack(side='top', fill='x')
-
 
     def load_robot(self):
         print('loading robot!')

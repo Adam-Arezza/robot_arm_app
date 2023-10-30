@@ -19,4 +19,3 @@ class TableRow(ttk.Frame):
                 col = ttk.Entry(self, textvariable=self.params[i-1])
             col.grid(row=0, column=i)
             self.columns.append(col)
-            
