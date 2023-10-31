@@ -5,20 +5,29 @@ from spatialmath import SE3, SO3
 import matplotlib.pyplot as plt
 
 
+# DH parameters of robot arm
+# Joint	θ	α	r	d
+#   1	θ1	90	0.0	0.07855
+#   2	θ2 -180 0.2286	0.0
+#   3	θ3	0	0.0995	0.0
+#   4	θ4	90	0.17177	0.0
+
 class RobotArm:
     def __init__(self, parent, dh_params) -> None:
         # self.robot = rtb.models.DH.Panda()
         self.parent = parent
         self.dh_params = dh_params
-
-        self.robot = rtb.DHRobot(
-            [
-                rtb.RevoluteDH(d=0.07855, a=0.0, alpha=math.pi / 2),
-                rtb.RevoluteDH(d=-0.0, a=0.2286, alpha=-math.pi, qlim=[-math.pi, math.pi]),
-                rtb.RevoluteDH(d=0.0, a=0.0995, alpha=0, qlim=[-math.pi, math.pi]),
-                rtb.RevoluteDH(d=0.0, a=0.17177, alpha=math.pi / 2, qlim=[-math.pi, math.pi])
-            ]
-        )
+        # print(dh_params)
+        self.links = []
+        for link in dh_params:
+            t,a,r,d = dh_params[f'{link}']
+            t = float(t)
+            a = float(a)
+            r = float(r)
+            d = float(d)
+            link = rtb.RevoluteDH(d=d, a=r, alpha=math.radians(a))
+            self.links.append(link)
+        self.robot = rtb.DHRobot(self.links)
         self.robot.q = [0,math.pi/2,math.pi,-math.pi/2]
 
     def show_robot(self):

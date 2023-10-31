@@ -53,11 +53,11 @@ class DHTable():
         print(f'Joint | Theta | Alpha | r | d |')
         for row in rows:
             print(row)
-            print_row = []
-            print_row.append(row.joint)
+            dh_parameters = []
+            dh_parameters.append(row.joint)
             for p in row.params:
-                print_row.append(p.get())
-            print(print_row)
+                dh_parameters.append(p.get())
+            print(dh_parameters)
     
     def clear_table(self):
         for row in self.rows:
@@ -74,10 +74,11 @@ class DHTable():
         rows = self.rows
         params = {}
         for row in rows:
-            print_row = []
-            print_row.append(row.joint)
+            dh_parameters = []
+            dh_parameters.append(row.joint)
             for p in row.params:
-                print_row.append(p.get())
-            print(print_row)
-            params[f'{row.joint}'] = print_row
+                dh_parameters.append(p.get())
+            # print(dh_parameters)
+            dh_parameters.pop(0)
+            params[f'{row.joint}'] = dh_parameters
         self.cb(params)

@@ -1,9 +1,11 @@
 import ttkbootstrap as ttk
 
 class SideMenu:
-    def __init__(self, parent, sim_cb):
+    def __init__(self, parent, sim_cb, save_rb, load_rb):
         self.parent = parent
         self.sim_cb = sim_cb
+        self.save_robot = save_rb
+        self.load_robot = load_rb
         self.frame = ttk.Frame(parent,  
                                padding=10,
                                style='secondary.TFrame',
@@ -32,12 +34,6 @@ class SideMenu:
         self.load_robot_btn.pack(side='top', fill='x')
         self.save_robot_btn.pack(side='top', pady=8, fill='x')
         self.save_routine_btn.pack(side='top', fill='x')
-
-    def load_robot(self):
-        print('loading robot!')
-
-    def save_robot(self):
-        print('Saving robot!')
 
     def save_routine(self):
         print('Saving Routine!')
