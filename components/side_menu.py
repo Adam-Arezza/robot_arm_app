@@ -40,3 +40,4 @@ class SideMenu:
     
     def sim_robot(self):
         self.sim_cb()
+    
