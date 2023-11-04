@@ -8,18 +8,26 @@ import json
 import math
 from tkinter import filedialog as fd
 
-class App:
-    def __init__(self, root):
-        self.root = root
-        # self.root.resizable(False,False)
-        self.side_menu = SideMenu(root, self.simulate_robot, self.save_robot, self.load_robot)
-        self.d_h_table = DHTable(root, self.create_robot)
+class App(ttk.Window):
+    def __init__(self, theme, title, minsize):
+        super().__init__(themename=theme, title=title, minsize=minsize)
+
+        # Widgets
+        self.side_menu = SideMenu(self, self.simulate_robot, self.save_robot, self.load_robot)
+        self.d_h_table = DHTable(self, self.create_robot)
+
+        # Layout
+        self.side_menu.pack(side='left', fill='both', expand=False)
+        self.side_menu.pack_propagate(0)
+
+        self.d_h_table.pack(anchor='nw')
     
+
     def run(self):
-        self.root.mainloop()
+        self.mainloop()
     
     def create_robot(self, dh_params):
-        self.robot_arm = RobotArm(self.root, dh_params)
+        self.robot_arm = RobotArm(self, dh_params)
         self.robot_arm.show_robot()
     
     def save_robot(self):
@@ -32,16 +40,17 @@ class App:
         with open(open_file, 'r') as params_file:
             robot_params = json.load(params_file)
         params_file.close()
-        self.robot_arm = RobotArm(self.root, robot_params)
+        self.robot_arm = RobotArm(self, robot_params)
         self.robot_arm.robot.q = [0,math.pi/2,math.pi,-math.pi/2]
         self.robot_arm.show_robot()
-        self.d_h_table.destroy_all()
+        self.d_h_table.destroy()
         self.d_h_table = None
-        self.main_container = MainContainer(self.root, self.robot_arm)
+        self.main_container = MainContainer(self, name='main_frame', robot=self.robot_arm)
+        self.main_container.pack(anchor='nw', expand=True, fill='both')
 
     def simulate_robot(self):
         print('Simulation!')
 
 if __name__ == "__main__":
-    app = App(ttk.Window(themename="darkly", title='Robot Arm Application', size=(1000, 600)))
+    app = App('darkly', 'Robot Arm Application', (1000,600))
     app.run()
