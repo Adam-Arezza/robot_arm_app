@@ -19,10 +19,8 @@ class App(ttk.Window):
         # Layout
         self.side_menu.pack(side='left', fill='both', expand=False)
         self.side_menu.pack_propagate(0)
-
         self.d_h_table.pack(anchor='nw')
     
-
     def run(self):
         self.mainloop()
     
@@ -47,6 +45,7 @@ class App(ttk.Window):
         self.d_h_table = None
         self.main_container = MainContainer(self, name='main_frame', robot=self.robot_arm)
         self.main_container.pack(anchor='nw', expand=True, fill='both')
+        self.side_menu.add_sliders()
 
     def simulate_robot(self):
         print('Simulation!')

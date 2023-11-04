@@ -14,10 +14,8 @@ import matplotlib.pyplot as plt
 
 class RobotArm:
     def __init__(self, parent, dh_params) -> None:
-        # self.robot = rtb.models.DH.Panda()
         self.parent = parent
         self.dh_params = dh_params
-        # print(dh_params)
         self.links = []
         for link in dh_params:
             t,a,r,d = dh_params[f'{link}']

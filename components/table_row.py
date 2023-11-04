@@ -11,6 +11,7 @@ class TableRow(ttk.Frame):
                        tk.StringVar(self, 0, f'{joint_name}_r'), 
                        tk.StringVar(self, 0, f'{joint_name}_d')]
         self.label = ttk.Label(self, text=joint_name)
+        
         for i in range(len(self.params)+1):
             col = None
             if i == 0:

@@ -8,7 +8,3 @@ class TableHeader(ttk.Frame):
 
         for i,l in enumerate(labels):
             ttk.Label(self, text=l, width=20).grid(row=0, column=i)
-
-if __name__ == "__main__":
-    header = TableHeader(None)
-    print(header.headers)

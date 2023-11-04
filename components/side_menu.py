@@ -1,4 +1,5 @@
 import ttkbootstrap as ttk
+from components.joint_slider import JointSlider
 
 class SideMenu(ttk.Frame):
     def __init__(self, parent, sim_cb, save_rb, load_rb):
@@ -25,9 +26,17 @@ class SideMenu(ttk.Frame):
         self.save_robot_btn.pack(side='top', pady=8, fill='x')
         self.save_routine_btn.pack(side='top', fill='x')
 
+        self.sliders = []
+
     def save_routine(self):
         print('Saving Routine!')
     
     def sim_robot(self):
         self.sim_cb()
+    
+    def add_sliders(self):
+        for i in range(4):
+            slider = JointSlider(self, joint_name=f'joint_{i}')
+            slider.pack(anchor='nw', pady=15, fill='x')
+            self.sliders.append(slider)
     

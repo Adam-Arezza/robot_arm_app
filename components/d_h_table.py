@@ -47,9 +47,6 @@ class DHTable(ttk.Frame):
         self.rows.append(new_row)
         new_row.pack()
         self.buttons.buttons["Add Link"]['state'] = NORMAL
-
-        # for i in range(len(self.rows)):
-        #     self.rows[i].grid(row=i, column=0)
     
     def create_robot(self):
         rows = self.rows
@@ -59,7 +56,6 @@ class DHTable(ttk.Frame):
             dh_parameters.append(row.joint)
             for p in row.params:
                 dh_parameters.append(p.get())
-            # print(dh_parameters)
             dh_parameters.pop(0)
             params[f'{row.joint}'] = dh_parameters
         self.cb(params)
