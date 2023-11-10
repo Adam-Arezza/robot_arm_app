@@ -28,8 +28,11 @@ class DHTable(ttk.Frame):
 
         for i in range(len(self.rows)):
             self.rows[i].pack()
+        
+        self.buttons.buttons['Create Robot']['state'] = DISABLED
 
     def add_link(self):
+        self.buttons.buttons['Create Robot']['state'] = NORMAL
         current_row = len(self.rows)
         if current_row >= 6:
             self.buttons.buttons["Add Link"]['state'] = DISABLED

@@ -8,3 +8,4 @@ class MainContainer(ttk.Frame):
         self.headers = TableHeader(self, name='robot_headers', labels=['Theta (deg)', 'Alpha (deg)', 'r (m)', 'd (m)'])
         self.headers.pack(anchor='nw')
         self.robot_config = RobotConfig(self, robot.dh_params)
+        
