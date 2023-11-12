@@ -14,22 +14,10 @@ class App(ttk.Window):
     def __init__(self, theme, title, minsize):
         super().__init__(themename=theme, title=title, minsize=minsize)
 
-        # Widgets
-        self.side_menu = SideMenu(self,
-                                  self.simulate_robot,
-                                  self.save_robot,
-                                  self.teach_pendant)
-
-        self.d_h_table = DHTable(self, self.create_robot)
-
         self.initial_btns = ButtonGroup(self,
                                         buttons=[('Create DH robot', self.create_dh_robot),
                                                  ('Load robot', self.load_robot)])
-        self.initial_btns.pack(pady=200)
-        # Layout
-
-    def run(self):
-        self.mainloop()
+        self.initial_btns.pack(pady=minsize[1] / 2) 
 
     def create_robot(self, dh_params):
         self.robot_arm = RobotArm(self, dh_params)
@@ -44,10 +32,12 @@ class App(ttk.Window):
 
     def create_dh_robot(self):
         self.initial_btns.destroy()
+        self.d_h_table = DHTable(self, self.create_robot)
         self.d_h_table.pack()
 
     def save_robot(self):
-        with open('test/my_robot_params.json', 'w') as params_file:
+        save_file = fd.askopenfilename()
+        with open(save_file,'w') as params_file:
             json.dump(self.robot_arm.dh_params, params_file)
             params_file.close()
 
@@ -59,13 +49,15 @@ class App(ttk.Window):
         params_file.close()
         self.robot_arm = RobotArm(self, robot_params)
         self.robot_arm.show_robot()
-        self.d_h_table.destroy()
-        self.d_h_table = None
-        self.side_menu.pack(side='left', fill='both', expand=False)
-        self.side_menu.pack_propagate(0)
+        self.side_menu = SideMenu(self,
+                                  self.simulate_robot,
+                                  self.save_robot,
+                                  self.teach_pendant,
+                                  self.show_robot)
+        self.side_menu.pack(side='left', fill='y')
         self.main_container = MainContainer(
-            self, name='main_frame', robot=self.robot_arm)
-        self.main_container.pack(anchor='nw', expand=True, fill='both')
+            self, name='main_frame', robot_arm=self.robot_arm)
+        self.main_container.pack(expand=True, fill='both')
 
     def simulate_robot(self):
         print('Simulation!')
@@ -73,7 +65,9 @@ class App(ttk.Window):
     def teach_pendant(self):
         self.robot_arm.robot.teach(self.robot_arm.robot.q)
 
+    def show_robot(self):
+        self.robot_arm.robot.plot(self.robot_arm.robot.q)
 
 if __name__ == "__main__":
-    app = App('darkly', 'Robot Arm Application', (1000, 600))
-    app.run()
+    app = App('darkly', 'Robot Arm Application', (1000, 800))
+    app.mainloop()

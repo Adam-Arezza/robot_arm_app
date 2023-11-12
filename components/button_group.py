@@ -2,7 +2,7 @@ import ttkbootstrap as ttk
 
 class ButtonGroup(ttk.Frame):
     def __init__(self, parent, buttons):
-        super().__init__(parent, name='dh_table_btn_group')
+        super().__init__(parent, name='dh_table_btn_group', height=300, width=400)
 
         self.buttons = {}
         for button in buttons:
