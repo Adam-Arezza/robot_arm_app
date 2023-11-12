@@ -29,11 +29,11 @@ class RobotArm:
         self.robot.q = [0,math.pi/2,math.pi,-math.pi/2]
 
         # a target pose
-        self.target = None
+        self.target = None        
 
     def show_robot(self):
         self.robot.plot(self.robot.q)
-    
+ 
     def add_target(self):
         #give the end effector a target position [xyzrpy]?
         pass

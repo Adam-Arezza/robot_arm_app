@@ -17,7 +17,8 @@ class App(ttk.Window):
         self.initial_btns = ButtonGroup(self,
                                         buttons=[('Create DH robot', self.create_dh_robot),
                                                  ('Load robot', self.load_robot)])
-        self.initial_btns.pack(pady=minsize[1] / 2) 
+        self.initial_btns.pack(pady=minsize[1] / 2)
+         
 
     def create_robot(self, dh_params):
         self.robot_arm = RobotArm(self, dh_params)
@@ -69,5 +70,5 @@ class App(ttk.Window):
         self.robot_arm.robot.plot(self.robot_arm.robot.q)
 
 if __name__ == "__main__":
-    app = App('darkly', 'Robot Arm Application', (1000, 800))
+    app = App('superhero', 'Robot Arm Application', (800, 600))
     app.mainloop()
