@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 #   4	θ4	90	0.17177	0.0
 
 class RobotArm:
-    def __init__(self, parent, dh_params) -> None:
+    def __init__(self, parent, dh_params, initial_joint_states = []) -> None:
         self.parent = parent
         self.dh_params = dh_params
         self.links = []
@@ -25,19 +25,13 @@ class RobotArm:
             d = float(d)
             link = rtb.RevoluteDH(d=d, a=r, alpha=math.radians(a))
             self.links.append(link)
-        self.robot = rtb.DHRobot(self.links)
-        self.robot.q = [0,math.pi/2,math.pi,-math.pi/2]
-
+        self.robot = rtb.DHRobot(self.links) 
+        if len(initial_joint_states) != len(self.links):
+            self.robot.q = [0 for i in self.links]
+        else:
+            self.robot.q = initial_joint_states
         # a target pose
         self.target = None        
 
     def show_robot(self):
         self.robot.plot(self.robot.q)
- 
-    def add_target(self):
-        #give the end effector a target position [xyzrpy]?
-        pass
-    
-    def compute_steps(self):
-        #perform IK for each step
-        pass

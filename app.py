@@ -5,10 +5,9 @@ from components.main_cointainer import MainContainer
 from components.d_h_table import DHTable
 from components.robot_arm import RobotArm
 import json
-import math
 from tkinter import filedialog as fd
 from components.button_group import ButtonGroup
-
+import math
 
 class App(ttk.Window):
     def __init__(self, theme, title, minsize):
@@ -21,14 +20,15 @@ class App(ttk.Window):
          
 
     def create_robot(self, dh_params):
-        self.robot_arm = RobotArm(self, dh_params)
+        self.robot_arm = RobotArm(self,
+                                  dh_params,
+                                  initial_joint_states = [0,math.pi/2,math.pi,-math.pi/2])
+
         self.robot_arm.show_robot()
         self.d_h_table.destroy()
         self.d_h_table = None
-        self.side_menu.pack(side='left', fill='both', expand=False)
-        self.side_menu.pack_propagate(0)
-        self.main_container = MainContainer(
-            self, name='main_frame', robot=self.robot_arm)
+        self.create_side_menu()
+        self.main_container = MainContainer(self, name='main_frame', robot=self.robot_arm)
         self.main_container.pack(anchor='nw', expand=True, fill='both')
 
     def create_dh_robot(self):
@@ -48,27 +48,28 @@ class App(ttk.Window):
         with open(open_file, 'r') as params_file:
             robot_params = json.load(params_file)
         params_file.close()
-        self.robot_arm = RobotArm(self, robot_params)
+        self.create_side_menu()
+        self.robot_arm = RobotArm(self, 
+                                  robot_params,
+                                  initial_joint_states = [0,math.pi/2,math.pi,-math.pi/2])
         self.robot_arm.show_robot()
-        self.side_menu = SideMenu(self,
-                                  self.simulate_robot,
-                                  self.save_robot,
-                                  self.teach_pendant,
-                                  self.show_robot)
-        self.side_menu.pack(side='left', fill='y')
         self.main_container = MainContainer(
             self, name='main_frame', robot_arm=self.robot_arm)
         self.main_container.pack(expand=True, fill='both')
-
-    def simulate_robot(self):
-        print('Simulation!')
 
     def teach_pendant(self):
         self.robot_arm.robot.teach(self.robot_arm.robot.q)
 
     def show_robot(self):
         self.robot_arm.robot.plot(self.robot_arm.robot.q)
-
+    
+    def create_side_menu(self):
+        self.side_menu = SideMenu(self,
+                                  self.save_robot,
+                                  self.teach_pendant,
+                                  self.show_robot)
+        self.side_menu.pack(side='left', fill='y')
+    
 if __name__ == "__main__":
-    app = App('superhero', 'Robot Arm Application', (800, 600))
+    app = App('cyborg', 'Robot Arm Application', (800, 600))
     app.mainloop()

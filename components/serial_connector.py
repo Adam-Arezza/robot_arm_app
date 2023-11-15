@@ -5,7 +5,7 @@ from serial.tools import list_ports
 class SerialConnector(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent, style='secondary.TFrame')
-
+        self.parent = parent
         self.header = ttk.Label(self, text='Serial Ports:', font=('bold', 12), style='secondary.inverse')
         self.header.pack(pady=(40,5))
 
@@ -18,8 +18,9 @@ class SerialConnector(ttk.Frame):
 
         self.connect_btn = ttk.Button(self, text='Connect', command=self.connect_to_port)
         self.connect_btn.pack(pady=15)
-        # self.serial_connection
+        self.serial_connection = None
         
     def connect_to_port(self):
         print(f'Connecting to port {self.ser_port.get()}')
-        # self.serial_connection = serial.Serial(port=self.ser_port, baudrate=115200)
+        self.serial_connection = serial.Serial(port=self.ser_port.get(), baudrate=115200, timeout=0.25) 
+        self.parent.parent.main_container.add_serial_connection(self.serial_connection)

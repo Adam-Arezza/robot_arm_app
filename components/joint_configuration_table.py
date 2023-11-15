@@ -1,6 +1,6 @@
 import ttkbootstrap as ttk
 from ttkbootstrap.tableview import Tableview
-
+from ttkbootstrap.constants import *
 
 class JointConfigurationTable(ttk.Frame):
     def __init__(self, parent, initial_joint_config):
@@ -11,6 +11,7 @@ class JointConfigurationTable(ttk.Frame):
             self,
             coldata=self.headers,
             rowdata=[initial_joint_config],
-            height=10 
+            height=10,
+            bootstyle='light' 
         )
         self.joint_table.pack()

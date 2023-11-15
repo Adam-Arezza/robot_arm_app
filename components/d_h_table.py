@@ -14,14 +14,14 @@ class DHTable(ttk.Frame):
         self.table_title.pack(padx=(50, 5), pady=10)
 
         self.buttons = ButtonGroup(self, [('Add Link', self.add_link), 
-                                          ('Create Robot', self.create_robot_cb), 
+                                          ('Create Robot', self.create_robot), 
                                           ('Clear Table', self.clear_table)])
         
         self.buttons.pack(anchor='nw')
 
         self.header_labels = ['Theta (deg)', 'Alpha (deg)', 'r (m)', 'd (m)']
         self.table_header = TableHeader(self, name='table_headers', labels=self.header_labels)
-        
+        self.table_header.pack(padx=(80, 0), pady=10)
         self.rows = []
         new_row = TableRow(self, 'Joint_1')
         self.rows.append(new_row)
@@ -61,4 +61,4 @@ class DHTable(ttk.Frame):
                 dh_parameters.append(p.get())
             dh_parameters.pop(0)
             params[f'{row.joint}'] = dh_parameters
-        self.cb(params)
+        self.create_robot_cb(params)
