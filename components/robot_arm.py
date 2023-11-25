@@ -31,7 +31,7 @@ class RobotArm:
         else:
             self.robot.q = initial_joint_states
         # a target pose
-        self.target = None        
+        self.target = None 
 
     def show_robot(self):
         self.robot.plot(self.robot.q)
