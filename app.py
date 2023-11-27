@@ -68,7 +68,7 @@ class App(ttk.Window):
 
         self.create_side_menu() 
         self.main_container.pack(expand=True, fill='both')
-        self.robot_arm.show_robot()
+#        self.robot_arm.show_robot()
 
     def teach_pendant(self):
         self.robot_arm.robot.teach(self.robot_arm.robot.q)
@@ -93,6 +93,6 @@ class App(ttk.Window):
             self.destroy()
 
 if __name__ == "__main__":
-    app = App('cyborg', 'Robot Arm Application', (800, 600))
+    app = App('journal', 'Robot Arm Application', (800, 600))
     app.protocol("WM_DELETE_WINDOW", app.on_close)
     app.mainloop()
