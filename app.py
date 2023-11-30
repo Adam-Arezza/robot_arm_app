@@ -34,13 +34,12 @@ class App(ttk.Window):
         self.robot_arm = RobotArm(self,
                                   dh_params,
                                   initial_joint_states = [0,math.pi/2,math.pi,-math.pi/2])
-
-        self.robot_arm.show_robot()
-        self.d_h_table.destroy()
-        self.d_h_table = None
-        self.main_container = MainContainer(self, name='main_frame', robot=self.robot_arm)
+ 
+        self.d_h_table.pack_forget()
+        self.main_container = MainContainer(self, name='main_frame', robot_arm=self.robot_arm)
         self.create_side_menu()
         self.main_container.pack(anchor='nw', expand=True, fill='both')
+        self.robot_arm.show_robot()
 
     def create_dh_robot(self):
         self.image_label.destroy()
@@ -49,6 +48,7 @@ class App(ttk.Window):
         self.d_h_table.pack()
 
     def save_robot(self):
+        #Add joint limits into the saved file
         save_file = fd.askopenfilename()
         with open(save_file,'w') as params_file:
             json.dump(self.robot_arm.dh_params, params_file)
@@ -68,10 +68,11 @@ class App(ttk.Window):
 
         self.create_side_menu() 
         self.main_container.pack(expand=True, fill='both')
-#        self.robot_arm.show_robot()
+        self.robot_arm.show_robot()
 
     def teach_pendant(self):
         self.robot_arm.robot.teach(self.robot_arm.robot.q)
+        #self.main_container.robot_view._add_teach_panel(self.robot_arm.robot, self.robot_arm.robot.q)
 
     def show_robot(self):
         self.robot_arm.robot.plot(self.robot_arm.robot.q)

@@ -20,11 +20,15 @@ class SerialConnector(ttk.Frame):
         self.serial_list_dropdown = ttk.Combobox(self, textvariable=self.ser_port)
         self.serial_list_dropdown['values'] = self.port_list 
         self.serial_list_dropdown.pack(side='left')
-        self.connect_btn = ttk.Button(self, text='Connect', command=self.connect_to_port)
-        self.connect_btn.pack(padx=15)
+        
         self.serial_connection = None
-        self.scan_btn = ttk.Button(self, text='Scan Ports', command=self.scan_for_ports)
-        self.scan_btn.pack(side='right')
+        self.serial_btns = ttk.Frame(self)
+        self.serial_btns.pack()
+        self.connect_btn = ttk.Button(self.serial_btns, text='Connect', command=self.connect_to_port)
+        self.connect_btn.pack(side='left', padx=15)
+        self.scan_btn = ttk.Button(self.serial_btns, text='Scan Ports', command=self.scan_for_ports)
+        self.scan_btn.pack()
+
         self.serial_kill_loop = threading.Event()
         self.thread_running = False
         self.serial_window = ScrolledText(self, width=60, height=8, wrap=ttk.WORD)
@@ -36,7 +40,7 @@ class SerialConnector(ttk.Frame):
         self.serial_kill_loop.clear()
         if self.serial_connection.is_open:
             self.parent.add_serial_connection(self.serial_connection)
-            self.connect_btn.pack_forget()
+            self.serial_btns.pack_forget()
             self.serial_list_dropdown.pack_forget()
             self.serial_window.pack(after=self.header, anchor='nw')
             self.serial_window.configure(state="normal")
@@ -79,7 +83,7 @@ class SerialConnector(ttk.Frame):
         self.serial_connection.close()
         self.serial_window.pack_forget()
         self.serial_list_dropdown.pack(side='left')
-        self.connect_btn.pack(padx=15)
+        self.serial_btns.pack()
         self.disconnect_btn.pack_forget()
         self.serial_window.configure(state="normal")
         self.serial_window.delete(1.0, END)

@@ -9,7 +9,7 @@ Image.CUBIC = Image.BICUBIC
 from components.serial_connector import SerialConnector
 from utils import to_degrees, to_radians
 from ttkbootstrap.dialogs.dialogs import Messagebox
-from components.robot_view import RobotView
+
 
 class MainContainer(ttk.Frame):
     def __init__(self, parent, name, robot_arm):
@@ -21,35 +21,11 @@ class MainContainer(ttk.Frame):
 
         self.top_frame = ttk.Frame(self)
         self.top_frame.pack(fill='x')
-        self.robot_view = RobotView(parent,self.top_frame,self.robot_arm.robot)
-        self.robot_view.step()
         self.headers = ['Theta (deg)', 'Alpha (deg)', 'r (m)', 'd (m)']    
-        #self.robot_config = RobotConfig(self.top_frame, robot_arm.dh_params, self.headers)
-        #self.robot_config.pack(side='left') 
-
-        #self.initial_joint_state = ttk.StringVar()
-        #self.previous_joint_state = ttk.StringVar()
-        #self.current_joint_state = ttk.StringVar()
-
-        #self.initial_joint_state.set(str(to_degrees(robot_arm.robot.q)))
-
-        #self.initial_joints = JointConfig(self.top_frame, 'Initial Joint State',
-        #                                  self.initial_joint_state)
-        #self.previous_joints = JointConfig(self.top_frame, 'Previous Joint State',
-        #                                   self.previous_joint_state)
-        #self.current_joints = JointConfig(self.top_frame, 'Current Joint State',
-        #                                  self.current_joint_state)
-
-        #self.initial_joints.pack()
-        #self.previous_joints.pack()
-        #self.current_joints.pack()
-
-        
-        self.serial_connector = SerialConnector(self.top_frame)
+        self.serial_connector = SerialConnector(self)
         self.serial_connector.pack(pady=(10, 50))
         self.serial_command_btn = ttk.Button(self, text="Send Position", command=self.send_serial_command)
 
-# Joint entry
         self.joint_entry_frame = ttk.Frame(self)
         self.joint_config_entry = TableRow(self.joint_entry_frame, 'Configure Joints')
         self.joint_config_entry.pack(side='left', pady=15)
@@ -59,7 +35,6 @@ class MainContainer(ttk.Frame):
 
         self.joint_entry_frame.pack(anchor='nw')
 
-#Joint configuration table
         self.joint_config_table = JointConfigurationTable(self, to_degrees(self.robot_arm.robot.q))
         self.joint_config_table.pack(anchor='nw')  
 
@@ -77,7 +52,8 @@ class MainContainer(ttk.Frame):
 
     def add_serial_connection(self, serial):
         self.serial = serial
-        self.serial_command_btn.pack(before=self.joint_config_entry, anchor='nw')
+        self.serial_command_btn.pack(before=self.joint_entry_frame,
+                                     anchor='nw')
 
     def send_serial_command(self):
         joint_values = self.joint_config_table.joint_table.get_rows(selected=True)
@@ -92,6 +68,4 @@ class MainContainer(ttk.Frame):
             self.serial.open()
         self.serial.write(serial_msg)
         self.serial.reset_input_buffer()
-        data = self.serial.readline()
-        print(data.decode())
 

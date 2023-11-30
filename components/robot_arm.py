@@ -17,7 +17,8 @@ class RobotArm:
         self.parent = parent
         self.dh_params = dh_params
         self.links = []
-        for link in dh_params:
+        for i,link in enumerate(dh_params):
+            # add the joint limits to the link
             t,a,r,d = dh_params[f'{link}']
             t = float(t)
             a = float(a)
@@ -30,7 +31,6 @@ class RobotArm:
             self.robot.q = [0 for i in self.links]
         else:
             self.robot.q = initial_joint_states
-        # a target pose
         self.target = None 
 
     def show_robot(self):

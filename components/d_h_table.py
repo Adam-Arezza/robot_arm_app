@@ -15,7 +15,8 @@ class DHTable(ttk.Frame):
 
         self.buttons = ButtonGroup(self, [('Add Link', self.add_link), 
                                           ('Create Robot', self.create_robot), 
-                                          ('Clear Table', self.clear_table)])
+                                          ('Clear Table', self.clear_table)],
+                                   container_style='default')
         
         self.buttons.pack(anchor='nw')
 

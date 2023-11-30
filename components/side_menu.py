@@ -12,40 +12,31 @@ class SideMenu(ttk.Frame):
         self.robot_arm = self.parent.robot_arm
         self.default_joint_state = self.robot_arm.robot.q
 
-        # callback functions
         self.save_robot = save_rb     
         self.teach_cb = teach_cb
         self.show_cb = show_cb
-        
-        #menu buttons  
-        self.save_robot_btn = ttk.Button(self, text='Save Robot', width=30, command=self.save_robot) 
-        
-        self.teach_pendant_btn = ttk.Button(self, text='Teach Pendant', width=30, command=self.teach_cb)
 
+        self.save_robot_btn = ttk.Button(self, text='Save Robot', width=30, command=self.save_robot) 
+        self.teach_pendant_btn = ttk.Button(self, text='Teach Pendant', width=30, command=self.teach_cb)
         self.show_robot_btn = ttk.Button(self, text='Show Robot', width=30, command=self.show_cb) 
-        
-        # button layout
+
         self.show_robot_btn.pack(side='top', pady=8)
         self.save_robot_btn.pack(side='top', pady=8) 
         self.teach_pendant_btn.pack(side='top', pady=8)
 
-
-        self.table_btn_group = ButtonGroup(self, [('Update Joints', self.update_joint_configs),
-                                                  ('Add Joint Configuration', self.add_joint_configuration),
-                                                  ('Show Configuration', self.show_configuration),
-                                                  ('Show Trajectory', self.show_trajectory),
-                                                  ('Re-initialize', self.set_to_initial_state)],
-                                                  'secondary.TFrame',
-                                                  horizontal=False,
-                                                  style='info')
+        self.table_btn_group = ButtonGroup(self, [
+            ('Add Joint Configuration', self.add_joint_configuration),
+            ('Show Configuration', self.show_configuration),
+            ('Show Trajectory', self.show_trajectory),
+            ('Re-initialize', self.set_to_initial_state)],
+                                           'secondary.TFrame',
+                                           horizontal=False,
+                                           style='info')
         self.table_btn_group.pack(pady=25, fill='x')
 
     def set_to_initial_state(self):
         self.robot_arm.robot.q = self.default_joint_state
 
-    def update_joint_configs(self):
-        self.main_container.previous_joint_state.set(self.main_container.current_joint_state.get())
-        self.main_container.current_joint_state.set(str(to_degrees(self.robot_arm.robot.q))) 
 
     def add_joint_configuration(self):
         rows = self.main_container.joint_config_table.joint_table.get_rows(visible=True)
@@ -56,8 +47,8 @@ class SideMenu(ttk.Frame):
                 return 
         self.main_container.joint_config_table.joint_table.insert_row(values=to_degrees(self.robot_arm.robot.q))
         self.main_container.joint_config_table.joint_table.load_table_data()
-        self.update_joint_configs()
-    
+
+
     def show_trajectory(self):
         joint_configurations = self.main_container.joint_config_table.joint_table.get_rows(selected=True)
         if len(joint_configurations) != 2:
@@ -66,7 +57,7 @@ class SideMenu(ttk.Frame):
         row_values = [to_radians(i.values) for i in joint_configurations]
         trajectory = rtb.jtraj(row_values[0], row_values[1], t=25)
         self.robot_arm.robot.plot(trajectory.q)
-    
+
     def show_configuration(self):
         config = self.main_container.joint_config_table.joint_table.get_rows(selected=True)
         if len(config) > 1:
