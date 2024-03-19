@@ -1,5 +1,5 @@
 import ttkbootstrap as ttk
-from components.button_group import ButtonGroup
+from src.button_group import ButtonGroup
 from ttkbootstrap.dialogs.dialogs import Messagebox
 import roboticstoolbox as rtb
 from utils import to_degrees, to_radians

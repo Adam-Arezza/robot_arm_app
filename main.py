@@ -1,12 +1,12 @@
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
-from components.side_menu import SideMenu
-from components.main_cointainer import MainContainer
-from components.d_h_table import DHTable
-from components.robot_arm import RobotArm
+from src.side_menu import SideMenu
+from src.main_cointainer import MainContainer
+from src.d_h_table import DHTable
+from src.robot_arm import RobotArm
 import json
 from tkinter import filedialog as fd
-from components.button_group import ButtonGroup
+from src.button_group import ButtonGroup
 import math
 from PIL import Image, ImageTk
 
@@ -94,6 +94,6 @@ class App(ttk.Window):
             self.destroy()
 
 if __name__ == "__main__":
-    app = App('journal', 'Robot Arm Application', (800, 600))
+    app = App('flatly', 'Robot Arm Application', (800, 600))
     app.protocol("WM_DELETE_WINDOW", app.on_close)
     app.mainloop()

@@ -1,12 +1,12 @@
 import ttkbootstrap as ttk
 import roboticstoolbox as rtb
-from components.robot_config import RobotConfig
-from components.table_row import TableRow
-from components.joint_config import JointConfig
-from components.joint_configuration_table import JointConfigurationTable
+from src.robot_config import RobotConfig
+from src.table_row import TableRow
+from src.joint_config import JointConfig
+from src.joint_configuration_table import JointConfigurationTable
 from PIL import Image
 Image.CUBIC = Image.BICUBIC
-from components.serial_connector import SerialConnector
+from src.serial_connector import SerialConnector
 from utils import to_degrees, to_radians
 from ttkbootstrap.dialogs.dialogs import Messagebox
 

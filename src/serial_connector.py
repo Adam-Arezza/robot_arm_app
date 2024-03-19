@@ -11,6 +11,7 @@ from tkinter.constants import END
 class SerialConnector(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent, style='default')
+        self.configure(borderwidth=2, relief="groove")
         self.parent = parent
         self.header = ttk.Label(self, text='Serial Ports:', font=('bold', 12))
         self.header.pack(pady=(40,5), anchor='nw')
@@ -49,6 +50,8 @@ class SerialConnector(ttk.Frame):
             self.serial_window.configure(state="disabled")
             self.disconnect_btn = ttk.Button(self, text='Disconnect', command=self.disconnect)
             self.disconnect_btn.pack(padx=15)
+            self.clear_btn = ttk.Button(self, text="Clear", command=self.clear_serial_window)
+            self.clear_btn.pack(side=ttk.RIGHT)
             if not self.thread_running:
                 self.serial_thread = threading.Thread(target=self.get_serial_msg, daemon=True)
                 self.serial_thread.start()
@@ -59,7 +62,12 @@ class SerialConnector(ttk.Frame):
             if self.serial_connection.inWaiting() > 0:
                 data = self.serial_connection.readline().decode()
                 self.message_queue.put(data)
-            time.sleep(0.1)
+            time.sleep(0.01)
+
+    def clear_serial_window(self):
+        self.serial_window.configure(state='normal')
+        self.serial_window.delete('1.0', ttk.END)
+        self.serial_window.configure(state='disabled')
 
     def update_serial_window(self):
         try:

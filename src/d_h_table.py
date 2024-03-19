@@ -1,7 +1,7 @@
 import ttkbootstrap as ttk
-from components.button_group import ButtonGroup
-from components.table_row import TableRow
-from components.table_header import TableHeader
+from src.button_group import ButtonGroup
+from src.table_row import TableRow
+from src.table_header import TableHeader
 from ttkbootstrap.constants import *
 
 class DHTable(ttk.Frame):
