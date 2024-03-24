@@ -1,16 +1,16 @@
-import ttkbootstrap as ttk
-from src.button_group import ButtonGroup
-from src.table_row import TableRow
-from src.table_header import TableHeader
+import ttkbootstrap as ttkb
+from src.views.components.button_group import ButtonGroup
+from src.views.components.table_row import TableRow
+from src.views.components.table_header import TableHeader
 from ttkbootstrap.constants import *
 
-class DHTable(ttk.Frame):
+class DHTable(ttkb.Frame):
     def __init__(self, parent, cb):
         super().__init__(parent)
         self.parent = parent
         self.create_robot_cb = cb
 
-        self.table_title = ttk.Label(self, text='D-H Parameters', font='bold')
+        self.table_title = ttkb.Label(self, text='D-H Parameters', font='bold')
         self.table_title.pack(padx=(50, 5), pady=10)
 
         self.buttons = ButtonGroup(self, [('Add Link', self.add_link), 

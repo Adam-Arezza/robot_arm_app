@@ -1,8 +1,8 @@
-import ttkbootstrap as ttk
+import ttkbootstrap as ttkb
 
-class ButtonGroup(ttk.Frame):
+class ButtonGroup(ttkb.Frame):
     def __init__(self, parent, buttons, container_style, style=None, horizontal=False):
-        super().__init__(parent, name='dh_table_btn_group', height=300, width=400, style=container_style)
+        super().__init__(parent, style=container_style, borderwidth=2, relief=ttkb.GROOVE)
 
         self.buttons = {}
         self.style = None
@@ -11,9 +11,9 @@ class ButtonGroup(ttk.Frame):
         else:
             self.style = 'default'
         for button in buttons:
-            b = ttk.Button(self, text=button[0], command=button[1], bootstyle=self.style)
+            b = ttkb.Button(self, text=button[0], command=button[1], style=self.style, padding=(10,10))
             self.buttons[f'{button[0]}'] = b
             if horizontal:
-                b.pack(side='left', padx=10)
+                b.pack(side='left', padx=10, pady=10)
             else:
-                b.pack(pady=10, fill='x')
+                b.pack(fill='x', pady=10, padx=10)

@@ -1,4 +1,4 @@
-import ttkbootstrap as ttk
+import ttkbootstrap as ttkb
 import roboticstoolbox.backends.PyPlot as plotter
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure

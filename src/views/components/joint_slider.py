@@ -1,9 +1,9 @@
-import ttkbootstrap as ttk
+import ttkbootstrap as ttkb
 
-class JointSlider(ttk.Frame):
+class JointSlider(ttkb.Frame):
     def __init__(self, parent, joint_name):
         super().__init__(parent)
-        self.slider_value = ttk.IntVar()
+        self.slider_value = ttkb.IntVar()
         label = ttk.Label(self, text=joint_name.replace("_", " ").capitalize())
         j = ttk.Scale(self, 
                           name=f'{joint_name}_slider', 
@@ -12,7 +12,7 @@ class JointSlider(ttk.Frame):
                           value=0,
                           command=lambda s : self.slider_value.set(int(float(s))))
             
-        value = ttk.Label(self, textvariable=self.slider_value, font='bold')
+        value = ttkb.Label(self, textvariable=self.slider_value, font='bold')
 
         label.pack(side='left')
         j.pack(side='left')

@@ -13,10 +13,23 @@ import matplotlib.pyplot as plt
 #   4	θ4	90	0.17177	0.0
 
 class RobotArm:
-    def __init__(self, parent, dh_params, initial_joint_states = []) -> None:
-        self.parent = parent
-        self.dh_params = dh_params
-        self.links = []
+    def __init__(self, dh_params, initial_joint_states = []) -> None:
+
+        self.links = [] 
+        self.target = None 
+        self.default_state = [0,0,0,0]
+        if len(dh_params) > 0:
+           self.create_robot_from_dh(dh_params, initial_joint_states)
+
+
+
+    def show_robot(self):
+        self.robot.plot(self.robot.q)
+
+    def set_joint_states(joint_states):
+        self.robot.q = joint_states
+
+    def create_robot_from_dh(self, dh_params, initial_joint_states):
         for i,link in enumerate(dh_params):
             # add the joint limits to the link
             t,a,r,d = dh_params[f'{link}']
@@ -31,7 +44,4 @@ class RobotArm:
             self.robot.q = [0 for i in self.links]
         else:
             self.robot.q = initial_joint_states
-        self.target = None 
-
-    def show_robot(self):
-        self.robot.plot(self.robot.q)
+            self.default_state = initial_joint_states
