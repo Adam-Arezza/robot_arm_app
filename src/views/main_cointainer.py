@@ -33,12 +33,6 @@ class MainContainer(ttkb.Frame):
         self.joint_table_controller.show_view()
 
     def on_close(self):
-        #print("closing all the views...")
-        #self.side_menu_controller.kill_view()
-        #self.serial_controller.disconnect()
-        #print("All serial closed")
-        #self.joint_table_controller.kill_view()
-        #print("joint table closed")
         self.root.robot_controller.kill_view()
         self.destroy()
 

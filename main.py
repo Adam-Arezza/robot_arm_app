@@ -22,7 +22,8 @@ class App(ttkb.Window):
         self.mode = 'manual'
 
     def create_robot(self, dh_params):
-        self.robot_controller = RobotController(RobotView(self, self.main_container), RobotArm(dh_params))
+        self.robot_view = RobotView(self, self.main_container)
+        self.robot_controller = RobotController(self.robot_view, RobotArm(dh_params))
         self.main_container.main_view()
 
 

@@ -1,4 +1,5 @@
 from src.utils import to_radians
+import numpy as np
 
 
 class RobotController:
@@ -28,12 +29,25 @@ class RobotController:
 
     def set_joints(self, joints):
         self.model.robot.q = joints
+        print(self.model.robot.q)
+
 
     def get_joints(self):
+        print(self.model.robot.q)
         return self.model.robot.q
 
     def show_view(self):
-        self.view.pack(side='right', fill='x', padx=0, pady=0)
+        self.view.pack(anchor='ne', side='right', fill='x', padx=0, pady=0)
+        print(self.model.robot)
+        print(f"Link Lengths: {self.model.robot.a}")
+        print(f"Robot Reach: {self.model.robot.reach}")
+        print(self.model.robot.alpha)
+        #print(self.model.robot.fkine(self.model.robot.q))
+        #print(self.model.robot.A([0,1],self.model.robot.q))
+        #print(self.model.robot.A([1,2],self.model.robot.q))
+        #print(self.model.robot.A([2,3],self.model.robot.q))
+        self.view.draw_robot(self.model.robot.q, self.model.robot)
+
 
     def kill_view(self):
         self.view.close()

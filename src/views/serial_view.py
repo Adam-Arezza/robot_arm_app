@@ -8,23 +8,25 @@ class SerialView(ttkb.Frame):
         super().__init__(parent, borderwidth=2, relief=GROOVE)
         self.controller = controller
         self.header = ttkb.Label(self, text='Serial Communication', font=('bold', 12))
-        self.header.pack(pady=(30,5), anchor='nw')
+        
         self.ser_port = ttkb.StringVar()
         self.ports = []
         self.serial_window = ScrolledText(self, width=60, height=8, wrap=ttkb.WORD)
         self.serial_window.configure(state="disabled")
         self.serial_list_dropdown = ttkb.Combobox(self, textvariable=self.ser_port)
         self.serial_list_dropdown['values'] = self.ports 
-        self.serial_list_dropdown.pack(side='left')
-
         self.connect_btn = ttkb.Button(self, 
                                        text='Connect', 
                                        command=self.controller.connect_to_port)
-        self.connect_btn.pack(side='left', padx=15)
         self.scan_btn = ttkb.Button(self, 
                                     text='Scan Ports', 
                                     command=self.controller.get_port_list)
-        self.scan_btn.pack()
+
+        #Layout
+        self.header.pack(pady=(5,5), anchor='nw')
+        self.serial_list_dropdown.pack(side='left', pady=0, padx=5)
+        self.connect_btn.pack(side='left', padx=5)
+        self.scan_btn.pack(side='left', padx=5)
 
     def show_connected_msg(self):
         self.serial_window.pack()
