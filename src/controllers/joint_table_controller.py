@@ -12,9 +12,9 @@ class JointTableController:
 
 
     def show_view(self):
-        self.view.pack_propagate(0)
-        self.view.pack(expand=True, padx=0, pady=0, fill='both')
-
+        #self.view.pack_propagate(0)
+        #self.view.pack(expand=True, padx=0, pady=0, fill='both')
+        self.view.grid(column=1, row=1, sticky='nsew')
 
     def kill_view(self):
         self.view.destroy()
@@ -59,7 +59,16 @@ class JointTableController:
     def show_configuration(self):
         config = self.view.joint_table.get_rows(selected=True)
         if len(config) > 1:
-            Messagebox.ok(message='Select 1 joint configuration to show')
+            self.view.error_msg('Select 1 joint configuration to show')
             return
         config = config[0].values
         self.root.show_configuration(config)
+
+    def send_joint_config(self):
+        joint_values = self.joint_config_table.joint_table.get_rows(selected=True)
+        if len(joint_values) > 1:
+            self.view.error_msg('Select only 1 joint configuration')
+            return
+        joint_values = joint_values[0].values
+        joint_values = [str(i) for i in joint_values]
+

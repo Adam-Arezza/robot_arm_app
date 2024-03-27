@@ -20,8 +20,6 @@ class SideMenu(ttkb.Frame):
                                                   [('Create', self.controller.create_robot),
                                                     ('Save', self.controller.save_robot),
                                                     ('Load', self.controller.load_robot),
-                                                    ('Show', self.controller.show_robot),
-                                                    ('Teach Pendant', self.controller.teach_pendant),
                                                     ('Reset', self.controller.reset_robot)],
                                                    'secondary.TFrame',
                                                    horizontal=False,

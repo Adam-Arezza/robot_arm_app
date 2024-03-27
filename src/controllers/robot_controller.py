@@ -7,25 +7,23 @@ class RobotController:
         self.view = view
         self.model = model
 
-    def show_robot(self):
-        self.model.robot.plot(self.model.robot.q)
-
     def teach_pendant(self):
         self.model.robot.teach(self.model.robot.q)
 
     def show_joint_config(self,cfg):
         old_config = self.model.robot.q
         self.model.robot.q = to_radians(cfg)
-        self.model.robot.plot(self.model.robot.q)
-        self.model.robot.q = old_config
+        self.view.draw_robot(self.model.robot.q, self.model.robot)
+        #self.model.robot.q = old_config
 
     def show_trajectory(self,traj):
-        self.model.robot.plot(traj)
+        self.view.show_trajectory(traj)
+        #self.model.robot.plot(traj)
 
 
     def reset(self):
         self.model.robot.q = self.model.default_state
-
+        self.view.draw_robot(self.model.robot.q, self.model.robot)
 
     def set_joints(self, joints):
         self.model.robot.q = joints
@@ -37,15 +35,12 @@ class RobotController:
         return self.model.robot.q
 
     def show_view(self):
-        self.view.pack(anchor='ne', side='right', fill='x', padx=0, pady=0)
+        #self.view.pack(anchor='ne', side='right', fill='x', padx=0, pady=0)
+        self.view.grid(column=2, row=0, sticky='nsew')
         print(self.model.robot)
         print(f"Link Lengths: {self.model.robot.a}")
         print(f"Robot Reach: {self.model.robot.reach}")
         print(self.model.robot.alpha)
-        #print(self.model.robot.fkine(self.model.robot.q))
-        #print(self.model.robot.A([0,1],self.model.robot.q))
-        #print(self.model.robot.A([1,2],self.model.robot.q))
-        #print(self.model.robot.A([2,3],self.model.robot.q))
         self.view.draw_robot(self.model.robot.q, self.model.robot)
 
 

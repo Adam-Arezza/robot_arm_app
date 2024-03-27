@@ -7,11 +7,13 @@ class SideMenuController:
         self.root = root
         self.view = SideMenu(parent, {}, self)
         self.parent = parent
+
+
     def show_view(self):
         self.view.configure(width=self.parent.winfo_width() * 0.2)
-        self.view.pack_propagate(0)
-        self.view.pack(side='left', expand=False, fill='both', padx=0, anchor='w')
-
+        #self.view.pack_propagate(0)
+        #self.view.pack(side='left', expand=False, fill='both', padx=0, anchor='w')
+        self.view.grid(column=0,row=0,rowspan=2, sticky='nsew')
 
     def kill_view(self):
         print("Closing the side menu.")
@@ -24,11 +26,6 @@ class SideMenuController:
             json.dump(self.root.robot_arm.dh_params, params_file)
             params_file.close()
 
-    def teach_pendant(self):
-        self.root.teach_pendant()
-
-    def show_robot(self):
-        self.root.show_robot()
 
     def load_robot(self):
         self.root.load_robot()

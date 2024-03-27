@@ -1,11 +1,10 @@
 import ttkbootstrap as ttkb
 from ttkbootstrap.constants import *
-from src.views.start import StartView
+from src.views.start_view import StartView
 from src.views.main_cointainer import MainContainer
 from src.models.robot_model import RobotArm
 from src.controllers.robot_controller import RobotController
 from src.controllers.start_view_controller import StartViewController
-import math
 from src.views.robot_view import RobotView
 
 
@@ -18,6 +17,10 @@ class App(ttkb.Window):
         self.resizable(True,True)
         self.main_container = MainContainer(self)
         self.main_container.pack(padx=0, pady=0, fill='both', expand=True)
+        self.main_container.columnconfigure(1, weight=1)
+        self.main_container.columnconfigure(2, weight=1)
+        self.main_container.rowconfigure(0, weight=1)
+        self.main_container.rowconfigure(1, weight=1)
 
         self.mode = 'manual'
 
@@ -30,7 +33,6 @@ class App(ttkb.Window):
     def show_configuration(self, cfg):
         self.robot_controller.show_joint_config(cfg)
 
-
     def show_trajectory(self, trajectory):
         self.robot_controller.show_trajectory(trajectory)
 
@@ -39,6 +41,7 @@ class App(ttkb.Window):
 
     def show_robot(self):
         self.robot_controller.show_robot()
+
 
     def teach_pendant(self):
         self.robot_controller.teach_pendant()
