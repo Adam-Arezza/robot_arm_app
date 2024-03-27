@@ -6,11 +6,11 @@ import time
 
 
 class SerialService:
-    def __init__(self, controller):
+    def __init__(self):
         self.message_queue = []
         self.port_list = [i.name for i in list_ports.comports()]
         self.serial_connection = None
-        self.controller = controller
+        #self.controller = controller
         self.serial_kill_loop = threading.Event()
         self.thread_running = False
 
@@ -19,6 +19,7 @@ class SerialService:
         try:
             self.serial_connection = serial.Serial(port=port, baudrate=115200, timeout=0.1)
             self.serial_kill_loop.clear()
+            #self.add_controller(self, contoller)
             if self.serial_connection and self.serial_connection.isOpen():
                 print(f"Connected to {port}")
                 if not self.thread_running:
@@ -29,6 +30,8 @@ class SerialService:
         except serial.SerialException as e:
             print(e)
 
+    def add_controller(self, controller):
+        self.controller = controller
 
     def get_ports(self):
         ports = [i.name for i in list_ports.comports()]

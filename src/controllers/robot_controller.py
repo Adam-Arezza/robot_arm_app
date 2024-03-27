@@ -3,8 +3,11 @@ import numpy as np
 
 
 class RobotController:
-    def __init__(self, view, model):
-        self.view = view
+    def __init__(self):
+        self.model = None
+        self.view = None
+
+    def add_model(self, model):
         self.model = model
 
     def teach_pendant(self):
@@ -33,6 +36,9 @@ class RobotController:
     def get_joints(self):
         print(self.model.robot.q)
         return self.model.robot.q
+
+    def add_view(self, view):
+        self.view = view
 
     def show_view(self):
         #self.view.pack(anchor='ne', side='right', fill='x', padx=0, pady=0)

@@ -4,18 +4,23 @@ from src.views.serial_view import SerialView
 import threading
 
 class SerialController:
-    def __init__(self, root, parent, joint_table):
-        self.root = root
-        self.view = SerialView(parent, self)
-        self.serial_service = SerialService(self)
-        self.joint_table = joint_table
+    def __init__(self):
+        #self.root = root
+        #self.view = SerialView(parent, self)
+        #self.serial_service = SerialService(self)
+        #self.joint_table = joint_table
+        print("initialized serial controller")
+
+
+    def add_view(self, view):
+        self.view = view
 
     def show_view(self):
         self.get_port_list()
         #self.view.pack_propagate(0)
         #self.view.pack(anchor='nw', fill='both', expand=True, padx=0, pady=0)
         #self.view.pack(anchor='nw', side='left', fill='both', expand=True)
-        self.view.grid(column=1, row=0, sticky='nsew')
+        #self.view.grid(column=1, row=0, sticky='nsew')
 
     def kill_view(self):
         print("Closing the Serial communications")

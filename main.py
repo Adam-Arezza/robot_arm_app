@@ -15,29 +15,32 @@ class App(ttkb.Window):
                          minsize=(960,720))
         self.maxsize = (self.winfo_screenwidth(),self.winfo_screenheight())
         self.resizable(True,True)
+        self.robot_controller = RobotController()
         self.main_container = MainContainer(self)
         self.main_container.pack(padx=0, pady=0, fill='both', expand=True)
+        #self.main_container.columnconfigure(0, weight=0)
         self.main_container.columnconfigure(1, weight=1)
-        self.main_container.columnconfigure(2, weight=1)
         self.main_container.rowconfigure(0, weight=1)
         self.main_container.rowconfigure(1, weight=1)
-
         self.mode = 'manual'
 
     def create_robot(self, dh_params):
-        self.robot_view = RobotView(self, self.main_container)
-        self.robot_controller = RobotController(self.robot_view, RobotArm(dh_params))
+        robot_model = RobotArm(dh_params)
+        self.robot_controller.add_model(robot_model)
         self.main_container.main_view()
 
 
     def show_configuration(self, cfg):
         self.robot_controller.show_joint_config(cfg)
 
+
     def show_trajectory(self, trajectory):
         self.robot_controller.show_trajectory(trajectory)
 
+
     def reset_robot(self):
         self.robot_controller.reset()
+
 
     def show_robot(self):
         self.robot_controller.show_robot()

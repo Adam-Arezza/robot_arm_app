@@ -6,9 +6,13 @@ from ttkbootstrap.constants import *
 
 
 class JointTableController:
-    def __init__(self, root, parent, num_joints):
-        self.view = JointConfigurationTable(parent, self, num_joints)
+    def __init__(self, root):
+        #self.view = JointConfigurationTable(parent, self, num_joints)
         self.root = root
+
+
+    def add_view(self, view):
+        self.view = view
 
 
     def show_view(self):

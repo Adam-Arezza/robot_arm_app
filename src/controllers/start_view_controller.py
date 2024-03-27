@@ -4,10 +4,9 @@ from tkinter import filedialog as fd
 import json
 
 class StartViewController:
-    def __init__(self, root, parent):
+    def __init__(self, root):
         self.root = root
-        self.parent = parent
-        self.view = StartView(parent, self)
+        #self.view = StartView(parent, self)
 
     def load_robot(self):
         open_file = fd.askopenfilename()
@@ -27,6 +26,9 @@ class StartViewController:
     def create_robot(self, params):
         self.view.destroy()
         self.root.create_robot(params)
+
+    def add_view(self,view):
+        self.view = view
 
     def show_view(self):
         self.view.pack()

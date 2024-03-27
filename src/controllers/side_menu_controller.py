@@ -3,14 +3,16 @@ from ttkbootstrap.dialogs.dialogs import Messagebox
 from src.views.components.side_menu import SideMenu
 
 class SideMenuController:
-    def __init__(self, root, parent):
+    def __init__(self, root):
         self.root = root
-        self.view = SideMenu(parent, {}, self)
-        self.parent = parent
+        #self.view = SideMenu(parent, {}, self)
+        #self.parent = parent
 
+    def add_view(self, view):
+        self.view = view
 
     def show_view(self):
-        self.view.configure(width=self.parent.winfo_width() * 0.2)
+        #self.view.configure(width=self.parent.winfo_width() * 0.2)
         #self.view.pack_propagate(0)
         #self.view.pack(side='left', expand=False, fill='both', padx=0, anchor='w')
         self.view.grid(column=0,row=0,rowspan=2, sticky='nsew')
