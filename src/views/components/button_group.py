@@ -2,7 +2,7 @@ import ttkbootstrap as ttkb
 
 class ButtonGroup(ttkb.Frame):
     def __init__(self, parent, buttons, container_style, style=None, horizontal=False):
-        super().__init__(parent, style=container_style, borderwidth=2, relief=ttkb.GROOVE)
+        super().__init__(parent, style=container_style)
 
         self.buttons = {}
         self.style = None

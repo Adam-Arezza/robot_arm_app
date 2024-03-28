@@ -4,26 +4,20 @@ from src.views.serial_view import SerialView
 import threading
 
 class SerialController:
-    def __init__(self):
-        #self.root = root
-        #self.view = SerialView(parent, self)
-        #self.serial_service = SerialService(self)
-        #self.joint_table = joint_table
-        print("initialized serial controller")
+    def __init__(self, serial_service):
+        self.serial_service = serial_service
+        self.view = None
+        self.joint_table = None
 
 
     def add_view(self, view):
         self.view = view
 
-    def show_view(self):
-        self.get_port_list()
-        #self.view.pack_propagate(0)
-        #self.view.pack(anchor='nw', fill='both', expand=True, padx=0, pady=0)
-        #self.view.pack(anchor='nw', side='left', fill='both', expand=True)
-        #self.view.grid(column=1, row=0, sticky='nsew')
+    def add_joint_table(self, joint_table):
+        self.joint_table = joint_table
+
 
     def kill_view(self):
-        print("Closing the Serial communications")
         self.view.destroy()
 
 
@@ -42,13 +36,18 @@ class SerialController:
             self.view.show_connected_msg()
             self.view.serial_connected()
 
-    def send_serial_msg(self):
+    def get_joint_values(self):
         joint_values = self.joint_table.get_rows(selected=True)
         if len(joint_values) > 1:
             self.view.error_msg('Select only 1 joint configuration')
             return
         joint_values = joint_values[0].values
         joint_values = [str(i) for i in joint_values]
+        return joint_values
+
+
+    def send_serial_msg(self):
+        joint_values = self.get_joint_values()
         separator = ':'
         serial_msg = f'<{separator.join(joint_values)}>'.encode()
         print(serial_msg)
@@ -76,6 +75,7 @@ class SerialController:
     def disconnect(self):
         self.serial_service.disconnect()
         self.view.serial_disconnected()
+
 
     def on_close(self):
         self.serial_kill_loop.set()

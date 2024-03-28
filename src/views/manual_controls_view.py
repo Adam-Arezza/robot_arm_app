@@ -4,7 +4,7 @@ from ttkbootstrap.constants import GROOVE
 
 class ManualControls(ttkb.Frame):
     def __init__(self, parent, num_joints):
-        super().__init__(parent, borderwidth=2, relief=GROOVE)
+        super().__init__(parent)
         self.sliders = []
         self.num_joints = num_joints
         for i in range(self.num_joints):

@@ -69,6 +69,8 @@ class RobotView(ttkb.Frame):
         self.canvas_plot.draw()
        # # Plot links as lines between joint positions
 
+    def show_trajectory(self, trajectory):
+        pass
 
     def close(self):
         self.fig.clf()

@@ -6,15 +6,11 @@ from ttkbootstrap.constants import GROOVE
 
 class SideMenu(ttkb.Frame):
     def __init__(self, parent, config, controller):
-        super().__init__(parent, 
-                         style='secondary.TFrame', 
-                         name='menu_frame',
-                         borderwidth=2,
-                         relief=GROOVE)
+        super().__init__(parent, style='secondary.TFrame')
         self.controller = controller
         self.config = config
         self.style = ttkb.Style()
-        self.style.configure('info.TButton', font=('Helvetica', 12))
+        #self.style.configure('info.TButton', font=('Helvetica', 12))
 
         self.side_menu_button_group = ButtonGroup(self,
                                                   [('Create', self.controller.create_robot),
@@ -23,7 +19,7 @@ class SideMenu(ttkb.Frame):
                                                     ('Reset', self.controller.reset_robot)],
                                                    'secondary.TFrame',
                                                    horizontal=False,
-                                                   style='info.TButton')
+                                                   style='primary.TButton')
         self.side_menu_button_group.pack(fill='x')
         self.toggle_mode_switch = ttkb.Checkbutton(self, text='Mode', style='Roundtoggle.Toolbutton')
         self.toggle_mode_switch.pack()
