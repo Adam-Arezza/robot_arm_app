@@ -3,12 +3,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from ttkbootstrap.constants import GROOVE
+from src.views.manual_controls_view import ManualControls
 
 
 class RobotView(ttkb.Frame):
     def __init__(self, root, parent):
         super().__init__(parent, borderwidth=2, relief=GROOVE)
+        self.root = root
         self.configure(padding=(0,0))
+        self.manual_controls = ManualControls(self, 4)
         self.fig, self.ax = plt.subplots(subplot_kw=dict(projection="3d"))
         self.fig.figure.subplots_adjust(left=0, right=1, bottom=0, top=1, wspace=0)
         self.fig.figure.set_figwidth(6)
@@ -33,32 +36,18 @@ class RobotView(ttkb.Frame):
         self.ax.set_zlim3d([z_limits[0], z_limits[0] + 0.4])
         self.canvas_plot = FigureCanvasTkAgg(self.fig, self)
         self.canvas_plot.get_tk_widget().pack(padx=0, pady=0)
+        self.manual_controls.pack()
         self.robot_plot = None
 
 
-    def draw_robot(self, angles, robot):
-        #given joint angles, compute the 
-
-        prev_transform = None
-        joint_coordinates = [[0],[0],[0]]
-        for i in range(len(angles)):
-            t_matrix = robot.links[i].A(robot.q[i])  
-            t_matrix = np.array(t_matrix)
-            new_transform = t_matrix
-            if i > 0:
-                new_transform = np.dot(prev_transform, t_matrix)
-            prev_transform = new_transform
-            j_coords = new_transform[:3,3]
-            joint_coordinates[0].append(j_coords[0])
-            joint_coordinates[1].append(j_coords[1])
-            joint_coordinates[2].append(j_coords[2])
-
+    def draw_robot(self, joint_coords):
+        xs, ys, zs = joint_coords 
         if self.robot_plot:
             self.robot_plot.remove()
         # provide the joint coordinates to ax.plot for each joint
-        self.robot_plot, = self.ax.plot(xs=joint_coordinates[0], 
-                     ys=joint_coordinates[1], 
-                     zs=joint_coordinates[2],
+        self.robot_plot, = self.ax.plot(xs=xs, 
+                     ys=ys, 
+                     zs=zs,
                      color='red',
                      linewidth=3,
                      marker='o',

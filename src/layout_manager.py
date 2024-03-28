@@ -7,10 +7,9 @@ class LayoutManager:
         self.views.append(view)
 
     def create_grid(self, cols, rows):
-
-        if rows * cols != len(self.views):
-            print("views won't fit in grid")
-            return
+        #if rows * cols != len(self.views):
+        #    print("views won't fit in grid")
+        #    return
         num_columns = cols
         num_rows = rows
         grid_counter = 0

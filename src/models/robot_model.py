@@ -26,8 +26,10 @@ class RobotArm:
     def show_robot(self):
         self.robot.plot(self.robot.q)
 
+
     def set_joint_states(joint_states):
         self.robot.q = joint_states
+
 
     def create_robot_from_dh(self, dh_params, initial_joint_states):
         for i,link in enumerate(dh_params):

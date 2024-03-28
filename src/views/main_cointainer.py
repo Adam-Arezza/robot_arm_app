@@ -35,23 +35,24 @@ class MainContainer(ttkb.Frame):
         self.start_controller = StartViewController(root)
         self.side_menu_controller = SideMenuController(root)
         self.joint_table_controller = JointTableController(root)
-        self.manual_controller = ManualController(root)
+        #self.manual_controller = ManualController(root)
         self.serial_controller = SerialController(self.serial_service)
         #self.headers = ['Theta (deg)', 'Alpha (deg)', 'r (m)', 'd (m)']    
 
        #views
         self.side_menu_view = SideMenu(self, {}, self.side_menu_controller)
         self.joint_table_view = JointConfigurationTable(self.main_grid_frame, self.joint_table_controller, 4)
-        self.manual_control_view = ManualControls(self.main_grid_frame, 4)
         self.serial_view = SerialView(self.main_grid_frame, self.serial_controller)
         self.serial_service.add_controller(self.serial_controller)
         self.robot_view = RobotView(root, self.main_grid_frame)
+        #self.manual_control_view = ManualControls(self.robot_view, 4)
         self.start_view = StartView(self, self.start_controller)
+        self.camera_view = ttkb.Frame(self.main_grid_frame, borderwidth=2, relief=GROOVE)
 
         #register views with controllers and layout manager
         self.side_menu_controller.add_view(self.side_menu_view)
         self.joint_table_controller.add_view(self.joint_table_view)
-        self.manual_controller.add_view(self.manual_control_view)
+        #self.manual_controller.add_view(self.manual_control_view)
         self.serial_controller.add_view(self.serial_view)
         self.start_controller.add_view(self.start_view)
         self.root.robot_controller.add_view(self.robot_view)
@@ -60,22 +61,23 @@ class MainContainer(ttkb.Frame):
         self.layout_mgr.add_view(self.serial_view)
         self.layout_mgr.add_view(self.joint_table_view)
         self.layout_mgr.add_view(self.robot_view)
-        self.layout_mgr.add_view(self.manual_control_view)
+        self.layout_mgr.add_view(self.camera_view)
+        #self.layout_mgr.add_view(self.manual_control_view)
         
         #show start page
         self.start_controller.show_view()
-
         self.serial_controller.add_joint_table(self.joint_table_view.joint_table)
-
+        
 
     def main_view(self):
         self.start_controller.kill_view()
         self.side_menu_controller.show_view()
         self.main_grid_frame.grid(column=1, row=0, rowspan=2, sticky="nsew")
         self.layout_mgr.create_grid(2,2)
-        self.root.robot_controller.draw_robot()
+        self.root.robot_controller.set_joints()
+        #self.manual_controller.pack_view()
         self.serial_controller.get_port_list()
-        
+
 
     def on_close(self):
         for view in self.layout_mgr.views:
