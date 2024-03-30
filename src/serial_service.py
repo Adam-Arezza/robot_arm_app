@@ -10,7 +10,6 @@ class SerialService:
         self.message_queue = []
         self.port_list = [i.name for i in list_ports.comports()]
         self.serial_connection = None
-        #self.controller = controller
         self.serial_kill_loop = threading.Event()
         self.thread_running = False
 
@@ -19,19 +18,19 @@ class SerialService:
         try:
             self.serial_connection = serial.Serial(port=port, baudrate=115200, timeout=0.1)
             self.serial_kill_loop.clear()
-            #self.add_controller(self, contoller)
             if self.serial_connection and self.serial_connection.isOpen():
                 print(f"Connected to {port}")
                 if not self.thread_running:
                     self.thread = threading.Thread(target=self.get_serial_msg, daemon=True)
                     self.thread.start()
-                    self.thread_running = True
-        
+                    self.thread_running = True 
         except serial.SerialException as e:
             print(e)
 
+
     def add_controller(self, controller):
         self.controller = controller
+
 
     def get_ports(self):
         ports = [i.name for i in list_ports.comports()]
@@ -45,8 +44,8 @@ class SerialService:
         while self.thread_running:
             if self.serial_connection.is_open:
                 try:
+                    #receives messages from the microcontroller
                     data = self.serial_connection.readline().decode()
-                    #print(data)
                     if len(data) > 0:
                         self.message_queue.append(data)
                     self.serial_connection.reset_input_buffer()

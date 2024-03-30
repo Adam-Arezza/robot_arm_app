@@ -46,8 +46,12 @@ class SerialController:
         return joint_values
 
 
-    def send_serial_msg(self):
-        joint_values = self.get_joint_values()
+    def send_serial_msg(self, joint_values=[]):
+        j_vals = None
+        if len(joint_values) == 0:
+            j_vals = self.get_joint_values()
+        else:
+            j_vals = joint_values
         separator = ':'
         serial_msg = f'<{separator.join(joint_values)}>'.encode()
         print(serial_msg)

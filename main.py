@@ -18,14 +18,12 @@ class App(ttkb.Window):
         self.robot_controller = RobotController()
         self.main_container = MainContainer(self)
         self.main_container.pack(padx=0, pady=0, fill='both', expand=True)
-        #self.main_container.columnconfigure(0, weight=0)
         self.main_container.columnconfigure(1, weight=1)
         self.main_container.rowconfigure(0, weight=1)
         self.main_container.rowconfigure(1, weight=1)
-        self.manual_mode = True
 
     def create_robot(self, dh_params):
-        robot_model = RobotArm(dh_params, mode = self.manual_mode)
+        robot_model = RobotArm(dh_params, mode = False)
         self.robot_controller.add_model(robot_model)
         self.main_container.main_view()
 
@@ -42,18 +40,6 @@ class App(ttkb.Window):
         self.robot_controller.reset()
 
 
-    def show_robot(self):
-        self.robot_controller.show_robot()
-
-
-    def teach_pendant(self):
-        self.robot_controller.teach_pendant()
-
-    def set_mode(self, mode):
-        print(f"switching mode from manual mode: {self.manual_mode} to {mode}")
-        self.manual_mode = mode
-
-    
     def on_close(self):
         try:
             self.main_container.on_close()

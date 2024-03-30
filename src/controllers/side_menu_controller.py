@@ -38,7 +38,3 @@ class SideMenuController:
     def create_robot(self):
         self.root.create_robot()
 
-    def toggle_auto_manual(self):
-        print("toggling")
-        self.root.set_mode(self.view.mode_value.get())
-

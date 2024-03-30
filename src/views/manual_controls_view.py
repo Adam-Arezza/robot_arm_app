@@ -23,6 +23,4 @@ class ManualControls(ttkb.Frame):
         for slider in self.sliders:
             slider_values.append(slider.slider_value.get())
         self.parent.root.robot_controller.set_joints(slider_values)
-        #return slider_values
-
     

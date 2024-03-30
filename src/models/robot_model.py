@@ -17,18 +17,21 @@ class RobotArm:
         self.links = [] 
         self.target = None 
         self.default_state = [0,0,0,0]
-        self.manual_mode = mode
+        self.online_mode = mode
         if len(dh_params) > 0:
            self.create_robot_from_dh(dh_params, initial_joint_states)
 
 
-
-    def show_robot(self):
-        self.robot.plot(self.robot.q)
-
-
-    def set_joint_states(joint_states):
+    def set_joint_states(self,joint_states):
         self.robot.q = joint_states
+
+
+    def set_mode(self, mode):
+        self.offline_mode = mode
+
+
+    def get_joints(self):
+        return self.robot.q
 
 
     def create_robot_from_dh(self, dh_params, initial_joint_states):

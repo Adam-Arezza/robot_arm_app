@@ -9,6 +9,7 @@ class JointConfigurationTable(ttkb.Frame):
     def __init__(self, parent, controller, num_joints):
         super().__init__(parent, borderwidth=2, relief=GROOVE)
         self.controller = controller
+        self.header = ttkb.Label(self, text='Joint Configurator', font=('bold', 12))
         self.headers = [f'Joint{i}' for i in range(num_joints)]
         self.joint_table = Tableview(
             self,
@@ -26,15 +27,18 @@ class JointConfigurationTable(ttkb.Frame):
                                             text='Add to table', 
                                             command=self.controller.add_configuration, 
                                             bootstyle='primary')
-        
+
+        self.btn_style = ttkb.Style()
+        self.btn_style.configure('primary.TButton', font=('Helvetica', 11))
         self.table_btn_group = ButtonGroup(self, [
             ('Add Joint Configuration', self.controller.add_joint_configuration),
             ('Show Configuration', self.controller.show_configuration),
             ('Show Trajectory', self.controller.show_trajectory)],
-                                           'secondary.TFrame',
+                                           'default',
                                            horizontal=True,
-                                           style='primary')
-
+                                           style='primary.TButton')
+        
+        self.header.pack(anchor='nw')
         self.joint_entry_frame.pack()
         self.joint_config_entry.pack(padx=20, pady=15)
         self.add_to_table_btn.pack(pady=5)

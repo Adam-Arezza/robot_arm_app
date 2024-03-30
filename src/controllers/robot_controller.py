@@ -1,3 +1,4 @@
+from ttkbootstrap.dialogs.dialogs import Messagebox
 from src.utils import to_radians
 import numpy as np
 
@@ -6,14 +7,11 @@ class RobotController:
     def __init__(self):
         self.model = None
         self.view = None
+        self.serial_service = None
 
 
     def add_model(self, model):
         self.model = model
-
-
-    def teach_pendant(self):
-        self.model.robot.teach(self.model.robot.q)
 
 
     def show_joint_config(self,cfg):
@@ -31,23 +29,32 @@ class RobotController:
         self.model.robot.q = self.model.default_state
         self.view.draw_robot(self.model.robot.q, self.model.robot)
 
-
-    def set_joints(self, joints=None):
+    #given degrees, sets the radian values of the joints
+    #updated the robot plot
+    def set_joints(self, joints=[]):
         if joints and len(joints) > 0:
-            self.model.robot.q = to_radians(joints)
-        self.update_joint_positions(self.model.robot.q)
+            self.model.set_joint_states(to_radians(joints))
+        self.update_joint_positions(self.model.get_joints())
 
 
     def get_joints(self):
-        return self.model.robot.q
+        return self.model.get_joints()
 
 
     def get_slider_values(self):
         pass
 
 
-    def update_mode(self, mode):
-        self.model.mode = mode
+    def toggle_auto_manual(self):
+        if self.serial_service and self.serial_service.serial_connection and self.serial_service.serial_connection.is_open:
+            self.model.set_mode(self.view.mode_value.get())
+            if self.view.mode_value.get():
+                self.view.mode_string.set('Online')
+            else:
+                self.view.mode_string.set('Offline')
+        else:
+            self.view.mode_value.set(False)
+            Messagebox.ok('Must connect to serial port before going online')
 
 
     def update_joint_positions(self, joint_angles):
@@ -65,9 +72,11 @@ class RobotController:
             joint_coordinates[0].append(j_coords[0])
             joint_coordinates[1].append(j_coords[1])
             joint_coordinates[2].append(j_coords[2])
-        #if in manual mode, send the joint configuration to the robot through serial
-        #if in auto mode, draw the new robot configuration in the plot window
         self.draw_robot(joint_coordinates)
+            
+
+    def connect_serial_service(self, serial_service):
+        self.serial_service = serial_service
 
 
     def add_view(self, view):
