@@ -35,7 +35,7 @@ class RobotView(ttkb.Frame):
         self.ax.set_ylim3d([y_limits[0], y_limits[0] + 0.4])
         self.ax.set_zlim3d([z_limits[0], z_limits[0] + 0.4])
         self.canvas_plot = FigureCanvasTkAgg(self.fig, self)
-        self.canvas_plot.get_tk_widget().pack(padx=0, pady=0)
+        self.canvas_plot.get_tk_widget().pack(side='right',padx=0, pady=0)
         self.manual_controls.pack()
         self.robot_plot = None
 

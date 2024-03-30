@@ -46,6 +46,10 @@ class RobotController:
         pass
 
 
+    def update_mode(self, mode):
+        self.model.mode = mode
+
+
     def update_joint_positions(self, joint_angles):
         prev_transform = None
         joint_coordinates = [[0],[0],[0]]
@@ -61,6 +65,8 @@ class RobotController:
             joint_coordinates[0].append(j_coords[0])
             joint_coordinates[1].append(j_coords[1])
             joint_coordinates[2].append(j_coords[2])
+        #if in manual mode, send the joint configuration to the robot through serial
+        #if in auto mode, draw the new robot configuration in the plot window
         self.draw_robot(joint_coordinates)
 
 

@@ -75,7 +75,6 @@ class MainContainer(ttkb.Frame):
         self.main_grid_frame.grid(column=1, row=0, rowspan=2, sticky="nsew")
         self.layout_mgr.create_grid(2,2)
         self.root.robot_controller.set_joints()
-        #self.manual_controller.pack_view()
         self.serial_controller.get_port_list()
 
 

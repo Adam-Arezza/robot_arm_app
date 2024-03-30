@@ -13,11 +13,11 @@ import matplotlib.pyplot as plt
 #   4	θ4	90	0.17177	0.0
 
 class RobotArm:
-    def __init__(self, dh_params, initial_joint_states = []) -> None:
-
+    def __init__(self, dh_params, mode, initial_joint_states = []) -> None:
         self.links = [] 
         self.target = None 
         self.default_state = [0,0,0,0]
+        self.manual_mode = mode
         if len(dh_params) > 0:
            self.create_robot_from_dh(dh_params, initial_joint_states)
 

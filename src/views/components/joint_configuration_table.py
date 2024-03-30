@@ -15,7 +15,7 @@ class JointConfigurationTable(ttkb.Frame):
             coldata=self.headers,
             rowdata=[],
             height=10,
-            bootstyle='light' 
+            bootstyle='primary' 
         )
 
         self.joint_entry_frame = ttkb.Frame(self)
@@ -25,20 +25,20 @@ class JointConfigurationTable(ttkb.Frame):
         self.add_to_table_btn = ttkb.Button(self.joint_entry_frame, 
                                             text='Add to table', 
                                             command=self.controller.add_configuration, 
-                                            bootstyle='info')
+                                            bootstyle='primary')
         
         self.table_btn_group = ButtonGroup(self, [
             ('Add Joint Configuration', self.controller.add_joint_configuration),
             ('Show Configuration', self.controller.show_configuration),
             ('Show Trajectory', self.controller.show_trajectory)],
-                                           'primary.TFrame',
+                                           'secondary.TFrame',
                                            horizontal=True,
-                                           style='info')
+                                           style='primary')
 
         self.joint_entry_frame.pack()
         self.joint_config_entry.pack(padx=20, pady=15)
         self.add_to_table_btn.pack(pady=5)
-        self.table_btn_group.pack(pady=25, fill='x')
+        self.table_btn_group.pack(pady=10, fill='x')
         self.joint_table.pack()
 
     def error_msg(self, msg):

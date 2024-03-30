@@ -22,10 +22,10 @@ class App(ttkb.Window):
         self.main_container.columnconfigure(1, weight=1)
         self.main_container.rowconfigure(0, weight=1)
         self.main_container.rowconfigure(1, weight=1)
-        self.mode = 'manual'
+        self.manual_mode = True
 
     def create_robot(self, dh_params):
-        robot_model = RobotArm(dh_params)
+        robot_model = RobotArm(dh_params, mode = self.manual_mode)
         self.robot_controller.add_model(robot_model)
         self.main_container.main_view()
 
@@ -48,6 +48,10 @@ class App(ttkb.Window):
 
     def teach_pendant(self):
         self.robot_controller.teach_pendant()
+
+    def set_mode(self, mode):
+        print(f"switching mode from manual mode: {self.manual_mode} to {mode}")
+        self.manual_mode = mode
 
     
     def on_close(self):
