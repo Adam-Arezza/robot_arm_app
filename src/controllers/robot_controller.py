@@ -31,18 +31,28 @@ class RobotController:
 
     #given degrees, sets the radian values of the joints
     #updated the robot plot
-    def set_joints(self, joints=[]):
-        if joints and len(joints) > 0:
-            self.model.set_joint_states(to_radians(joints))
+    def set_joints_offline(self):
+        joints = self.get_slider_values()
+        self.model.set_joint_states(to_radians(joints))
         self.update_joint_positions(self.model.get_joints())
+        self.update_readouts(joints)
 
+    def set_joints_online(self):
+        joint_slider_values =0
 
     def get_joints(self):
         return self.model.get_joints()
 
 
     def get_slider_values(self):
-        pass
+        slider_values = self.view.manual_controls.get_slider_values()
+        return slider_values
+
+
+    def update_readouts(self, joint_angles):
+        readouts = self.view.readouts_frame.readouts
+        for i in range(len(readouts)):
+            readouts[i].joint_value.set(joint_angles[i])
 
 
     def toggle_auto_manual(self):
@@ -73,7 +83,7 @@ class RobotController:
             joint_coordinates[1].append(j_coords[1])
             joint_coordinates[2].append(j_coords[2])
         self.draw_robot(joint_coordinates)
-            
+
 
     def connect_serial_service(self, serial_service):
         self.serial_service = serial_service

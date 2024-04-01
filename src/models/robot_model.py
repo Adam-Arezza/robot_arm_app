@@ -27,7 +27,7 @@ class RobotArm:
 
 
     def set_mode(self, mode):
-        self.offline_mode = mode
+        self.online_mode = mode
 
 
     def get_joints(self):

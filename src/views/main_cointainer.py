@@ -73,7 +73,7 @@ class MainContainer(ttkb.Frame):
         self.side_menu_controller.show_view()
         self.main_grid_frame.grid(column=1, row=0, rowspan=2, sticky="nsew")
         self.layout_mgr.create_grid(2,2)
-        self.root.robot_controller.set_joints()
+        self.root.robot_controller.set_joints_offline()
         self.serial_controller.get_port_list()
 
 

@@ -5,6 +5,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from ttkbootstrap.constants import GROOVE
 from ttkbootstrap import BooleanVar, StringVar
 from src.views.manual_controls_view import ManualControls
+from src.views.components.joint_readouts import JointReadout, ReadoutsFrame
 
 
 class RobotView(ttkb.Frame):
@@ -16,7 +17,8 @@ class RobotView(ttkb.Frame):
         self.configure(padding=(0,0))
         self.mode_value = BooleanVar(value=False)
         self.mode_string = StringVar(value='Offline')
-        self.manual_controls = ManualControls(self, 4)
+        self.manual_controls = ManualControls(self, 4, self.controller.set_joints_offline)
+        self.readouts_frame = ReadoutsFrame(self,4)
         self.check_btn_frame = ttkb.Frame(self, style='default')
         self.toggle_label = ttkb.Label(self.check_btn_frame, 
                                        textvariable=self.mode_string, 
@@ -59,6 +61,7 @@ class RobotView(ttkb.Frame):
         self.toggle_mode_switch.pack(padx=10, pady=5)
         self.check_btn_frame.pack()
         self.manual_controls.pack()
+        self.readouts_frame.pack()
         self.robot_plot = None
 
 
