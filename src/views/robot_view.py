@@ -9,15 +9,14 @@ from src.views.components.joint_readouts import JointReadout, ReadoutsFrame
 
 
 class RobotView(ttkb.Frame):
-    def __init__(self, root, parent, controller):
+    def __init__(self, root, parent, slider_cb, toggle_cb):
         super().__init__(parent, borderwidth=2, relief=GROOVE)
         self.root = root
-        self.controller = controller
         self.header = ttkb.Label(self, text='Robot Visualizer', font=('bold', 12))
         self.configure(padding=(0,0))
         self.mode_value = BooleanVar(value=False)
         self.mode_string = StringVar(value='Offline')
-        self.manual_controls = ManualControls(self, 4, self.controller.set_joints_offline)
+        self.manual_controls = ManualControls(self, 4, slider_cb)
         self.readouts_frame = ReadoutsFrame(self,4)
         self.check_btn_frame = ttkb.Frame(self, style='default')
         self.toggle_label = ttkb.Label(self.check_btn_frame, 
@@ -27,7 +26,7 @@ class RobotView(ttkb.Frame):
                                                    onvalue=True,
                                                    offvalue=False,
                                                    variable=self.mode_value,
-                                                   command=self.controller.toggle_auto_manual,
+                                                   command=toggle_cb,
                                                    bootstyle='default')
 
 

@@ -15,9 +15,10 @@ class ManualControls(ttkb.Frame):
             self.sliders.append(slider)
 
 
-    def get_slider_values(self):
-        slider_values = []
-        for slider in self.sliders:
-            slider_values.append(slider.slider_value.get())
-        return slider_values
+#    def get_slider_values(self):
+#        slider_values = []
+#        for slider in self.sliders:
+#            slider_values.append(slider.slider_value.get())
+#        return slider_values
+#
     

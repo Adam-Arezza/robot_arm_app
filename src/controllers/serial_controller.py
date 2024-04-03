@@ -36,6 +36,7 @@ class SerialController:
             self.view.show_connected_msg()
             self.view.serial_connected()
 
+#change to get_joint_table_values
     def get_joint_values(self):
         joint_values = self.joint_table.get_rows(selected=True)
         if len(joint_values) > 1:
@@ -61,6 +62,7 @@ class SerialController:
         if not self.serial_service.serial_connection.is_open:
             self.serial_service.serial_connection.open()
             self.serial_service.send_serial_msg(serial_msg)
+            self.view.serial_window.sending_message(serial_msg)
         else:
             self.serial_service.send_serial_msg(serial_msg)
 

@@ -18,9 +18,9 @@ class App(ttkb.Window):
         self.robot_controller = RobotController()
         self.main_container = MainContainer(self)
         self.main_container.pack(padx=0, pady=0, fill='both', expand=True)
-        self.main_container.columnconfigure(1, weight=1)
-        self.main_container.rowconfigure(0, weight=1)
+        self.main_container.columnconfigure(0, weight=1)
         self.main_container.rowconfigure(1, weight=1)
+
 
     def create_robot(self, dh_params):
         robot_model = RobotArm(dh_params, mode = False)

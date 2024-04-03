@@ -19,7 +19,7 @@ class StartViewController:
 
     def create_dh_robot(self):
         self.view.destroy()
-        self.view = DHTable(self.parent, self.create_robot)
+        self.view = DHTable(self.root.main_container, self.create_robot)
         self.show_view()
 
 
@@ -27,11 +27,15 @@ class StartViewController:
         self.view.destroy()
         self.root.create_robot(params)
 
+
     def add_view(self,view):
         self.view = view
+
 
     def show_view(self):
         self.view.pack()
 
+
     def kill_view(self):
         self.view.destroy()
+

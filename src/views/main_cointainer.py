@@ -5,7 +5,6 @@ from src.controllers.robot_controller import RobotController
 from src.controllers.start_view_controller import StartViewController
 from src.controllers.serial_controller import SerialController
 from src.controllers.joint_table_controller import JointTableController
-from src.controllers.manual_controller import ManualController
 from src.views.components.table_row import TableRow
 from src.utils import to_degrees, to_radians
 from ttkbootstrap.dialogs.dialogs import Messagebox
@@ -45,7 +44,10 @@ class MainContainer(ttkb.Frame):
         self.joint_table_view = JointConfigurationTable(self.main_grid_frame, self.joint_table_controller, 4)
         self.serial_view = SerialView(self.main_grid_frame, self.serial_controller)
         self.serial_service.add_controller(self.serial_controller)
-        self.robot_view = RobotView(root, self.main_grid_frame, self.root.robot_controller)
+        self.robot_view = RobotView(root, 
+                                    self.main_grid_frame,
+                                    root.robot_controller.slider_callback,
+                                    root.robot_controller.toggle_auto_manual)
         self.start_view = StartView(self, self.start_controller)
         self.camera_view = CameraView(self.main_grid_frame)
         
@@ -71,9 +73,9 @@ class MainContainer(ttkb.Frame):
     def main_view(self):
         self.start_controller.kill_view()
         self.side_menu_controller.show_view()
-        self.main_grid_frame.grid(column=1, row=0, rowspan=2, sticky="nsew")
+        self.main_grid_frame.grid(column=0, row=1, rowspan=2, columnspan=2, sticky="nsew")
         self.layout_mgr.create_grid(2,2)
-        self.root.robot_controller.set_joints_offline()
+        self.root.robot_controller.set_joints(self.root.robot_controller.model.robot.q)
         self.serial_controller.get_port_list()
 
 

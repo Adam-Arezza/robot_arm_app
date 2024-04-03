@@ -16,8 +16,6 @@ class JointTableController:
 
 
     def show_view(self):
-        #self.view.pack_propagate(0)
-        #self.view.pack(expand=True, padx=0, pady=0, fill='both')
         self.view.grid(column=1, row=1, sticky='nsew')
 
     def kill_view(self):
@@ -40,6 +38,7 @@ class JointTableController:
         for p in self.view.joint_config_entry.params:
             p.set(str(0)) 
 
+
     def add_joint_configuration(self):
         rows = self.view.joint_table.get_rows(visible=True)
         for row in rows:
@@ -49,6 +48,7 @@ class JointTableController:
                 return 
         self.view.joint_table.insert_row(values=to_degrees(self.root.robot_controller.get_joints()))
         self.view.joint_table.load_table_data()
+
 
     def show_trajectory(self):
         joint_configurations = self.view.joint_table.get_rows(selected=True)
@@ -67,6 +67,7 @@ class JointTableController:
             return
         config = config[0].values
         self.root.show_configuration(config)
+
 
     def send_joint_config(self):
         joint_values = self.joint_config_table.joint_table.get_rows(selected=True)
