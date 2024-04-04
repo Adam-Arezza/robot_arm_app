@@ -89,4 +89,3 @@ class RobotView(ttkb.Frame):
         self.fig.clf()
         self.ax.cla()
         plt.close()
-

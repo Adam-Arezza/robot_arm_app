@@ -16,7 +16,7 @@ class JointConfigurationTable(ttkb.Frame):
             coldata=self.headers,
             rowdata=[],
             height=10,
-            bootstyle='primary' 
+            bootstyle='info' 
         )
 
         self.joint_entry_frame = ttkb.Frame(self)
@@ -26,10 +26,8 @@ class JointConfigurationTable(ttkb.Frame):
         self.add_to_table_btn = ttkb.Button(self.joint_entry_frame, 
                                             text='Add to table', 
                                             command=self.controller.add_configuration, 
-                                            bootstyle='primary')
+                                            bootstyle='primary.Outline.TButton')
 
-        self.btn_style = ttkb.Style()
-        self.btn_style.configure('primary.TButton', font=('Helvetica', 11))
         self.table_btn_group = ButtonGroup(self, [
             ('Add Joint Configuration', self.controller.add_joint_configuration),
             ('Show Configuration', self.controller.show_configuration),

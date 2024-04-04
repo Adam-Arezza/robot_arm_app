@@ -1,8 +1,8 @@
 import roboticstoolbox as rtb
 from ttkbootstrap.dialogs.dialogs import Messagebox
-from src.views.components.side_menu import SideMenu
+from src.views.components.menu import Menu
 
-class SideMenuController:
+class MenuController:
     def __init__(self, root):
         self.root = root
         

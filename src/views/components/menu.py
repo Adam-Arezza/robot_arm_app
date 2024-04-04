@@ -5,14 +5,14 @@ from src.utils import to_degrees, to_radians
 from ttkbootstrap.constants import GROOVE
 from ttkbootstrap import BooleanVar, StringVar
 
-class SideMenu(ttkb.Frame):
+class Menu(ttkb.Frame):
     def __init__(self, parent, config, controller):
         super().__init__(parent, style='secondary.TFrame')
         self.controller = controller
         self.config = config
        # self.style = ttkb.Style()
        # self.style.configure('primary.TButton', font=('Helvetica', 15))
-        self.side_menu_button_group = ButtonGroup(self,
+        self.menu_button_group = ButtonGroup(self,
                                                   [('Create', self.controller.create_robot),
                                                     ('Save', self.controller.save_robot),
                                                     ('Load', self.controller.load_robot),
@@ -20,5 +20,5 @@ class SideMenu(ttkb.Frame):
                                                    'secondary.TFrame',
                                                    horizontal=True,
                                                    style='primary.TButton')
-        self.side_menu_button_group.pack(fill='x')
+        self.menu_button_group.pack(fill='x')
 

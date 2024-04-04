@@ -22,8 +22,9 @@ class SerialService:
                 print(f"Connected to {port}")
                 if not self.thread_running:
                     self.thread = threading.Thread(target=self.get_serial_msg, daemon=True)
-                    self.thread.start()
                     self.thread_running = True 
+                    self.thread.start()
+                    
         except serial.SerialException as e:
             print(e)
 
@@ -38,29 +39,21 @@ class SerialService:
 
 
     def get_serial_msg(self):
-        print("Started thread")
-        if not self.serial_connection.is_open:
-            self.serial_connection.open()
         while self.thread_running:
-            if self.serial_connection.is_open:
-                try:
-                    #receives messages from the microcontroller
-                    data = self.serial_connection.readline().decode()
-                    if len(data) > 0:
-                        self.message_queue.append(data)
+            try:
+                data = self.serial_connection.readline().decode()
+                if len(data) > 0:
+                    self.message_queue.append(data)
                     self.serial_connection.reset_input_buffer()
-                    self.controller.update_serial_window()
-                except Exception as e:
-                    print(f"There was an error: {e}")
+                    self.controller.update_serial_window(data)
+            except Exception as e:
+                print(f"There was an error: {e}")
             time.sleep(0.1)
 
 
     def send_serial_msg(self, msg):
-        print("Sending serial message now")
         if self.serial_connection:
             self.serial_connection.write(msg)
-            #response = self.serial_connection.readline().decode()
-            #self.message_queue.put(response)
             self.serial_connection.reset_input_buffer()
 
 
@@ -74,6 +67,4 @@ class SerialService:
         self.thread_running = False
         print("thread not running")
         print("Serial port closed")
-
-
 

@@ -6,7 +6,6 @@ import json
 class StartViewController:
     def __init__(self, root):
         self.root = root
-        #self.view = StartView(parent, self)
 
     def load_robot(self):
         open_file = fd.askopenfilename()
@@ -33,7 +32,7 @@ class StartViewController:
 
 
     def show_view(self):
-        self.view.pack()
+        self.view.pack(expand=True, fill='both')
 
 
     def kill_view(self):

@@ -13,6 +13,7 @@ class SerialController:
     def add_view(self, view):
         self.view = view
 
+
     def add_joint_table(self, joint_table):
         self.joint_table = joint_table
 
@@ -30,13 +31,13 @@ class SerialController:
     def connect_to_port(self):
         port = self.view.ser_port.get()
         self.serial_service.connect(port)
-        #self.serial_service.serial_kill_loop.clear()
+        self.serial_service.serial_kill_loop.clear()
         if self.serial_service.serial_connection.is_open:
-            self.view.after(50, self.update_serial_window)
             self.view.show_connected_msg()
             self.view.serial_connected()
 
-#change to get_joint_table_values
+
+    #change to get_joint_table_values
     def get_joint_values(self):
         joint_values = self.joint_table.get_rows(selected=True)
         if len(joint_values) > 1:
@@ -54,7 +55,7 @@ class SerialController:
         else:
             j_vals = joint_values
         separator = ':'
-        serial_msg = f'<{separator.join(joint_values)}>'.encode()
+        serial_msg = f'<{separator.join(j_vals)}>'.encode()
         print(serial_msg)
         if not self.serial_service.serial_connection:
             self.view.error_msg('There is no serial connection')
@@ -62,17 +63,15 @@ class SerialController:
         if not self.serial_service.serial_connection.is_open:
             self.serial_service.serial_connection.open()
             self.serial_service.send_serial_msg(serial_msg)
-            self.view.serial_window.sending_message(serial_msg)
+            self.view.sending_message(serial_msg)
         else:
             self.serial_service.send_serial_msg(serial_msg)
+            self.view.sending_message(serial_msg)
 
 
-    def update_serial_window(self):
+    def update_serial_window(self, new_msg):
         try:
-            if len(self.serial_service.message_queue) > 0:
-                new_msg = self.serial_service.message_queue.pop(0)
-                self.view.new_msg(new_msg)
-                self.view.update()
+            self.view.new_msg(new_msg)
         except Exception as e:
             if e:
                 print(e)

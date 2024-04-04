@@ -34,7 +34,7 @@ class JointTableController:
             joint_values.append(val)
         self.view.joint_table.insert_row(values=joint_values) 
         self.view.joint_table.load_table_data()
-        self.root.robot_controller.set_joints(to_radians(joint_values))
+        #self.root.robot_controller.set_joints(to_radians(joint_values))
         for p in self.view.joint_config_entry.params:
             p.set(str(0)) 
 

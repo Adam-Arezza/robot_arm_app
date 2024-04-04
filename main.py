@@ -1,10 +1,8 @@
 import ttkbootstrap as ttkb
 from ttkbootstrap.constants import *
-from src.views.start_view import StartView
 from src.views.main_cointainer import MainContainer
 from src.models.robot_model import RobotArm
 from src.controllers.robot_controller import RobotController
-from src.controllers.start_view_controller import StartViewController
 from src.views.robot_view import RobotView
 
 

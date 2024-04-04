@@ -12,7 +12,7 @@ class SerialView(ttkb.Frame):
         self.header = ttkb.Label(self, text='Serial Communication', font=('bold', 12))
         self.ser_port = ttkb.StringVar()
         self.ports = []
-        self.serial_window = ScrolledText(self, width=60, height=12, wrap=ttkb.WORD)
+        self.serial_window = ScrolledText(self, width=60, height=20, wrap=ttkb.WORD)
         self.serial_window.configure(state="disabled")
         self.serial_list_dropdown = ttkb.Combobox(self, textvariable=self.ser_port)
         self.serial_list_dropdown['values'] = self.ports 
@@ -79,6 +79,6 @@ class SerialView(ttkb.Frame):
         Messagebox.ok(msg)
 
 
-    def update(self):
-        self.after(20, self.controller.update_serial_window)
+    #def update(self):
+    #    self.after(20, self.controller.update_serial_window)
 
