@@ -15,7 +15,9 @@ class DHTable(ttkb.Frame):
 
         self.buttons = ButtonGroup(self, [('Add Link', self.add_link), 
                                           ('Create Robot', self.create_robot), 
-                                          ('Clear Table', self.clear_table)],
+                                          ('Clear Table', self.clear_table),
+                                          ('Cancel', self.cancel)],
+                                          
                                    container_style='default')
         
         self.buttons.pack(anchor='nw')
@@ -63,3 +65,9 @@ class DHTable(ttkb.Frame):
             dh_parameters.pop(0)
             params[f'{row.joint}'] = dh_parameters
         self.create_robot_cb(params)
+        self.cancel()
+
+    def cancel(self):
+        self.parent.destroy()
+        self.destroy()
+

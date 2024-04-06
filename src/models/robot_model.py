@@ -14,7 +14,8 @@ import matplotlib.pyplot as plt
 
 class RobotArm:
     def __init__(self, dh_params, mode, initial_joint_states = []) -> None:
-        self.links = [] 
+        self.links = []
+        self.dh_params = dh_params
         self.target = None 
         self.default_state = [0,0,0,0]
         self.online_mode = mode

@@ -1,35 +1,30 @@
 import roboticstoolbox as rtb
+import ttkbootstrap as ttkb
+import json
 from ttkbootstrap.dialogs.dialogs import Messagebox
-from src.views.components.menu import Menu
+from tkinter import filedialog as fd
+from src.views.d_h_table import DHTable
+
 
 class MenuController:
     def __init__(self, root):
         self.root = root
         
 
-    def add_view(self, view):
-        self.view = view
-
-
-    def show_view(self):
-        self.view.grid(column=0,row=0,columnspan=2, sticky='ew')
-
-
-    def kill_view(self):
-        print("Closing the side menu.")
-        self.view.destroy()
-
-
     def save_robot(self):
         #Add joint limits into the saved file
-        save_file = fd.askopenfilename()
+        save_file = fd.asksaveasfilename(defaultextension='json')
         with open(save_file,'w') as params_file:
-            json.dump(self.root.robot_arm.dh_params, params_file)
+            json.dump(self.root.robot_controller.model.dh_params, params_file)
             params_file.close()
 
 
     def load_robot(self):
-        self.root.load_robot()
+        open_file = fd.askopenfilename()
+        with open(open_file, 'r') as params_file:
+            params = json.load(params_file)
+        params_file.close()
+        self.root.create_robot(params)
 
 
     def reset_robot(self):
@@ -37,5 +32,15 @@ class MenuController:
 
 
     def create_robot(self):
-        self.root.create_robot()
+        self.dh_window = ttkb.window.Toplevel(self.root)
+        self.dh_table = DHTable(self.dh_window, self.root.create_robot)
+        self.dh_table.pack()
+
+
+    def show_help_dialog(self):
+        pass
+
+
+    def exit(self):
+        self.root.on_close()
 

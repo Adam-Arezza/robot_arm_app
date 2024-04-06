@@ -42,8 +42,8 @@ class MainContainer(ttkb.Frame):
         #self.serial_service.register_callback("update_robot_joints", self.robot_controller.set_joints)
 
        #views
-        self.menu_view = Menu(self, {}, self.menu_controller)
-        self.joint_table_view = JointConfigurationTable(self.main_grid_frame, self.joint_table_controller, 4)
+        self.menu_view = Menu(self.root, {}, self.menu_controller)
+        self.joint_table_view = JointConfigurationTable(self.main_grid_frame, self.joint_table_controller)
         self.serial_view = SerialView(self.main_grid_frame, self.serial_controller)
         self.serial_service.add_controller(self.serial_controller)
         self.robot_view = RobotView(root, 
@@ -54,7 +54,7 @@ class MainContainer(ttkb.Frame):
         self.camera_view = CameraView(self.main_grid_frame)
         
         #register views with controllers and layout manager
-        self.menu_controller.add_view(self.menu_view)
+        #self.menu_controller.add_view(self.menu_view)
         self.joint_table_controller.add_view(self.joint_table_view)
         self.serial_controller.add_view(self.serial_view)
         self.start_controller.add_view(self.start_view)
@@ -69,16 +69,19 @@ class MainContainer(ttkb.Frame):
         
         #show start page
         self.start_controller.show_view()
-        self.serial_controller.add_joint_table(self.joint_table_view.joint_table)
-        
+                
 
     def main_view(self):
+        self.root.config(menu=self.menu_view)
+        num_joints = len(self.root.robot_controller.model.robot.links)
         self.start_controller.kill_view()
-        self.menu_controller.show_view()
         self.main_grid_frame.grid(column=0, row=1, rowspan=2, columnspan=2, sticky="nsew")
         self.layout_mgr.create_grid(2,2)
+        self.robot_view.add_controls(num_joints)
+        self.joint_table_view.create_joint_entries(num_joints)
         self.root.robot_controller.set_joints(self.root.robot_controller.model.robot.q)
         self.serial_controller.get_port_list()
+        self.serial_controller.add_joint_table(self.joint_table_view.joint_table)
 
 
     def on_close(self):

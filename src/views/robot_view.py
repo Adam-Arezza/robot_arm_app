@@ -14,11 +14,12 @@ class RobotView(ttkb.Frame):
         self.root = root
         self.header = ttkb.Label(self, text='Robot Visualizer', font=('bold', 12))
         self.configure(padding=(0,0))
+        self.manual_controls = None
+        self.readouts_frame = None
         self.mode_value = BooleanVar(value=False)
         self.mode_string = StringVar(value='Offline')
-        self.manual_controls = ManualControls(self, 4, slider_cb)
-        self.readouts_frame = ReadoutsFrame(self,4)
         self.check_btn_frame = ttkb.Frame(self, style='default')
+        self.slider_cb = slider_cb
         self.toggle_label = ttkb.Label(self.check_btn_frame, 
                                        textvariable=self.mode_string, 
                                        bootstyle='default')
@@ -59,8 +60,6 @@ class RobotView(ttkb.Frame):
         self.toggle_label.pack()
         self.toggle_mode_switch.pack(padx=10, pady=5)
         self.check_btn_frame.pack()
-        self.manual_controls.pack()
-        self.readouts_frame.pack()
         self.robot_plot = None
 
 
@@ -84,6 +83,17 @@ class RobotView(ttkb.Frame):
 
     def show_trajectory(self, trajectory):
         pass
+
+
+    def add_controls(self, n):
+        if self.manual_controls:
+            self.manual_controls.destroy()
+            self.readouts_frame.destroy()
+        self.manual_controls = ManualControls(self, n, self.slider_cb)
+        self.readouts_frame = ReadoutsFrame(self, n)
+        self.manual_controls.pack()
+        self.readouts_frame.pack()
+
 
     def close(self):
         self.fig.clf()
