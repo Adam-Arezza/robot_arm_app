@@ -32,9 +32,9 @@ class MainContainer(ttkb.Frame):
         self.main_grid_frame.rowconfigure(1, weight=1)
 
         #controllers
-        self.start_controller = StartViewController(root)
+        self.start_controller = StartViewController(root, self)
         self.menu_controller = MenuController(root)
-        self.joint_table_controller = JointTableController(root)
+        self.joint_table_controller = JointTableController(root, self.main_grid_frame)
         self.serial_controller = SerialController(self.serial_service)
         self.robot_controller = root.robot_controller
 
@@ -43,27 +43,22 @@ class MainContainer(ttkb.Frame):
 
        #views
         self.menu_view = Menu(self.root, {}, self.menu_controller)
-        self.joint_table_view = JointConfigurationTable(self.main_grid_frame, self.joint_table_controller)
         self.serial_view = SerialView(self.main_grid_frame, self.serial_controller)
         self.serial_service.add_controller(self.serial_controller)
         self.robot_view = RobotView(root, 
                                     self.main_grid_frame,
                                     self.robot_controller.slider_callback,
                                     self.robot_controller.toggle_auto_manual)
-        self.start_view = StartView(self, self.start_controller.create_dh_robot, self.start_controller.load_robot)
         self.camera_view = CameraView(self.main_grid_frame)
         
         #register views with controllers and layout manager
-        #self.menu_controller.add_view(self.menu_view)
-        self.joint_table_controller.add_view(self.joint_table_view)
         self.serial_controller.add_view(self.serial_view)
-        self.start_controller.add_view(self.start_view)
         self.robot_controller.add_view(self.robot_view)
         self.robot_controller.connect_serial_service(self.serial_service)
 
         #add views to layout manager
         self.layout_mgr.add_view(self.serial_view)
-        self.layout_mgr.add_view(self.joint_table_view)
+        self.layout_mgr.add_view(self.joint_table_controller.view)
         self.layout_mgr.add_view(self.robot_view)
         self.layout_mgr.add_view(self.camera_view)
         
@@ -78,10 +73,10 @@ class MainContainer(ttkb.Frame):
         self.main_grid_frame.grid(column=0, row=1, rowspan=2, columnspan=2, sticky="nsew")
         self.layout_mgr.create_grid(2,2)
         self.robot_view.add_controls(num_joints)
-        self.joint_table_view.create_joint_entries(num_joints)
+        self.joint_table_controller.view.create_joint_entries(num_joints)
         self.root.robot_controller.set_joints(self.root.robot_controller.model.robot.q)
         self.serial_controller.get_port_list()
-        self.serial_controller.add_joint_table(self.joint_table_view.joint_table)
+        self.serial_controller.add_joint_table(self.joint_table_controller.view.joint_table)
 
 
     def on_close(self):

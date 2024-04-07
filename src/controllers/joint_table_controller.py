@@ -6,17 +6,18 @@ from ttkbootstrap.constants import *
 
 
 class JointTableController:
-    def __init__(self, root):
-        #self.view = JointConfigurationTable(parent, self, num_joints)
+    def __init__(self, root, parent):
         self.root = root
-
-
-    def add_view(self, view):
-        self.view = view
+        self.view = JointConfigurationTable(parent)
+        self.view.add_to_table_btn.configure(command=self.add_configuration)
+        self.view.table_btn_group.buttons["add_joint_configuration"].configure(command=self.add_joint_configuration)
+        self.view.table_btn_group.buttons["show_configuration"].configure(command=self.show_configuration)
+        self.view.table_btn_group.buttons["show_trajectory"].configure(command=self.show_trajectory)
 
 
     def show_view(self):
         self.view.grid(column=1, row=1, sticky='nsew')
+
 
     def kill_view(self):
         self.view.destroy()
@@ -70,7 +71,7 @@ class JointTableController:
 
 
     def send_joint_config(self):
-        joint_values = self.joint_config_table.joint_table.get_rows(selected=True)
+        joint_values = self.view.joint_table.get_rows(selected=True)
         if len(joint_values) > 1:
             self.view.error_msg('Select only 1 joint configuration')
             return

@@ -24,7 +24,10 @@ class RobotController:
 
 
     def show_trajectory(self,traj):
-        self.view.show_trajectory(traj)
+        for i in traj:
+            deg = to_degrees(i)
+            self.set_joints(deg)
+            time.sleep(0.1)
 
 
     def reset(self):

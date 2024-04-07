@@ -11,3 +11,10 @@ def to_radians(degrees:list):
     for i in degrees:
         result.append(math.radians(i))
     return result
+
+def find(arr, fn):
+    for i in arr:
+        if fn(i):
+            return i
+    return False
+

@@ -77,12 +77,9 @@ class RobotView(ttkb.Frame):
                      markersize=5,
                      markerfacecolor='blue',
                      markeredgecolor='blue')
-
         self.canvas_plot.draw()
+        self.canvas_plot.flush_events()
        # # Plot links as lines between joint positions
-
-    def show_trajectory(self, trajectory):
-        pass
 
 
     def add_controls(self, n):

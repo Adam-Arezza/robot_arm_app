@@ -10,8 +10,15 @@ class ButtonGroup(ttkb.Frame):
         else:
             self.style = 'default'
         for button in buttons:
-            b = ttkb.Button(self, text=button[0], command=button[1], style='primary.Outline.TButton', padding=(8,3))
-            self.buttons[f'{button[0]}'] = b
+            btn_name = button[0].replace(" ", "_").lower()
+            b = ttkb.Button(self, 
+                            text=button[0], 
+                            style='primary.Outline.TButton', 
+                            padding=(8,3), 
+                            name=btn_name)
+            if len(button) == 2:
+                b.configure(command=button[1])
+            self.buttons[f'{btn_name}'] = b
             if horizontal:
                 b.pack(side='left', padx=0, pady=0)
             else:

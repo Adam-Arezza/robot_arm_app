@@ -5,7 +5,7 @@ from PIL import Image, ImageTk
 import json
 
 class StartView(ttkb.Frame):
-    def __init__(self, parent, create_cb, load_cb):
+    def __init__(self, parent):
         super().__init__(parent)
         self.image = Image.open('assets/robot.png')
         width = self.image.width
@@ -15,7 +15,7 @@ class StartView(ttkb.Frame):
         self.image_label = ttkb.Label(self,image=self.robot_image)
         self.image_label.pack(pady=80)
         self.initial_btns = ButtonGroup(self,
-                                        buttons=[('Create DH robot', create_cb),
-                                                 ('Load robot', load_cb)],
+                                        buttons=[('Create DH robot',),
+                                                 ('Load robot',)],
                                         container_style='default')
         self.initial_btns.pack(pady=30)
