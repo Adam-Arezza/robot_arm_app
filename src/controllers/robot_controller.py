@@ -33,6 +33,9 @@ class RobotController:
     def reset(self):
         self.model.robot.q = self.model.default_state
         self.set_joints(self.model.robot.q)
+        for slider in self.view.manual_controls.sliders:
+            slider.slider_value.set(0)
+            slider.slider.set(slider.slider['from'])
 
 
     #given degrees, sets the radian values of the joints
@@ -117,6 +120,7 @@ class RobotController:
 
     def add_view(self, view):
         self.view = view
+        self.view.reset_btn.configure(command=self.reset)
 
 
     def draw_robot(self, joint_coords):

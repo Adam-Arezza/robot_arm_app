@@ -29,6 +29,7 @@ class RobotView(ttkb.Frame):
                                                    variable=self.mode_value,
                                                    command=toggle_cb,
                                                    bootstyle='default')
+        self.reset_btn = ttkb.Button(self, text="Reset")
 
 
         #plot setup
@@ -60,6 +61,7 @@ class RobotView(ttkb.Frame):
         self.toggle_label.pack()
         self.toggle_mode_switch.pack(padx=10, pady=5)
         self.check_btn_frame.pack()
+        self.reset_btn.pack()
         self.robot_plot = None
 
 

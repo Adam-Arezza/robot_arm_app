@@ -6,7 +6,7 @@ class JointSlider(ttkb.Frame):
         super().__init__(parent)
         self.slider_value = ttkb.IntVar()
         label = ttkb.Label(self, text=joint_name.replace("_", " ").capitalize())
-        j = ttkb.Scale(self, 
+        self.slider = ttkb.Scale(self, 
                           name=f'{joint_name}_slider', 
                           from_=0, 
                           to=180, 
@@ -15,7 +15,7 @@ class JointSlider(ttkb.Frame):
             
         value = ttkb.Label(parent, textvariable=self.slider_value, font='bold')
         label.pack(side='left', padx=10)
-        j.pack(side='left', padx=10, pady=10)
+        self.slider.pack(side='left', padx=10, pady=10)
         value.pack()
         self.slider_cb = cb
 
