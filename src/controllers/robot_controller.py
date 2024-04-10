@@ -42,10 +42,11 @@ class RobotController:
     #updates the robot plot
     def set_joints(self, joints):
         if not self.model.online_mode:
-            self.model.set_joint_states(to_radians(joints))
+            self.model.set_joint_states(joints)
             self.update_joint_positions()
             self.update_readouts()
         else:
+            joints = [str(i) for i in joints]
             separator = ':'
             serial_msg = f'<{separator.join(joints)}>'.encode()
             self.serial_service.send_serial_msg(serial_msg)
@@ -85,6 +86,8 @@ class RobotController:
                 self.feedback_thread.start()
                 self.view.mode_string.set('Online')
                 self.kill_feedback_thread.clear()
+                go_online_msg = f'<online>'.encode()
+                self.serial_service.send_serial_msg(go_online_msg)
             else:
                 self.view.mode_string.set('Offline')
                 self.feedback_thread_running = False
@@ -129,18 +132,20 @@ class RobotController:
 
     def get_feedback(self):
         while self.feedback_thread_running:
+            #print(f"current message queue: {self.serial_service.message_queue}")
             try:
                 if len(self.serial_service.message_queue) > 0:
                     data = self.serial_service.message_queue.pop(0)
                     data = data.split(":")
                     data = [int(i) for i in data]
                     data.pop()
-                    self.model.set_joint_states(to_degrees(data))
+                    print(f"feedback data: {data}")
+                    self.model.set_joint_states(data)
                     self.update_readouts(data)
                     self.update_joint_positions()
             except Exception as e:
                 print(e)
-            time.sleep(0.1)
+            time.sleep(0.02)
         print("stopped feedback thread")
 
 

@@ -1,19 +1,20 @@
 import ttkbootstrap as ttkb
 import tkinter as tk
+from ttkbootstrap.constants import GROOVE
 
 class TableRow(ttkb.Frame):
-    def __init__(self, parent, joint_name, cols):
+    def __init__(self, parent, cols, name='', header=False, values=[]):
         super().__init__(parent)
         self.columns = []
-        self.joint = joint_name
+        self.name = name
         self.params = [ttkb.StringVar(self, value=0) for i in range(cols)]
-        self.label = ttkb.Label(self, text=joint_name)
-        
-        for i in range(cols+1):
+        self.header = header
+        for i in range(cols):
             col = None
-            if i == 0:
-                col = self.label
+            if self.header:
+                col = ttkb.Label(self, text=f"{values[i]}", width=16)
+                col.configure(anchor='nw', borderwidth=1, relief=GROOVE, padding=(5,5))
             else:
-                col = ttkb.Entry(self, textvariable=self.params[i-1], width=10)
+                col = ttkb.Entry(self, textvariable=self.params[i], width=16)
             col.grid(row=0, column=i)
             self.columns.append(col)

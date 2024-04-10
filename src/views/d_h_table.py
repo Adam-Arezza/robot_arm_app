@@ -20,13 +20,13 @@ class DHTable(ttkb.Frame):
                                    container_style='default')
         
         self.buttons.pack(anchor='nw')
-        self.header_labels = ['Theta (deg)', 'Alpha (deg)', 'r (m)', 'd (m)']
-        self.table_header = TableHeader(self, name='table_headers', labels=self.header_labels)
-        self.table_header.pack(padx=(80, 0), pady=10)
+        self.header_labels = ['Theta (deg)', 'Alpha (deg)', 'r (m)', 'd (m)', 'lower limit(deg)', 'upper limit(deg)']
+        
         self.rows = []
-        new_row = TableRow(self, 'Joint_1', 4)
+        header_row = TableRow(self, 6, header=True, values=self.header_labels)
+        new_row = TableRow(self, 6, 'Joint_1')
+        self.rows.append(header_row)
         self.rows.append(new_row)
-
         for i in range(len(self.rows)):
             self.rows[i].pack()
         
@@ -36,19 +36,22 @@ class DHTable(ttkb.Frame):
     def add_link(self):
         self.buttons.buttons['create_robot']['state'] = NORMAL
         current_row = len(self.rows)
-        if current_row >= 6:
+        if current_row >= 7:
             self.buttons.buttons['add_link']['state'] = DISABLED
             return 
-        new_row = TableRow(self, f'Joint_{current_row + 1}', 4)
+        new_row = TableRow(self, 6, f'Joint_{current_row + 1}')
         self.rows.append(new_row)
         new_row.pack()
     
 
     def clear_table(self):
         for row in self.rows:
+            if row.header:
+                continue
             row.destroy()    
-        self.rows = []
-        new_row = TableRow(self, 'Joint_1', 4)
+        self.rows = [self.rows[0]]
+        #new_row = TableRow(self, 'Joint_1', 4)
+        new_row = TableRow(self, 6, 'Joint_1')
         self.rows.append(new_row)
         new_row.pack()
         self.buttons.buttons['add_link']['state'] = NORMAL
@@ -59,16 +62,19 @@ class DHTable(ttkb.Frame):
         params = {}
         for row in rows:
             dh_parameters = []
-            dh_parameters.append(row.joint)
+            if row.name:
+                dh_parameters.append(row.name)
+            else:
+                continue
             for p in row.params:
                 dh_parameters.append(p.get())
             dh_parameters.pop(0)
-            params[f'{row.joint}'] = dh_parameters
+            params[f'{row.name}'] = dh_parameters
         self.create_robot_cb(params)
         self.cancel()
 
 
     def cancel(self):
-        self.parent.destroy()
+        #self.parent.destroy()
         self.destroy()
 

@@ -38,7 +38,7 @@ class SerialView(ttkb.Frame):
 
 
     def serial_connected(self):
-        self.serial_btns.buttons['Connect'].configure(text="Disconnect", command=self.controller.disconnect)
+        self.serial_btns.buttons['connect'].configure(text="Disconnect", command=self.controller.disconnect)
 
 
     def sending_message(self, msg):
@@ -66,7 +66,7 @@ class SerialView(ttkb.Frame):
 
 
     def serial_disconnected(self):
-        self.serial_btns.buttons['Connect'].configure(text="Connect", command=self.controller.connect_to_port)
+        self.serial_btns.buttons['connect'].configure(text="Connect", command=self.controller.connect_to_port)
         self.serial_window.configure(state="normal")
         self.serial_window.delete(1.0, END)
 

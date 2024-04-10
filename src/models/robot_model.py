@@ -1,6 +1,7 @@
 import roboticstoolbox as rtb
 import numpy as np
 import math
+from src.utils import to_radians
 from spatialmath import SE3, SO3
 import matplotlib.pyplot as plt
 
@@ -17,14 +18,15 @@ class RobotArm:
         self.links = []
         self.dh_params = dh_params
         self.target = None 
-        self.default_state = [0,0,0,0]
+        self.default_state = []
         self.online_mode = mode
         if len(dh_params) > 0:
            self.create_robot_from_dh(dh_params, initial_joint_states)
 
 
     def set_joint_states(self,joint_states):
-        self.robot.q = joint_states
+        rads = to_radians(joint_states)
+        self.robot.q = rads
 
 
     def set_mode(self, mode):
@@ -38,16 +40,22 @@ class RobotArm:
     def create_robot_from_dh(self, dh_params, initial_joint_states):
         for i,link in enumerate(dh_params):
             # add the joint limits to the link
-            t,a,r,d = dh_params[f'{link}']
+            t,a,r,d,ql,qu = dh_params[f'{link}']
             t = float(t)
             a = float(a)
             r = float(r)
             d = float(d)
-            link = rtb.RevoluteDH(d=d, a=r, alpha=math.radians(a))
+            ql = float(ql)
+            qu = float(qu)
+            link = rtb.RevoluteDH(d=d, a=r, alpha=math.radians(a), qlim=[ql,qu])
             self.links.append(link)
+        #test
+        #self.links[2].qlim = to_radians([-90,90])
+        #self.links[3].qlim = to_radians([-90,90])
         self.robot = rtb.DHRobot(self.links) 
         if len(initial_joint_states) != len(self.links):
-            self.robot.q = [0 for i in self.links]
+            self.robot.q = [i.qlim[0] for i in self.links]
+            self.default_state = [0 for i in self.links]
         else:
             self.robot.q = initial_joint_states
             self.default_state = initial_joint_states

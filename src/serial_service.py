@@ -48,7 +48,7 @@ class SerialService:
                     self.controller.update_serial_window(data)
             except Exception as e:
                 print(f"There was an error: {e}")
-            time.sleep(0.1)
+            time.sleep(0.02)
 
 
     def send_serial_msg(self, msg):

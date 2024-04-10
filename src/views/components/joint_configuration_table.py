@@ -42,7 +42,7 @@ class JointConfigurationTable(ttkb.Frame):
                 bootstyle='info', 
                 autofit=True
                 )
-        self.joint_config_entry = TableRow(self.joint_entry_frame, 'Configure Joints', n)
+        self.joint_config_entry = TableRow(self.joint_entry_frame, n, 'Configure Joints')
         self.header.pack(anchor='nw')
         self.joint_config_entry.pack(anchor='nw')
         self.add_to_table_btn.pack(anchor='ne',side='right')

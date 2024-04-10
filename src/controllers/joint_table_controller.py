@@ -47,6 +47,7 @@ class JointTableController:
             if are_equal:
                 Messagebox.ok(message='The table already has this configuration')
                 return 
+        print(self.root.robot_controller.get_joints())
         self.view.joint_table.insert_row(values=to_degrees(self.root.robot_controller.get_joints()))
         self.view.joint_table.load_table_data()
 
