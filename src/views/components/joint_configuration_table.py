@@ -8,11 +8,11 @@ from ttkbootstrap.dialogs.dialogs import Messagebox
 class JointConfigurationTable(ttkb.Frame):
     def __init__(self, parent):
         super().__init__(parent, borderwidth=2, relief=GROOVE)
-        self.header = ttkb.Label(self, text='Joint Configurator', font=('bold', 12))
+        self.header = ttkb.Label(self, text='Joint Configurations', font=('bold', 12))
         self.joint_entry_frame = ttkb.Frame(self)
         self.joint_table = None
         self.headers = None
-
+        self.name = 'joint_table_view'
         self.add_to_table_btn = ttkb.Button(self.joint_entry_frame, 
                                             text='Add to table', 
                                             bootstyle='primary.Outline.TButton')
@@ -20,7 +20,8 @@ class JointConfigurationTable(ttkb.Frame):
         self.table_btn_group = ButtonGroup(self,
                                            [('Add Joint Configuration',),
                                             ('Show Configuration',),
-                                            ('Show Trajectory',)],
+                                            ('Show Trajectory',),
+                                            ('Send To Robot',)],
                                             'default',
                                             horizontal=False,
                                             style='primary.TButton')

@@ -18,16 +18,4 @@ class Menu(ttkb.Menu):
         self.file_menu.add_command(label='Exit', command=self.controller.exit)
         self.add_cascade(label="File", menu=self.file_menu)
         self.add_command(label="Help", command=self.controller.show_help_dialog)
-        #self.add_command(label='Create', command=self.controller.create_robot)
-        #self.add_command(label='Save', command=self.controller.save_robot)
-        #self.add_command(label='Load', command=self.controller.load_robot)
-        #self.menu_button_group = ButtonGroup(self,
-        #                                          [('Create', self.controller.create_robot),
-        #                                            ('Save', self.controller.save_robot),
-        #                                            ('Load', self.controller.load_robot),
-        #                                            ('Reset', self.controller.reset_robot)],
-        #                                           'secondary.TFrame',
-        #                                           horizontal=True,
-        #                                           style='primary.TButton')
-        #self.menu_button_group.pack(fill='x')
-
+        

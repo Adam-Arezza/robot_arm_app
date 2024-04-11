@@ -6,21 +6,15 @@ from ttkbootstrap.constants import *
 
 
 class JointTableController:
-    def __init__(self, root, parent):
+    def __init__(self, root, serial_service, parent):
         self.root = root
+        self.serial_service = serial_service
         self.view = JointConfigurationTable(parent)
         self.view.add_to_table_btn.configure(command=self.add_configuration)
         self.view.table_btn_group.buttons["add_joint_configuration"].configure(command=self.add_joint_configuration)
         self.view.table_btn_group.buttons["show_configuration"].configure(command=self.show_configuration)
         self.view.table_btn_group.buttons["show_trajectory"].configure(command=self.show_trajectory)
-
-
-    def show_view(self):
-        self.view.grid(column=1, row=1, sticky='nsew')
-
-
-    def kill_view(self):
-        self.view.destroy()
+        self.view.table_btn_group.buttons["send_to_robot"].configure(command=self.send_to_robot)
 
 
     def set_to_initial_state(self):
@@ -78,4 +72,26 @@ class JointTableController:
             return
         joint_values = joint_values[0].values
         joint_values = [str(i) for i in joint_values]
+
+
+    def send_to_robot(self):
+        j_vals = None
+        if len(joint_values) == 0:
+            j_vals = self.view.joint_table.get_rows(selected=True)
+        else:
+            j_vals = joint_values
+        separator = ':'
+        serial_msg = f'<{separator.join(j_vals)}>'.encode()
+        if not self.serial_service.serial_connection:
+            self.view.error_msg('There is no serial connection')
+            return
+        if not self.serial_service.serial_connection.is_open:
+            self.serial_service.serial_connection.open()
+            self.serial_service.send_serial_msg(serial_msg)
+            #self.view.sending_message(serial_msg)
+            self.serial_service.update_window(f"Sent data: {serial_msg}")
+        else:
+            self.serial_service.send_serial_msg(serial_msg)
+            #self.view.sending_message(serial_msg)
+            self.serial_service.update_window(f"Sent data: {serial_msg}")
 

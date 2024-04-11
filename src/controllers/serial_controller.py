@@ -4,22 +4,14 @@ from src.views.serial_view import SerialView
 import threading
 
 class SerialController:
-    def __init__(self, serial_service):
+    def __init__(self, serial_service, parent):
         self.serial_service = serial_service
-        self.view = None
+        self.view = SerialView(parent, self)
         self.joint_table = None
-
-
-    def add_view(self, view):
-        self.view = view
 
 
     def add_joint_table(self, joint_table):
         self.joint_table = joint_table
-
-
-    def kill_view(self):
-        self.view.destroy()
 
 
     def get_port_list(self):
@@ -31,10 +23,11 @@ class SerialController:
     def connect_to_port(self):
         port = self.view.ser_port.get()
         self.serial_service.connect(port)
-        self.serial_service.serial_kill_loop.clear()
         if self.serial_service.serial_connection.is_open:
             self.view.show_connected_msg()
             self.view.serial_connected()
+        else:
+            self.view.show_error_msg()
 
 
     #change to get_joint_table_values

@@ -4,12 +4,14 @@ import json
 from ttkbootstrap.dialogs.dialogs import Messagebox
 from tkinter import filedialog as fd
 from src.views.d_h_table import DHTable
+from src.views.components.menu import Menu
 
 
 class MenuController:
     def __init__(self, root):
         self.root = root
-        
+        self.view = Menu(root, {}, self)
+
 
     def save_robot(self):
         #Add joint limits into the saved file

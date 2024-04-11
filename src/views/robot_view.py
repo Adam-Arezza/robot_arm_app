@@ -5,13 +5,14 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from ttkbootstrap.constants import GROOVE
 from ttkbootstrap import BooleanVar, StringVar
 from src.views.manual_controls_view import ManualControls
-from src.views.components.joint_readouts import JointReadout, ReadoutsFrame
+from src.views.components.joint_readouts import ReadoutsFrame
 
 
 class RobotView(ttkb.Frame):
-    def __init__(self, root, parent, slider_cb, toggle_cb):
+    def __init__(self, root, parent):
         super().__init__(parent, borderwidth=2, relief=GROOVE)
         self.root = root
+        self.name = 'robot_view'
         self.header = ttkb.Label(self, text='Robot Visualizer', font=('bold', 12))
         self.configure(padding=(0,0))
         self.manual_controls = None
@@ -19,7 +20,6 @@ class RobotView(ttkb.Frame):
         self.mode_value = BooleanVar(value=False)
         self.mode_string = StringVar(value='Offline')
         self.check_btn_frame = ttkb.Frame(self, style='default')
-        self.slider_cb = slider_cb
         self.toggle_label = ttkb.Label(self.check_btn_frame, 
                                        textvariable=self.mode_string, 
                                        bootstyle='default')
@@ -27,7 +27,6 @@ class RobotView(ttkb.Frame):
                                                    onvalue=True,
                                                    offvalue=False,
                                                    variable=self.mode_value,
-                                                   command=toggle_cb,
                                                    bootstyle='default')
         self.reset_btn = ttkb.Button(self, text="Reset")
 
@@ -84,14 +83,14 @@ class RobotView(ttkb.Frame):
        # # Plot links as lines between joint positions
 
 
-    def add_controls(self, n):
+    def add_controls(self, n, cb):
         if self.manual_controls:
             self.manual_controls.destroy()
             self.readouts_frame.destroy()
-        self.manual_controls = ManualControls(self, n, self.slider_cb)
+        self.manual_controls = ManualControls(self, n, cb)
         self.readouts_frame = ReadoutsFrame(self, n)
-        self.manual_controls.pack()
-        self.readouts_frame.pack()
+        self.manual_controls.pack(padx=20)
+        self.readouts_frame.pack(padx=20)
 
 
     def close(self):

@@ -9,10 +9,11 @@ class SerialView(ttkb.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, borderwidth=2, relief=GROOVE)
         self.controller = controller
+        self.name = 'serial_view'
         self.header = ttkb.Label(self, text='Serial Communication', font=('bold', 12))
         self.ser_port = ttkb.StringVar()
         self.ports = []
-        self.serial_window = ScrolledText(self, width=60, height=20, wrap=ttkb.WORD)
+        self.serial_window = ScrolledText(self, width=60, height=40, wrap=ttkb.WORD)
         self.serial_window.configure(state="disabled")
         self.serial_list_dropdown = ttkb.Combobox(self, textvariable=self.ser_port)
         self.serial_list_dropdown['values'] = self.ports 
@@ -22,12 +23,11 @@ class SerialView(ttkb.Frame):
         self.serial_list_dropdown.pack(pady=0, padx=5)
         self.serial_btns = ButtonGroup(self, [('Connect', self.controller.connect_to_port),
                                               ('Scan', self.controller.get_port_list),
-                                              ('Clear', self.clear_window),
-                                              ('Send Message', self.controller.send_serial_msg)
+                                              ('Clear', self.clear_window)
                                               ], container_style='default', style=None, horizontal=True)
 
         self.serial_btns.pack()
-        self.serial_window.pack()
+        self.serial_window.pack(padx=20, pady=20)
 
 
     def show_connected_msg(self):
@@ -77,8 +77,4 @@ class SerialView(ttkb.Frame):
 
     def error_msg(self, msg):
         Messagebox.ok(msg)
-
-
-    #def update(self):
-    #    self.after(20, self.controller.update_serial_window)
 

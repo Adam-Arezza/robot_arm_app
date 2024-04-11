@@ -29,13 +29,13 @@ class SerialService:
             print(e)
 
 
-    def add_controller(self, controller):
-        self.controller = controller
-
-
     def get_ports(self):
-        ports = [i.name for i in list_ports.comports()]
-        return ports
+        self.port_list = [i.name for i in list_ports.comports()]
+        return self.port_list
+
+
+    def set_update_window(self, fn):
+        self.update_window = fn
 
 
     def get_serial_msg(self):
@@ -45,7 +45,7 @@ class SerialService:
                 if len(data) > 0:
                     self.message_queue.append(data)
                     self.serial_connection.reset_input_buffer()
-                    self.controller.update_serial_window(data)
+                    self.update_window(data)
             except Exception as e:
                 print(f"There was an error: {e}")
             time.sleep(0.02)
@@ -60,8 +60,7 @@ class SerialService:
     def disconnect(self):
         print("Closing serial port")
         self.serial_kill_loop.set()
-        print("kill loop set")
-        if self.serial_connection.is_open:
+        if self.serial_connection and self.serial_connection.is_open:
             self.serial_connection.close()
         print("connection closed")
         self.thread_running = False

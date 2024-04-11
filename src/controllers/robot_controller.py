@@ -1,4 +1,5 @@
 from ttkbootstrap.dialogs.dialogs import Messagebox
+from src.views.robot_view import RobotView
 from src.utils import to_radians, to_degrees
 import numpy as np
 import threading
@@ -6,9 +7,10 @@ import time
 
 
 class RobotController:
-    def __init__(self):
+    def __init__(self, root, parent):
         self.model = None
-        self.view = None
+        self.view = RobotView(root, parent)
+        self.view.toggle_mode_switch.configure(command=self.toggle_auto_manual)
         self.serial_service = None
         #self.feedback_thread = threading.Thread(target=self.get_feedback, daemon=True)
         self.kill_feedback_thread = threading.Event()
@@ -21,6 +23,8 @@ class RobotController:
 
     def add_model(self, model):
         self.model = model
+        num_joints = len(self.model.robot.links)
+        self.view.add_controls(num_joints, self.slider_callback)
 
 
     def show_trajectory(self,traj):
@@ -121,11 +125,6 @@ class RobotController:
         self.serial_service = serial_service
 
 
-    def add_view(self, view):
-        self.view = view
-        self.view.reset_btn.configure(command=self.reset)
-
-
     def draw_robot(self, joint_coords):
         self.view.draw_robot(joint_coords)
 
@@ -149,6 +148,3 @@ class RobotController:
         print("stopped feedback thread")
 
 
-    def kill_view(self):
-        self.view.close()
-        self.view.destroy()
