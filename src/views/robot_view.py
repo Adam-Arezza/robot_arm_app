@@ -10,10 +10,10 @@ from src.views.components.joint_readouts import ReadoutsFrame
 
 class RobotView(ttkb.Frame):
     def __init__(self, root, parent):
-        super().__init__(parent, borderwidth=2, relief=GROOVE)
+        super().__init__(parent)
         self.root = root
         self.name = 'robot_view'
-        self.header = ttkb.Label(self, text='Robot Visualizer', font=('bold', 12))
+        self.header = ttkb.Label(self, text='Robot Viewer', font=('default', 12, 'bold'))
         self.configure(padding=(0,0))
         self.manual_controls = None
         self.readouts_frame = None
@@ -28,7 +28,9 @@ class RobotView(ttkb.Frame):
                                                    offvalue=False,
                                                    variable=self.mode_value,
                                                    bootstyle='default')
-        self.reset_btn = ttkb.Button(self, text="Reset")
+        self.reset_btn = ttkb.Button(self, 
+                                     text="Reset",
+                                     style='primary.Outline.TButton')
 
 
         #plot setup
@@ -54,9 +56,9 @@ class RobotView(ttkb.Frame):
 
 
         #place widgets
-        self.header.pack(anchor='nw')
+        self.header.pack(pady=10, padx=10)
         self.canvas_plot = FigureCanvasTkAgg(self.fig, self)
-        self.canvas_plot.get_tk_widget().pack(anchor='ne',side='right',padx=0, pady=0)
+        self.canvas_plot.get_tk_widget().pack(anchor='ne', side='right', padx=(0,20), pady=0)
         self.toggle_label.pack()
         self.toggle_mode_switch.pack(padx=10, pady=5)
         self.check_btn_frame.pack()
@@ -83,14 +85,14 @@ class RobotView(ttkb.Frame):
        # # Plot links as lines between joint positions
 
 
-    def add_controls(self, n, cb):
+    def add_controls(self, cb, links):
         if self.manual_controls:
             self.manual_controls.destroy()
             self.readouts_frame.destroy()
-        self.manual_controls = ManualControls(self, n, cb)
-        self.readouts_frame = ReadoutsFrame(self, n)
+        self.manual_controls = ManualControls(self, cb, links)
+        self.readouts_frame = ReadoutsFrame(self, len(links))
         self.manual_controls.pack(padx=20)
-        self.readouts_frame.pack(padx=20)
+        self.readouts_frame.pack(padx=20,pady=20)
 
 
     def close(self):

@@ -7,10 +7,10 @@ from ttkbootstrap.dialogs.dialogs import Messagebox
 
 class SerialView(ttkb.Frame):
     def __init__(self, parent, controller):
-        super().__init__(parent, borderwidth=2, relief=GROOVE)
+        super().__init__(parent)
         self.controller = controller
         self.name = 'serial_view'
-        self.header = ttkb.Label(self, text='Serial Communication', font=('bold', 12))
+        self.header = ttkb.Label(self, text='Serial Communication', font=('default', 12, 'bold'))
         self.ser_port = ttkb.StringVar()
         self.ports = []
         self.serial_window = ScrolledText(self, width=60, height=40, wrap=ttkb.WORD)
@@ -19,7 +19,7 @@ class SerialView(ttkb.Frame):
         self.serial_list_dropdown['values'] = self.ports 
 
         #Layout
-        self.header.pack(pady=(5,5), anchor='nw')
+        self.header.pack(pady=10,padx=10)
         self.serial_list_dropdown.pack(pady=0, padx=5)
         self.serial_btns = ButtonGroup(self, [('Connect', self.controller.connect_to_port),
                                               ('Scan', self.controller.get_port_list),

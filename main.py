@@ -10,7 +10,8 @@ class App(ttkb.Window):
     def __init__(self, theme, title):
         super().__init__(themename=theme, 
                          title=title,
-                         minsize=(960,720))
+                         minsize=(960,720),
+                         maxsize=(1440,960))
         self.maxsize = (self.winfo_screenwidth(),self.winfo_screenheight())
         self.resizable(True,True)
         self.main_container = MainContainer(self)

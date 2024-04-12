@@ -6,13 +6,6 @@ from spatialmath import SE3, SO3
 import matplotlib.pyplot as plt
 
 
-# DH parameters of robot arm
-# Joint	θ	α	r	d
-#   1	θ1	90	0.0	0.07855
-#   2	θ2 -180 0.2286	0.0
-#   3	θ3	0	0.0995	0.0
-#   4	θ4	90	0.17177	0.0
-
 class RobotArm:
     def __init__(self, dh_params, mode, initial_joint_states = []) -> None:
         self.links = []
@@ -49,12 +42,9 @@ class RobotArm:
             qu = float(qu)
             link = rtb.RevoluteDH(d=d, a=r, alpha=math.radians(a), qlim=[ql,qu])
             self.links.append(link)
-        #test
-        #self.links[2].qlim = to_radians([-90,90])
-        #self.links[3].qlim = to_radians([-90,90])
         self.robot = rtb.DHRobot(self.links) 
         if len(initial_joint_states) != len(self.links):
-            self.robot.q = [i.qlim[0] for i in self.links]
+            self.robot.q = [0 for i in self.links]
             self.default_state = [0 for i in self.links]
         else:
             self.robot.q = initial_joint_states

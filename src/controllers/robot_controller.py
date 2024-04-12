@@ -23,8 +23,7 @@ class RobotController:
 
     def add_model(self, model):
         self.model = model
-        num_joints = len(self.model.robot.links)
-        self.view.add_controls(num_joints, self.slider_callback)
+        self.view.add_controls(self.slider_callback, self.model.robot.links)
 
 
     def show_trajectory(self,traj):

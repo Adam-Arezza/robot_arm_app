@@ -2,14 +2,14 @@ import ttkbootstrap as ttkb
 from ttkbootstrap.constants import GROOVE
 
 class JointSlider(ttkb.Frame):
-    def __init__(self, parent, joint_name, cb):
+    def __init__(self, parent, joint_name, cb, joint_range):
         super().__init__(parent)
         self.slider_value = ttkb.IntVar()
         label = ttkb.Label(self, text=joint_name.replace("_", " ").capitalize())
         self.slider = ttkb.Scale(self, 
                           name=f'{joint_name}_slider', 
-                          from_=0, 
-                          to=180, 
+                          from_=joint_range[0], 
+                          to=joint_range[1], 
                           value=0,
                           command=lambda s : self.set_slider_value(s))
             

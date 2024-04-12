@@ -7,8 +7,8 @@ from ttkbootstrap.dialogs.dialogs import Messagebox
 
 class JointConfigurationTable(ttkb.Frame):
     def __init__(self, parent):
-        super().__init__(parent, borderwidth=2, relief=GROOVE)
-        self.header = ttkb.Label(self, text='Joint Configurations', font=('bold', 12))
+        super().__init__(parent)
+        self.header = ttkb.Label(self, text='Joint Configurations', font=('default', 12, 'bold'))
         self.joint_entry_frame = ttkb.Frame(self)
         self.joint_table = None
         self.headers = None
@@ -34,19 +34,19 @@ class JointConfigurationTable(ttkb.Frame):
             self.joint_config_entry.destroy()
             self.joint_config_entry = None
 
-        self.headers = [f'Joint{i}' for i in range(n)]
+        self.headers = [f'Joint{i+1}' for i in range(n)]
         self.joint_table = Tableview(
                 self,
                 coldata=self.headers,
                 rowdata=[],
                 height=10,
-                bootstyle='info', 
+                bootstyle='primary', 
                 autofit=True
                 )
-        self.joint_config_entry = TableRow(self.joint_entry_frame, n, 'Configure Joints')
-        self.header.pack(anchor='nw')
-        self.joint_config_entry.pack(anchor='nw')
-        self.add_to_table_btn.pack(anchor='ne',side='right')
+        self.joint_config_entry = TableRow(self.joint_entry_frame, n, 'Configure Joints',width=10)
+        self.header.pack(padx=10, pady=10)
+        self.joint_config_entry.pack(anchor='nw', side='left')
+        self.add_to_table_btn.pack(anchor='ne')
         self.joint_entry_frame.pack()
         self.table_btn_group.pack(side='left',padx=(100, 0), pady=10, fill='x', anchor='ne')
         self.joint_table.pack(expand=True, anchor='nw')
