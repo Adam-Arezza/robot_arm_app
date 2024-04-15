@@ -15,9 +15,8 @@ class DHTable(ttkb.Frame):
         self.buttons = ButtonGroup(self, [('Add Link', self.add_link), 
                                           ('Create Robot', self.create_robot), 
                                           ('Clear Table', self.clear_table),
-                                          ('Cancel', self.cancel)],
-                                          
-                                   container_style='default')
+                                          ('Cancel', self.cancel)], 
+                                           container_style='default')
         
         self.buttons.pack(anchor='nw')
         self.header_labels = ['Theta (deg)', 'Alpha (deg)', 'r (m)', 'd (m)', 'lower limit(deg)', 'upper limit(deg)']
@@ -50,7 +49,6 @@ class DHTable(ttkb.Frame):
                 continue
             row.destroy()    
         self.rows = [self.rows[0]]
-        #new_row = TableRow(self, 'Joint_1', 4)
         new_row = TableRow(self, 6, 'Joint_1')
         self.rows.append(new_row)
         new_row.pack()
@@ -75,6 +73,5 @@ class DHTable(ttkb.Frame):
 
 
     def cancel(self):
-        #self.parent.destroy()
         self.destroy()
 

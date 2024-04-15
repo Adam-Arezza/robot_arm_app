@@ -5,12 +5,15 @@ from ttkbootstrap.dialogs.dialogs import Messagebox
 from tkinter import filedialog as fd
 from src.views.d_h_table import DHTable
 from src.views.components.menu import Menu
+from src.views.calibration_view import CalibrationView
 
 
 class MenuController:
     def __init__(self, root):
         self.root = root
         self.view = Menu(root, {}, self)
+        self.calibration_window = None
+        self.dh_window = None
 
 
     def save_robot(self):
@@ -34,13 +37,23 @@ class MenuController:
 
 
     def create_robot(self):
-        self.dh_window = ttkb.window.Toplevel(self.root)
-        self.dh_table = DHTable(self.dh_window, self.root.create_robot)
-        self.dh_table.pack()
+        if not self.dh_window:
+            self.dh_window = ttkb.window.Toplevel(self.root)
+            self.dh_table = DHTable(self.dh_window, self.root.create_robot)
+            self.dh_table.pack()
 
 
     def show_help_dialog(self):
         pass
+
+
+    def open_calibration(self):
+        if not self.calibration_window:
+            self.calibration_window = ttkb.window.Toplevel(self.root)
+            self.calibration_view = CalibrationView(self.calibration_window, self.root.main_container.robot_controller.model.robot.links)
+            self.calibration_view.pack()
+        else:
+            return
 
 
     def exit(self):

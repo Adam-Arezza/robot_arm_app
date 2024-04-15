@@ -1,6 +1,5 @@
 import ttkbootstrap as ttkb
 from src.views.components.button_group import ButtonGroup
-#from src.views.d_h_table import DHTable
 from PIL import Image, ImageTk
 import json
 

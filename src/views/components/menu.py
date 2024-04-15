@@ -17,5 +17,7 @@ class Menu(ttkb.Menu):
         self.file_menu.add_command(label='Load', command=self.controller.load_robot)
         self.file_menu.add_command(label='Exit', command=self.controller.exit)
         self.add_cascade(label="File", menu=self.file_menu)
+        self.add_command(label="Calibrate", command=self.controller.open_calibration)
         self.add_command(label="Help", command=self.controller.show_help_dialog)
+
         

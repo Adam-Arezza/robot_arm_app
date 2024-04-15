@@ -7,11 +7,11 @@ from src.views.robot_view import RobotView
 
 
 class App(ttkb.Window):
-    def __init__(self, theme, title):
+    def __init__(self, theme, title, minsize, maxsize):
         super().__init__(themename=theme, 
                          title=title,
-                         minsize=(960,720),
-                         maxsize=(1440,960))
+                         minsize=minsize,
+                         maxsize=maxsize)
         self.maxsize = (self.winfo_screenwidth(),self.winfo_screenheight())
         self.resizable(True,True)
         self.main_container = MainContainer(self)
@@ -47,7 +47,7 @@ class App(ttkb.Window):
             self.destroy()
 
 if __name__ == "__main__":
-    app = App('flatly', 'Robot Arm Application')
+    app = App('flatly', 'Robot Arm Application',(960,720),(1440,960))
     app.protocol("WM_DELETE_WINDOW", app.on_close)
     app.mainloop()
 
