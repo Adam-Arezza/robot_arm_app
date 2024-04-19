@@ -17,12 +17,12 @@ class RobotArm:
            self.create_robot_from_dh(dh_params, initial_joint_states)
 
 
-    def set_joint_states(self,joint_states):
+    def set_joint_states(self, joint_states:list):
         rads = to_radians(joint_states)
         self.robot.q = rads
 
 
-    def set_mode(self, mode):
+    def set_mode(self, mode:bool):
         self.online_mode = mode
 
 
@@ -30,7 +30,7 @@ class RobotArm:
         return self.robot.q
 
 
-    def create_robot_from_dh(self, dh_params, initial_joint_states):
+    def create_robot_from_dh(self, dh_params:dict, initial_joint_states:list):
         for i,link in enumerate(dh_params):
             # add the joint limits to the link
             t,a,r,d,ql,qu = dh_params[f'{link}']

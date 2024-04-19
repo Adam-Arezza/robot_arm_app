@@ -1,32 +1,32 @@
+import numpy as np
+import time
 from ttkbootstrap.dialogs.dialogs import Messagebox
 from src.views.robot_view import RobotView
 from src.utils import to_radians, to_degrees
-import numpy as np
-import threading
-import time
+from src.models.robot_model import RobotArm
+from src.serial_service import SerialService
 
 
 class RobotController:
-    def __init__(self, root, parent):
+    def __init__(self, root, parent, serial_service):
         self.model = None
+        self.serial_service = serial_service
         self.view = RobotView(root, parent)
         self.view.toggle_mode_switch.configure(command=self.toggle_auto_manual)
-        self.serial_service = None
-        #self.feedback_thread = threading.Thread(target=self.get_feedback, daemon=True)
-        self.kill_feedback_thread = threading.Event()
-        self.feedback_thread_running = False
+        self.view.reset_btn.configure(command=self.reset)
+        self.serial_connected = None
 
 
-    def show_joint_config(self,cfg):
+    def show_joint_config(self,cfg:list):
         self.set_joints(cfg)
 
 
-    def add_model(self, model):
+    def add_model(self, model:RobotArm):
         self.model = model
         self.view.add_controls(self.slider_callback, self.model.robot.links)
 
 
-    def show_trajectory(self,traj):
+    def show_trajectory(self,traj:list):
         for i in traj:
             deg = to_degrees(i)
             self.set_joints(deg)
@@ -36,14 +36,13 @@ class RobotController:
     def reset(self):
         self.model.robot.q = self.model.default_state
         self.set_joints(self.model.robot.q)
-        for slider in self.view.manual_controls.sliders:
-            slider.slider_value.set(0)
-            slider.slider.set(slider.slider['from'])
+        sliders = self.view.slider_controls.sliders
+        for i in range(len(sliders)):
+            sliders[i].slider_value.set(self.model.default_state[i])
+            sliders[i].slider.set(self.model.default_state[i])
 
 
-    #given degrees, sets the radian values of the joints
-    #updates the robot plot
-    def set_joints(self, joints):
+    def set_joints(self, joints:list):
         if not self.model.online_mode:
             self.model.set_joint_states(joints)
             self.update_joint_positions()
@@ -53,51 +52,53 @@ class RobotController:
             separator = ':'
             serial_msg = f'<{separator.join(joints)}>'.encode()
             self.serial_service.send_serial_msg(serial_msg)
-            #need to poll for feedback from potentiometers
-            #update joint positions
-            #update readouts
 
 
-    def get_joints(self):
+    def get_joints(self) -> list:
         return self.model.get_joints()
 
 
     def slider_callback(self):
         slider_values = []
-        for slider in self.view.manual_controls.sliders:
+        for slider in self.view.slider_controls.sliders:
             slider_values.append(slider.slider_value.get())
         self.set_joints(slider_values)
 
 
-    def update_readouts(self, joint_angles=[]):
-        joints = None
+    def update_readouts(self):
+        joints = self.model.get_joints()
         readouts = self.view.readouts_frame.readouts
-        if len(joint_angles) > 0:
-            joints = joint_angles
-        else:
-            joints = to_degrees(self.model.get_joints())
+        joints = to_degrees(self.model.get_joints())
         for i in range(len(readouts)):
             readouts[i].joint_value.set(joints[i])
 
 
     def toggle_auto_manual(self):
-        if self.serial_service and self.serial_service.serial_connection and self.serial_service.serial_connection.is_open:
+        if self.serial_connected:
             self.model.set_mode(self.view.mode_value.get())
-            if self.view.mode_value.get(): 
-                self.feedback_thread = threading.Thread(target=self.get_feedback, daemon=True)
-                self.feedback_thread_running = True
-                self.feedback_thread.start()
-                self.view.mode_string.set('Online')
-                self.kill_feedback_thread.clear()
-                go_online_msg = f'<online>'.encode()
-                self.serial_service.send_serial_msg(go_online_msg)
-            else:
-                self.view.mode_string.set('Offline')
-                self.feedback_thread_running = False
-                self.kill_feedback_thread.set()
+            self.send_connected_msg()
         else:
             self.view.mode_value.set(False)
             Messagebox.ok('Must connect to serial port before going online')
+
+
+    def add_serial_connection(self, port:str):
+        self.serial_connected = port
+
+
+    def remove_serial_connection(self, port:str):
+        self.serial_connected = port
+        self.view.mode_value.set(False)
+        self.model.set_mode(False)
+
+
+    def send_connected_msg(self):
+        if self.view.mode_value.get(): 
+            self.view.mode_string.set('Online')
+            go_online_msg = f'<online>'.encode()
+            self.serial_service.send_serial_msg(go_online_msg)
+        else:
+            self.view.mode_string.set('Offline')
 
 
 #Updates the coordinates of the joints in the 3d plot
@@ -117,33 +118,19 @@ class RobotController:
             joint_coordinates[0].append(j_coords[0])
             joint_coordinates[1].append(j_coords[1])
             joint_coordinates[2].append(j_coords[2])
-        self.draw_robot(joint_coordinates)
+        self.view.draw_robot(joint_coordinates)
 
 
-    def connect_serial_service(self, serial_service):
-        self.serial_service = serial_service
-
-
-    def draw_robot(self, joint_coords):
-        self.view.draw_robot(joint_coords)
-
-
-    def get_feedback(self):
-        while self.feedback_thread_running:
-            #print(f"current message queue: {self.serial_service.message_queue}")
-            try:
-                if len(self.serial_service.message_queue) > 0:
-                    data = self.serial_service.message_queue.pop(0)
-                    data = data.split(":")
-                    data = [int(i) for i in data]
-                    data.pop()
-                    print(f"feedback data: {data}")
-                    self.model.set_joint_states(data)
-                    self.update_readouts(data)
-                    self.update_joint_positions()
-            except Exception as e:
-                print(e)
-            time.sleep(0.02)
-        print("stopped feedback thread")
+    def update_joint_data(self, new_data):
+        try:
+            data = new_data.strip()
+            data = data.split(":")
+            data = [int(i) for i in data]
+            data.pop()
+            print(f"feedback data: {data}")
+            self.set_joints(data)
+        except Exception as e:
+            print("Robot Controller - Error in feedback data")
+            print(e)
 
 

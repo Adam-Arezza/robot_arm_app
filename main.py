@@ -20,17 +20,17 @@ class App(ttkb.Window):
         self.main_container.rowconfigure(1, weight=1)
 
 
-    def create_robot(self, dh_params):
+    def create_robot(self, dh_params:dict):
         robot_model = RobotArm(dh_params, mode=False)
         self.main_container.robot_controller.add_model(robot_model)
         self.main_container.main_view()
 
 
-    def show_configuration(self, cfg):
+    def show_configuration(self, cfg:list):
         self.main_container.robot_controller.show_joint_config(cfg)
 
 
-    def show_trajectory(self, trajectory):
+    def show_trajectory(self, trajectory:list):
         self.main_container.robot_controller.show_trajectory(trajectory)
 
 

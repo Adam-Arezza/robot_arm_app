@@ -29,7 +29,7 @@ class StartViewController:
         self.show_view()
 
 
-    def create_robot(self, params):
+    def create_robot(self, params:dict):
         self.view.destroy()
         self.root.create_robot(params)
 

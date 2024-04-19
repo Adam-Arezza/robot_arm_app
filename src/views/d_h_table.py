@@ -1,7 +1,6 @@
 import ttkbootstrap as ttkb
 from src.views.components.button_group import ButtonGroup
 from src.views.components.table_row import TableRow
-from src.views.components.table_header import TableHeader
 from ttkbootstrap.constants import *
 
 

@@ -1,4 +1,5 @@
 import math
+from typing import Callable
 
 def to_degrees(radians:list):
     result = []
@@ -12,7 +13,7 @@ def to_radians(degrees:list):
         result.append(math.radians(i))
     return result
 
-def find(arr, fn):
+def find(arr:list, fn:Callable):
     for i in arr:
         if fn(i):
             return i

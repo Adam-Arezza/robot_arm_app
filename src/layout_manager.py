@@ -1,15 +1,16 @@
 from src.utils import find
+from ttkbootstrap import Frame
 
 class LayoutManager:
     def __init__(self):
         self.views = []
         self.main_grid = None
 
-    def add_view(self, view):
+    def add_view(self, view:Frame):
         self.views.append(view)
 
 
-    def add_main_grid(self, view):
+    def add_main_grid(self, view:Frame):
         self.main_grid = view
         self.main_grid.columnconfigure(0, weight=1)
         self.main_grid.columnconfigure(1, weight=1)
@@ -19,6 +20,7 @@ class LayoutManager:
 
     def create_main_grid(self):
         self.main_grid.grid(column=0, row=0, rowspan=2, columnspan=2, sticky="nsew")
+            #update readouts
 
     
     def create_grid(self):

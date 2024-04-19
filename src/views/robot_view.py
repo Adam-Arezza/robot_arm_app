@@ -4,8 +4,9 @@ import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from ttkbootstrap.constants import GROOVE
 from ttkbootstrap import BooleanVar, StringVar
-from src.views.manual_controls_view import ManualControls
+from src.views.slider_controls_view import SliderControls
 from src.views.components.joint_readouts import ReadoutsFrame
+from typing import Callable
 
 
 class RobotView(ttkb.Frame):
@@ -15,7 +16,7 @@ class RobotView(ttkb.Frame):
         self.name = 'robot_view'
         self.header = ttkb.Label(self, text='Robot Viewer', font=('default', 12, 'bold'))
         self.configure(padding=(0,0))
-        self.manual_controls = None
+        self.slider_controls = None
         self.readouts_frame = None
         self.mode_value = BooleanVar(value=False)
         self.mode_string = StringVar(value='Offline')
@@ -66,7 +67,7 @@ class RobotView(ttkb.Frame):
         self.robot_plot = None
 
 
-    def draw_robot(self, joint_coords):
+    def draw_robot(self, joint_coords:list):
         xs, ys, zs = joint_coords 
         if self.robot_plot:
             self.robot_plot.remove()
@@ -85,13 +86,13 @@ class RobotView(ttkb.Frame):
        # # Plot links as lines between joint positions
 
 
-    def add_controls(self, cb, links):
-        if self.manual_controls:
-            self.manual_controls.destroy()
+    def add_controls(self, cb:Callable, links:list):
+        if self.slider_controls:
+            self.slider_controls.destroy()
             self.readouts_frame.destroy()
-        self.manual_controls = ManualControls(self, cb, links)
+        self.slider_controls = SliderControls(self, cb, links)
         self.readouts_frame = ReadoutsFrame(self, len(links))
-        self.manual_controls.pack(padx=20)
+        self.slider_controls.pack(padx=20)
         self.readouts_frame.pack(padx=20,pady=20)
 
 

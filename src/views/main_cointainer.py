@@ -21,7 +21,7 @@ class MainContainer(ttkb.Frame):
         self.main_grid_frame = ttkb.Frame(self)
 
         #controllers
-        self.robot_controller = RobotController(root, self.main_grid_frame)
+        self.robot_controller = RobotController(root, self.main_grid_frame, self.serial_service)
         self.start_controller = StartViewController(root, self)
         self.menu_controller = MenuController(root)
         self.joint_table_controller = JointTableController(root, self.serial_service, self.main_grid_frame)
@@ -47,12 +47,13 @@ class MainContainer(ttkb.Frame):
         self.start_controller.kill_view()
         self.layout_mgr.create_main_grid()
         self.layout_mgr.create_grid()
-        self.robot_controller.connect_serial_service(self.serial_service)
-        self.serial_service.set_update_window(self.serial_controller.update_serial_window)
+        self.serial_service.add_subscriber('new_data', self.serial_controller.update_serial_window)
+        self.serial_service.add_subscriber('new_data', self.robot_controller.update_joint_data)
+        self.serial_service.add_subscriber('connected', self.robot_controller.add_serial_connection)
+        self.serial_service.add_subscriber('connected', self.serial_controller.add_serial_connection)
+        self.serial_service.add_subscriber('disconnected', self.robot_controller.remove_serial_connection)
         self.joint_table_controller.view.create_joint_entries(num_joints)
         self.robot_controller.set_joints(self.robot_controller.model.robot.q)
-        self.serial_controller.get_port_list()
-        self.serial_controller.add_joint_table(self.joint_table_controller.view.joint_table)
 
 
     def on_close(self):

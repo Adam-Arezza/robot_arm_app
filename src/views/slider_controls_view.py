@@ -2,7 +2,7 @@ import ttkbootstrap as ttkb
 from src.views.components.joint_slider import JointSlider
 from ttkbootstrap.constants import GROOVE
 
-class ManualControls(ttkb.Frame):
+class SliderControls(ttkb.Frame):
     def __init__(self, parent, slider_cb, links):
         super().__init__(parent)
         self.parent = parent

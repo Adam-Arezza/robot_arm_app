@@ -27,11 +27,12 @@ class JointTableController:
             val = p.get()
             val = int(float(val))
             joint_values.append(val)
+            p.set(str(0))
         self.view.joint_table.insert_row(values=joint_values) 
         self.view.joint_table.load_table_data()
         #self.root.robot_controller.set_joints(to_radians(joint_values))
-        for p in self.view.joint_config_entry.params:
-            p.set(str(0)) 
+        #for p in self.view.joint_config_entry.params:
+        #    p.set(str(0)) 
 
 
     def add_joint_configuration(self):
@@ -41,7 +42,6 @@ class JointTableController:
             if are_equal:
                 Messagebox.ok(message='The table already has this configuration')
                 return 
-        print(self.root.robot_controller.get_joints())
         self.view.joint_table.insert_row(values=to_degrees(self.root.robot_controller.get_joints()))
         self.view.joint_table.load_table_data()
 
@@ -65,21 +65,10 @@ class JointTableController:
         self.root.show_configuration(config)
 
 
-    def send_joint_config(self):
-        joint_values = self.view.joint_table.get_rows(selected=True)
-        if len(joint_values) > 1:
-            self.view.error_msg('Select only 1 joint configuration')
-            return
-        joint_values = joint_values[0].values
-        joint_values = [str(i) for i in joint_values]
-
-
     def send_to_robot(self):
-        j_vals = None
-        if len(joint_values) == 0:
-            j_vals = self.view.joint_table.get_rows(selected=True)
-        else:
-            j_vals = joint_values
+        selected_row = self.view.joint_table.get_rows(selected=True)
+        j_vals = selected_row[0].values
+        j_vals = [str(i) for i in j_vals]
         separator = ':'
         serial_msg = f'<{separator.join(j_vals)}>'.encode()
         if not self.serial_service.serial_connection:
@@ -88,10 +77,6 @@ class JointTableController:
         if not self.serial_service.serial_connection.is_open:
             self.serial_service.serial_connection.open()
             self.serial_service.send_serial_msg(serial_msg)
-            #self.view.sending_message(serial_msg)
-            self.serial_service.update_window(f"Sent data: {serial_msg}")
         else:
             self.serial_service.send_serial_msg(serial_msg)
-            #self.view.sending_message(serial_msg)
-            self.serial_service.update_window(f"Sent data: {serial_msg}")
 

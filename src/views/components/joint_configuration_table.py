@@ -26,7 +26,7 @@ class JointConfigurationTable(ttkb.Frame):
                                             horizontal=False,
                                             style='primary.TButton')
 
-    def create_joint_entries(self, n):
+    def create_joint_entries(self, n:int):
         if self.headers or self.joint_table:
             self.headers = None
             self.joint_table.destroy()
@@ -52,6 +52,6 @@ class JointConfigurationTable(ttkb.Frame):
         self.joint_table.pack(expand=True, anchor='nw')
 
 
-    def error_msg(self, msg):
+    def error_msg(self, msg:str):
         Messagebox.ok(message=msg)
 
