@@ -28,7 +28,7 @@ class SerialView(ttkb.Frame):
         self.serial_window.pack(padx=20, pady=20)
 
 
-    def show_connected_msg(self, port):
+    def show_connected_msg(self, port:str):
         self.serial_window.configure(state="normal")
         self.serial_window.insert(END, f'Connected to serial device on port: {port}')
         self.serial_window.yview(END)
@@ -47,12 +47,18 @@ class SerialView(ttkb.Frame):
             self.serial_window.configure(state="disabled")
 
 
-    def update_serial_window(self, msg:str):
-        print("Got a new message")
-        print(msg)
+    def update_serial_window_received(self, msg:str):
         if len(msg) > 0:
             self.serial_window.configure(state="normal")
             self.serial_window.insert(END,f'Received:  {msg} \n')
+            self.serial_window.yview(END)
+            self.serial_window.configure(state="disabled")
+
+
+    def update_serial_window_sent(self, msg:str):
+        if len(msg) > 0:
+            self.serial_window.configure(state="normal")
+            self.serial_window.insert(END,f'Sent:  {msg} \n')
             self.serial_window.yview(END)
             self.serial_window.configure(state="disabled")
 

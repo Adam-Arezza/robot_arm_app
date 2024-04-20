@@ -1,8 +1,7 @@
-#joint readout will show the angle value of a joint of the robot when in online mode
-
 import ttkbootstrap as ttkb
 from ttkbootstrap import IntVar
 from ttkbootstrap.constants import GROOVE
+
 
 class JointReadout(ttkb.Frame):
     def __init__(self, parent, name):

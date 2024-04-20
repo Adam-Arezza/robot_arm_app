@@ -11,6 +11,7 @@ class JointSlider(ttkb.Frame):
                           from_=joint_range[0], 
                           to=joint_range[1], 
                           value=0,
+                          length=250,
                           command=lambda s : self.set_slider_value(int(float(s))))
             
         value = ttkb.Label(parent, textvariable=self.slider_value, font='bold')

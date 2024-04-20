@@ -3,7 +3,6 @@ import threading
 import time
 from serial.tools import list_ports
 from queue import Queue
-from typing import Callable
 
 
 class SerialService:
@@ -21,7 +20,6 @@ class SerialService:
             self.serial_connection = serial.Serial(port=port, baudrate=115200, timeout=0.1)
             self.serial_kill_loop.clear()
             if self.serial_connection and self.serial_connection.isOpen():
-                print(f"Connected to {port}")
                 self.publish_serial_event('connected', port)
                 if not self.thread_running:
                     self.start_thread()
@@ -65,7 +63,8 @@ class SerialService:
     def send_serial_msg(self, msg:str):
         if self.serial_connection:
             self.serial_connection.write(msg)
-            self.serial_connection.reset_input_buffer()
+            #self.serial_connection.reset_input_buffer()
+            self.publish_serial_event('send', msg)
 
 
     def disconnect(self):
@@ -74,9 +73,9 @@ class SerialService:
         if self.serial_connection and self.serial_connection.is_open:
             self.serial_connection.close()
             self.serial_connection = None
-            self.publish_serial_event('disconnected', '')
         print("connection closed")
         self.thread_running = False
+        self.publish_serial_event('disconnected', '')
         print("thread not running")
         print("Serial port closed")
 

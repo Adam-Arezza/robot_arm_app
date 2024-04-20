@@ -1,9 +1,9 @@
 import threading
 import time
+import queue
 from src.serial_service import SerialService
 from ttkbootstrap.constants import *
 from src.views.serial_view import SerialView
-import queue
 
 
 class SerialController:
@@ -51,8 +51,16 @@ class SerialController:
             time.sleep(0.02)
 
 
-    def update_serial_window(self, data):
-        self.view.update_serial_window(data)
+    def update_serial_window_received(self, data):
+        self.view.update_serial_window_received(data)
+
+
+    def update_serial_window_sent(self, data):
+        self.view.update_serial_window_sent(data)
+
+
+    def remove_serial_connection(self,port):
+        pass
 
     
     def disconnect(self):

@@ -20,7 +20,7 @@ class JointConfigurationTable(ttkb.Frame):
         self.table_btn_group = ButtonGroup(self,
                                            [('Add Joint Configuration',),
                                             ('Show Configuration',),
-                                            ('Show Trajectory',),
+                                            ('Simulate Trajectory',),
                                             ('Send To Robot',)],
                                             'default',
                                             horizontal=False,

@@ -1,7 +1,7 @@
+import json
 from src.views.start_view import StartView
 from src.views.d_h_table import DHTable
 from tkinter import filedialog as fd
-import json
 from src.utils import find
 
 class StartViewController:

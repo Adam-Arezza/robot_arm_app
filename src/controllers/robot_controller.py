@@ -8,11 +8,13 @@ from src.serial_service import SerialService
 
 
 class RobotController:
-    def __init__(self, root, parent, serial_service):
+    def __init__(self, root, parent, serial_command):
+        self.root = root
         self.model = None
-        self.serial_service = serial_service
+        self.serial_command = serial_command
         self.view = RobotView(root, parent)
-        self.view.toggle_mode_switch.configure(command=self.toggle_auto_manual)
+        self.view.toggle_mode_switch.configure(command=self.toggle_online_offline)
+        self.view.toggle_sim_switch.configure(command=self.toggle_sim_mode)
         self.view.reset_btn.configure(command=self.reset)
         self.serial_connected = None
 
@@ -26,11 +28,14 @@ class RobotController:
         self.view.add_controls(self.slider_callback, self.model.robot.links)
 
 
-    def show_trajectory(self,traj:list):
+    def simulate_trajectory(self,traj:list):
+        if not self.root.simulation_mode:
+            Messagebox.ok("Must be in simulation mode")
+            return
         for i in traj:
             deg = to_degrees(i)
             self.set_joints(deg)
-            time.sleep(0.1)
+            time.sleep(0.025)
 
 
     def reset(self):
@@ -43,15 +48,13 @@ class RobotController:
 
 
     def set_joints(self, joints:list):
-        if not self.model.online_mode:
-            self.model.set_joint_states(joints)
-            self.update_joint_positions()
-            self.update_readouts()
-        else:
-            joints = [str(i) for i in joints]
-            separator = ':'
-            serial_msg = f'<{separator.join(joints)}>'.encode()
-            self.serial_service.send_serial_msg(serial_msg)
+        self.model.set_joint_states(joints)
+        self.update_joint_positions()
+        self.update_readouts()
+            #joints = [str(i) for i in joints]
+            #separator = ':'
+            #serial_msg = f'<{separator.join(joints)}>'.encode()
+            #self.serial_command(serial_msg)
 
 
     def get_joints(self) -> list:
@@ -73,13 +76,20 @@ class RobotController:
             readouts[i].joint_value.set(joints[i])
 
 
-    def toggle_auto_manual(self):
+    def toggle_online_offline(self):
         if self.serial_connected:
             self.model.set_mode(self.view.mode_value.get())
             self.send_connected_msg()
         else:
             self.view.mode_value.set(False)
             Messagebox.ok('Must connect to serial port before going online')
+
+
+    def toggle_sim_mode(self):
+        mode = self.view.simulation_mode.get()
+        self.root.set_sim_mode(mode)
+        if not mode:
+            self.view.remove_sim()
 
 
     def add_serial_connection(self, port:str):
@@ -96,12 +106,11 @@ class RobotController:
         if self.view.mode_value.get(): 
             self.view.mode_string.set('Online')
             go_online_msg = f'<online>'.encode()
-            self.serial_service.send_serial_msg(go_online_msg)
+            self.serial_command(go_online_msg)
         else:
             self.view.mode_string.set('Offline')
 
 
-#Updates the coordinates of the joints in the 3d plot
     def update_joint_positions(self):
         joint_angles = self.model.get_joints()
         prev_transform = None
@@ -118,16 +127,18 @@ class RobotController:
             joint_coordinates[0].append(j_coords[0])
             joint_coordinates[1].append(j_coords[1])
             joint_coordinates[2].append(j_coords[2])
-        self.view.draw_robot(joint_coordinates)
+        if self.root.simulation_mode:
+            self.view.draw_sim(joint_coordinates)
+        else:
+            self.view.draw_robot(joint_coordinates)
 
 
-    def update_joint_data(self, new_data):
+    def update_joint_data(self, new_data:str):
         try:
             data = new_data.strip()
             data = data.split(":")
             data = [int(i) for i in data]
             data.pop()
-            print(f"feedback data: {data}")
             self.set_joints(data)
         except Exception as e:
             print("Robot Controller - Error in feedback data")

@@ -18,6 +18,7 @@ class App(ttkb.Window):
         self.main_container.pack(padx=0, pady=0, fill='both', expand=True)
         self.main_container.columnconfigure(0, weight=1)
         self.main_container.rowconfigure(1, weight=1)
+        self.simulation_mode = True
 
 
     def create_robot(self, dh_params:dict):
@@ -30,8 +31,12 @@ class App(ttkb.Window):
         self.main_container.robot_controller.show_joint_config(cfg)
 
 
-    def show_trajectory(self, trajectory:list):
-        self.main_container.robot_controller.show_trajectory(trajectory)
+    def simulate_trajectory(self, trajectory:list):
+        self.main_container.robot_controller.simulate_trajectory(trajectory)
+
+
+    def set_sim_mode(self, mode:bool):
+        self.simulation_mode = mode
 
 
     def reset_robot(self):

@@ -1,9 +1,9 @@
 import roboticstoolbox as rtb
 import numpy as np
 import math
+import matplotlib.pyplot as plt
 from src.utils import to_radians
 from spatialmath import SE3, SO3
-import matplotlib.pyplot as plt
 
 
 class RobotArm:
@@ -26,13 +26,12 @@ class RobotArm:
         self.online_mode = mode
 
 
-    def get_joints(self):
+    def get_joints(self) -> list:
         return self.robot.q
 
 
     def create_robot_from_dh(self, dh_params:dict, initial_joint_states:list):
         for i,link in enumerate(dh_params):
-            # add the joint limits to the link
             t,a,r,d,ql,qu = dh_params[f'{link}']
             t = float(t)
             a = float(a)

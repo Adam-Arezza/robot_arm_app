@@ -1,7 +1,8 @@
 import ttkbootstrap as ttkb
+import json
 from src.views.components.button_group import ButtonGroup
 from PIL import Image, ImageTk
-import json
+
 
 class StartView(ttkb.Frame):
     def __init__(self, parent):
