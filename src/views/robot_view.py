@@ -6,7 +6,6 @@ from ttkbootstrap.constants import GROOVE
 from ttkbootstrap import BooleanVar, StringVar
 from src.views.slider_controls_view import SliderControls
 from src.utils import to_degrees
-#from src.views.components.joint_readouts import ReadoutsFrame
 
 
 class RobotView(ttkb.Frame):

@@ -10,21 +10,21 @@ class SerialView(ttkb.Frame):
         super().__init__(parent)
         self.controller = controller
         self.name = 'serial_view'
-        self.header = ttkb.Label(self, text='Serial Communication', font=('default', 12, 'bold'))
         self.ser_port = ttkb.StringVar()
         self.serial_window = ScrolledText(self, width=60, height=40, wrap=ttkb.WORD)
         self.serial_window.configure(state="disabled")
-        self.serial_list_dropdown = ttkb.Combobox(self, textvariable=self.ser_port)
-
+        self.inputs_frame = ttkb.Frame(self)
+        self.serial_list_dropdown = ttkb.Combobox(self.inputs_frame, textvariable=self.ser_port, width=15)
+        self.inputs_label = ttkb.Label(self.inputs_frame, text="Available ports: ")
+        self.serial_btns = ButtonGroup(self.inputs_frame, [('Connect', self.controller.connect_to_port),
+                                                           ('Scan', self.controller.get_port_list),
+                                                           ('Clear', self.clear_window)
+                                                           ], container_style='default', style=None, horizontal=True)
         #Layout
-        self.header.pack(pady=10,padx=10)
-        self.serial_list_dropdown.pack(pady=0, padx=5)
-        self.serial_btns = ButtonGroup(self, [('Connect', self.controller.connect_to_port),
-                                              ('Scan', self.controller.get_port_list),
-                                              ('Clear', self.clear_window)
-                                              ], container_style='default', style=None, horizontal=True)
-
+        self.inputs_label.pack(side='left')
+        self.serial_list_dropdown.pack(pady=0, padx=5, side='left')
         self.serial_btns.pack()
+        self.inputs_frame.pack(pady=20)
         self.serial_window.pack(padx=20, pady=20)
 
 
