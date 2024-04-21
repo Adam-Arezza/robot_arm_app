@@ -5,8 +5,8 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from ttkbootstrap.constants import GROOVE
 from ttkbootstrap import BooleanVar, StringVar
 from src.views.slider_controls_view import SliderControls
-from src.views.components.joint_readouts import ReadoutsFrame
-from typing import Callable
+from src.utils import to_degrees
+#from src.views.components.joint_readouts import ReadoutsFrame
 
 
 class RobotView(ttkb.Frame):
@@ -17,7 +17,7 @@ class RobotView(ttkb.Frame):
         self.header = ttkb.Label(self, text='Robot Viewer', font=('default', 12, 'bold'))
         self.configure(padding=(0,0))
         self.slider_controls = None
-        self.readouts_frame = None
+        self.plot_readouts = None
         self.mode_value = BooleanVar(value=False)
         self.mode_string = StringVar(value='Offline')
         self.check_btn_frame = ttkb.Frame(self, style='default')
@@ -82,6 +82,14 @@ class RobotView(ttkb.Frame):
         xs, ys, zs = joint_coords 
         if self.robot_plot:
             self.robot_plot.remove()
+
+        if not self.plot_readouts:
+            self.draw_readouts()
+        else:
+            joint_angles = to_degrees(self.root.main_container.robot_controller.model.robot.q)
+            for i in range(len(joint_angles)):
+                self.plot_readouts[i].set_text(f'J{i+1}: {joint_angles[i]}')
+
         self.robot_plot, = self.ax.plot(xs=xs, 
                                         ys=ys, 
                                         zs=zs,
@@ -95,14 +103,26 @@ class RobotView(ttkb.Frame):
         self.canvas_plot.flush_events()
 
 
+    def draw_readouts(self):
+        self.plot_readouts = []
+        x_coord = 0.025
+        y_coord = 0.9
+        joint_angles = to_degrees(self.root.main_container.robot_controller.model.robot.q)
+        for i in range(len(joint_angles)):
+            joint_readout = self.fig.text(x=x_coord,
+                                          y=y_coord,
+                                          s=f'J{i+1}: {joint_angles[i]}',
+                                          color='lime',
+                                          fontsize='x-large')
+            self.plot_readouts.append(joint_readout)
+            y_coord -= 0.03
+
+
     def add_controls(self, cb, links:list):
         if self.slider_controls:
             self.slider_controls.destroy()
-            self.readouts_frame.destroy()
         self.slider_controls = SliderControls(self, cb, links)
-        self.readouts_frame = ReadoutsFrame(self, len(links))
         self.slider_controls.pack(padx=20)
-        self.readouts_frame.pack(padx=20,pady=20)
 
 
     def close(self):

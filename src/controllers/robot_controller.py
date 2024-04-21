@@ -52,7 +52,6 @@ class RobotController:
     def set_joints(self, joints:list):
         self.model.set_joint_states(joints)
         self.update_joint_positions()
-        self.update_readouts()
             #joints = [str(i) for i in joints]
             #separator = ':'
             #serial_msg = f'<{separator.join(joints)}>'.encode()
@@ -68,14 +67,6 @@ class RobotController:
         for slider in self.view.slider_controls.sliders:
             slider_values.append(slider.slider_value.get())
         self.set_joints(slider_values)
-
-
-    def update_readouts(self):
-        joints = self.model.get_joints()
-        readouts = self.view.readouts_frame.readouts
-        joints = to_degrees(self.model.get_joints())
-        for i in range(len(readouts)):
-            readouts[i].joint_value.set(joints[i])
 
 
     def toggle_online_offline(self):
