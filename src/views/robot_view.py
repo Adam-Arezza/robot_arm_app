@@ -20,26 +20,17 @@ class RobotView(ttkb.Frame):
         self.readouts_frame = None
         self.mode_value = BooleanVar(value=False)
         self.mode_string = StringVar(value='Offline')
-        self.simulation_mode = BooleanVar(value=True)
         self.check_btn_frame = ttkb.Frame(self, style='default')
         self.toggle_label = ttkb.Label(self.check_btn_frame, 
                                        textvariable=self.mode_string, 
                                        bootstyle='default')
 
-        self.toggle_sim_label = ttkb.Label(self.check_btn_frame,
-                                           text="Simulation Mode",
-                                           bootstyle='default')
         self.toggle_mode_switch = ttkb.Checkbutton(self.check_btn_frame,
                                                    onvalue=True,
                                                    offvalue=False,
                                                    variable=self.mode_value,
                                                    bootstyle='default')
 
-        self.toggle_sim_switch = ttkb.Checkbutton(self.check_btn_frame,
-                                                  onvalue=True,
-                                                  offvalue=False,
-                                                  variable=self.simulation_mode,
-                                                  bootstyle='default')
         self.reset_btn = ttkb.Button(self, 
                                      text="Reset",
                                      style='primary.Outline.TButton')
@@ -73,8 +64,6 @@ class RobotView(ttkb.Frame):
         self.canvas_plot.get_tk_widget().pack(anchor='ne', side='right', padx=(0,20), pady=0)
         self.toggle_label.pack()
         self.toggle_mode_switch.pack(padx=10, pady=5)
-        self.toggle_sim_label.pack()
-        self.toggle_sim_switch.pack(padx=10, pady=5)
         self.check_btn_frame.pack()
         self.reset_btn.pack()
         self.robot_plot = None
@@ -85,7 +74,11 @@ class RobotView(ttkb.Frame):
         color = 'red'
         markerfacecolor = 'blue'
         markeredgecolor = 'blue'
-
+        #if not in online mode, draw with inverted colors
+        if not self.mode_value.get():
+            color = 'blue'
+            markerfacecolor = 'red'
+            markeredgecolor = 'red'
         xs, ys, zs = joint_coords 
         if self.robot_plot:
             self.robot_plot.remove()
@@ -102,27 +95,6 @@ class RobotView(ttkb.Frame):
         self.canvas_plot.flush_events()
 
 
-    def draw_sim(self, joint_coords:list):
-        color = 'blue'
-        markerfacecolor = 'red'
-        markeredgecolor = 'red'
-        xs, ys, zs = joint_coords
-        if self.sim_plot:
-            self.sim_plot.remove()
-        self.sim_plot, = self.ax.plot(xs=xs,
-                                      ys=ys,
-                                      zs=zs,
-                                      color=color,
-                                      linewidth=3,
-                                      marker='o',
-                                      markersize=5,
-                                      markerfacecolor=markerfacecolor,
-                                      markeredgecolor=markeredgecolor,
-                                      alpha=0.7)
-        self.canvas_plot.draw()
-        self.canvas_plot.flush_events()
-
-
     def add_controls(self, cb, links:list):
         if self.slider_controls:
             self.slider_controls.destroy()
@@ -131,14 +103,6 @@ class RobotView(ttkb.Frame):
         self.readouts_frame = ReadoutsFrame(self, len(links))
         self.slider_controls.pack(padx=20)
         self.readouts_frame.pack(padx=20,pady=20)
-
-
-    def remove_sim(self):
-        if self.sim_plot:
-            self.sim_plot.remove()
-            self.sim_plot = None
-        self.canvas_plot.draw()
-        self.canvas_plot.flush_events()
 
 
     def close(self):

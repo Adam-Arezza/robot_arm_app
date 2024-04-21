@@ -77,8 +77,8 @@ class JointTableController:
 
 
     def send_to_robot(self):
-        if self.root.simulation_mode:
-            Messagebox.ok("Can't sent data to robot in simulation mode.")
+        if not self.root.online_mode:
+            Messagebox.ok("Can't sent data to robot while offline.")
             return
         selected_row = self.view.joint_table.get_rows(selected=True)
         if len(selected_row) == 0:

@@ -14,14 +14,16 @@ class RobotController:
         self.serial_command = serial_command
         self.view = RobotView(root, parent)
         self.view.toggle_mode_switch.configure(command=self.toggle_online_offline)
-        self.view.toggle_sim_switch.configure(command=self.toggle_sim_mode)
         self.view.reset_btn.configure(command=self.reset)
         self.serial_connected = None
 
 
     def show_joint_config(self,cfg:list):
-        self.set_joints(cfg)
-
+        if not self.model.online_mode:
+            self.set_joints(cfg)
+        else:
+            Messagebox.ok("Go offline to view joint configurations")
+            return
 
     def add_model(self, model:RobotArm):
         self.model = model
@@ -29,8 +31,8 @@ class RobotController:
 
 
     def simulate_trajectory(self,traj:list):
-        if not self.root.simulation_mode:
-            Messagebox.ok("Must be in simulation mode")
+        if self.model.online_mode:
+            Messagebox.ok("Must be in offline mode")
             return
         for i in traj:
             deg = to_degrees(i)
@@ -79,17 +81,12 @@ class RobotController:
     def toggle_online_offline(self):
         if self.serial_connected:
             self.model.set_mode(self.view.mode_value.get())
+            self.root.set_online_mode(self.view.mode_value.get())
             self.send_connected_msg()
+            self.reset()
         else:
             self.view.mode_value.set(False)
             Messagebox.ok('Must connect to serial port before going online')
-
-
-    def toggle_sim_mode(self):
-        mode = self.view.simulation_mode.get()
-        self.root.set_sim_mode(mode)
-        if not mode:
-            self.view.remove_sim()
 
 
     def add_serial_connection(self, port:str):
@@ -127,10 +124,7 @@ class RobotController:
             joint_coordinates[0].append(j_coords[0])
             joint_coordinates[1].append(j_coords[1])
             joint_coordinates[2].append(j_coords[2])
-        if self.root.simulation_mode:
-            self.view.draw_sim(joint_coordinates)
-        else:
-            self.view.draw_robot(joint_coordinates)
+        self.view.draw_robot(joint_coordinates)
 
 
     def update_joint_data(self, new_data:str):
