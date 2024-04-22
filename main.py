@@ -22,9 +22,8 @@ class App(ttkb.Window):
 
 
     def create_robot(self, dh_params:dict):
-        robot_model = RobotArm(dh_params, mode=False)
-        self.main_container.robot_controller.add_model(robot_model)
-        self.main_container.main_view()
+        self.robot_model = RobotArm(dh_params, mode=False)
+        self.main_container.main_view(self.robot_model)
 
 
     def show_configuration(self, cfg:list):
@@ -39,8 +38,8 @@ class App(ttkb.Window):
         self.online_mode = mode
 
 
-    def reset_robot(self):
-        self.main_container.robot_controller.reset()
+    def update_robot_state(self):
+        self.main_container.robot_controller.update_joint_positions()
 
 
     def on_close(self):

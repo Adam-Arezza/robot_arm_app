@@ -26,8 +26,9 @@ class LayoutManager:
         serial_view = find(self.views, lambda v: v.name == 'serial_view')
         joint_table_view = find(self.views, lambda v: v.name == 'joint_table_view')
         robot_view = find(self.views, lambda v: v.name == 'robot_view')
-        
+        controls_view = find(self.views, lambda v: v.name == 'controls_view')
         serial_view.grid(column=0, row=0,rowspan=2, sticky='nsew')
-        robot_view.grid(column=1, row=0, sticky='nsew')
+        robot_view.grid(column=1, row=0, columnspan=2, sticky='nsew')
         joint_table_view.grid(column=1, row=1, sticky='nsew')
+        controls_view.grid(column=2, row=1, sticky='nsew')
 

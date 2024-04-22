@@ -12,7 +12,7 @@ class RobotArm:
         self.dh_params = dh_params
         self.target = None 
         self.default_state = []
-        self.online_mode = mode
+
         if len(dh_params) > 0:
            self.create_robot_from_dh(dh_params, initial_joint_states)
 
@@ -20,10 +20,6 @@ class RobotArm:
     def set_joint_states(self, joint_states:list):
         rads = to_radians(joint_states)
         self.robot.q = rads
-
-
-    def set_mode(self, mode:bool):
-        self.online_mode = mode
 
 
     def get_joints(self) -> list:

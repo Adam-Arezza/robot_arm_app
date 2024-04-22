@@ -8,7 +8,6 @@ from ttkbootstrap.dialogs.dialogs import Messagebox
 class JointConfigurationTable(ttkb.Frame):
     def __init__(self, parent):
         super().__init__(parent)
-        self.header = ttkb.Label(self, text='Joint Configurations', font=('default', 12, 'bold'))
         self.joint_entry_frame = ttkb.Frame(self)
         self.joint_table = None
         self.headers = None
@@ -44,11 +43,10 @@ class JointConfigurationTable(ttkb.Frame):
                 autofit=True
                 )
         self.joint_config_entry = TableRow(self.joint_entry_frame, n, 'Configure Joints',width=10)
-        self.header.pack(padx=10, pady=10)
         self.joint_config_entry.pack(anchor='nw', side='left')
         self.add_to_table_btn.pack(anchor='ne')
-        self.joint_entry_frame.pack()
-        self.table_btn_group.pack(side='left',padx=(100, 0), pady=10, fill='x', anchor='ne')
+        self.joint_entry_frame.pack(pady=20)
+        self.table_btn_group.pack(side='left',padx=0, pady=10, fill='x', anchor='ne')
         self.joint_table.pack(expand=True, anchor='nw')
 
 
