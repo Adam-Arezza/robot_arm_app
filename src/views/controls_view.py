@@ -12,7 +12,8 @@ class ControlsView(ttkb.Frame):
         self.check_btn_frame = ttkb.Frame(self, style='default')
         self.toggle_label = ttkb.Label(self.check_btn_frame, 
                                        textvariable=self.mode_string, 
-                                       bootstyle='default')
+                                       bootstyle='default',
+                                       font=('Helvetica',10,'bold'))
 
         self.toggle_mode_switch = ttkb.Checkbutton(self.check_btn_frame,
                                                    onvalue=True,
@@ -20,12 +21,12 @@ class ControlsView(ttkb.Frame):
                                                    variable=self.mode_value,
                                                    bootstyle='default')
 
-        self.reset_btn = ttkb.Button(self, 
+        self.reset_btn = ttkb.Button(self.check_btn_frame, 
                                      text="Reset",
-                                     style='primary.Outline.TButton')
-        self.toggle_label.pack()
-        self.toggle_mode_switch.pack(padx=10, pady=5)
-        self.check_btn_frame.pack()
+                                     style='secondary.TButton')
+        self.toggle_label.pack(side='left')
+        self.toggle_mode_switch.pack(side='left', padx=10, pady=5)
+        self.check_btn_frame.pack(pady=20)
         self.reset_btn.pack()
         self.add_sliders(cb,links )
 

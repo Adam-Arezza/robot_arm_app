@@ -14,7 +14,7 @@ class JointConfigurationTable(ttkb.Frame):
         self.name = 'joint_table_view'
         self.add_to_table_btn = ttkb.Button(self.joint_entry_frame, 
                                             text='Add to table', 
-                                            bootstyle='primary.Outline.TButton')
+                                            bootstyle='secondary.TButton')
 
         self.table_btn_group = ButtonGroup(self,
                                            [('Add Joint Configuration',),
@@ -23,7 +23,7 @@ class JointConfigurationTable(ttkb.Frame):
                                             ('Send To Robot',)],
                                             'default',
                                             horizontal=False,
-                                            style='primary.TButton')
+                                            style='secondary.TButton')
 
     def create_joint_entries(self, n:int):
         if self.headers or self.joint_table:
@@ -39,7 +39,7 @@ class JointConfigurationTable(ttkb.Frame):
                 coldata=self.headers,
                 rowdata=[],
                 height=10,
-                bootstyle='primary', 
+                bootstyle='dark', 
                 autofit=True
                 )
         self.joint_config_entry = TableRow(self.joint_entry_frame, n, 'Configure Joints',width=10)
