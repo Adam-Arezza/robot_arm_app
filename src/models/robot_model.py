@@ -3,7 +3,6 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 from src.utils import to_radians
-from spatialmath import SE3, SO3
 
 
 class RobotArm:
@@ -37,6 +36,7 @@ class RobotArm:
             qu = float(qu)
             link = rtb.RevoluteDH(d=d, a=r, alpha=math.radians(a), qlim=[ql,qu])
             self.links.append(link)
+
         self.robot = rtb.DHRobot(self.links) 
         if len(initial_joint_states) != len(self.links):
             self.robot.q = [0 for i in self.links]

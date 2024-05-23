@@ -51,10 +51,13 @@ class RobotView(ttkb.Frame):
             self.robot_plot.remove()
         if not self.plot_readouts:
             self.draw_readouts()
+            self.draw_end_effector_pose([j[-1] for j in joint_coords])
         else:
             joint_angles = to_degrees(self.root.main_container.robot_controller.model.robot.q)
             for i in range(len(joint_angles)):
                 self.plot_readouts[i].set_text(f'J{i+1}: {joint_angles[i]}')
+ 
+            self.ee_pose.set_text("End Effector: " + ", ".join([str(round(j[-1], 2)) for j in joint_coords]))
 
         self.robot_plot, = self.ax.plot(xs=xs, 
                                         ys=ys, 
@@ -82,6 +85,15 @@ class RobotView(ttkb.Frame):
                                           fontsize='x-large')
             self.plot_readouts.append(joint_readout)
             y_coord -= 0.03
+
+
+    def draw_end_effector_pose(self, pose):
+        pose_text = str(pose).replace("[","")
+        pose_text = pose_text.replace("]","")
+        self.ee_pose = None
+        x = 0.025
+        y = 0.78
+        self.ee_pose = self.fig.text(x=x, y=y, s=f'End Effector: {str(pose_text)}',color='lime',fontsize='x-large')
 
 
     def close(self):

@@ -15,7 +15,7 @@ class ButtonGroup(ttkb.Frame):
             b = ttkb.Button(self, 
                             text=button[0], 
                             style='secondary.TButton', 
-                            padding=(8,3), 
+                            padding=(6,3), 
                             name=btn_name)
             if len(button) == 2:
                 b.configure(command=button[1])
