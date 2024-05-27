@@ -20,7 +20,7 @@ class MenuController:
         #Add joint limits into the saved file
         save_file = fd.asksaveasfilename(defaultextension='json')
         with open(save_file,'w') as params_file:
-            json.dump(self.root.robot_controller.model.dh_params, params_file)
+            json.dump(self.root.main_container.robot_controller.model.dh_params, params_file)
             params_file.close()
 
 

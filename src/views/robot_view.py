@@ -16,6 +16,7 @@ class RobotView(ttkb.Frame):
         self.configure(padding=(0,0))
         self.plot_readouts = None
         self.robot_plot = None
+        self.ee_axis = []
         self.fig, self.ax = plt.subplots(subplot_kw=dict(projection="3d"))
         self.fig.figure.subplots_adjust(left=0, right=1, bottom=0, top=1, wspace=0)
         self.fig.figure.set_figwidth(8)
@@ -35,9 +36,11 @@ class RobotView(ttkb.Frame):
         self.ax.set_zlim3d([z_limits[0], z_limits[0] + 0.4])
         self.canvas_plot = FigureCanvasTkAgg(self.fig, self)
         self.canvas_plot.get_tk_widget().pack(anchor='ne', side='right', padx=(0,20), pady=0)
+        self.gen_data_btn = ttkb.Button(self, text="Generate Pose Data")
+        self.gen_data_btn.pack()
        
 
-    def draw_robot(self, joint_coords:list):
+    def draw_robot(self, joint_coords:list, rotation_mat:list):
         color = 'red'
         markerfacecolor = 'blue'
         markeredgecolor = 'blue'
@@ -46,9 +49,13 @@ class RobotView(ttkb.Frame):
             color = 'blue'
             markerfacecolor = 'red'
             markeredgecolor = 'red'
-        xs, ys, zs = joint_coords 
+        xs, ys, zs = joint_coords
+        ee_pose = [xs[-1], ys[-1], zs[-1]]       
         if self.robot_plot:
             self.robot_plot.remove()
+            for quiver in self.ee_axis:
+                quiver.remove()
+            self.ee_axis.clear()
         if not self.plot_readouts:
             self.draw_readouts()
             self.draw_end_effector_pose([j[-1] for j in joint_coords])
@@ -56,9 +63,7 @@ class RobotView(ttkb.Frame):
             joint_angles = to_degrees(self.root.main_container.robot_controller.model.robot.q)
             for i in range(len(joint_angles)):
                 self.plot_readouts[i].set_text(f'J{i+1}: {joint_angles[i]}')
- 
             self.ee_pose.set_text("End Effector: " + ", ".join([str(round(j[-1], 2)) for j in joint_coords]))
-
         self.robot_plot, = self.ax.plot(xs=xs, 
                                         ys=ys, 
                                         zs=zs,
@@ -68,6 +73,12 @@ class RobotView(ttkb.Frame):
                                         markersize=5,
                                         markerfacecolor=markerfacecolor,
                                         markeredgecolor=markeredgecolor)
+        qx = self.ax.quiver(ee_pose[0],ee_pose[1],ee_pose[2],rotation_mat[0,0], rotation_mat[1,0], rotation_mat[2,0], color="r", length=0.05, normalize=True)
+        qy = self.ax.quiver(ee_pose[0],ee_pose[1],ee_pose[2],rotation_mat[0,1], rotation_mat[1,1], rotation_mat[2,1], color="g", length=0.05, normalize=True)
+        qz = self.ax.quiver(ee_pose[0],ee_pose[1],ee_pose[2],rotation_mat[0,2], rotation_mat[1,2], rotation_mat[2,2], color="b", length=0.05, normalize=True)
+        self.ee_axis.append(qx)
+        self.ee_axis.append(qy)
+        self.ee_axis.append(qz)
         self.canvas_plot.draw()
         self.canvas_plot.flush_events()
 
@@ -93,7 +104,9 @@ class RobotView(ttkb.Frame):
         self.ee_pose = None
         x = 0.025
         y = 0.78
+        #ee_frame = axis drawn on the end effector point representing its orientation
         self.ee_pose = self.fig.text(x=x, y=y, s=f'End Effector: {str(pose_text)}',color='lime',fontsize='x-large')
+        
 
 
     def close(self):

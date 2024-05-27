@@ -38,6 +38,7 @@ class MainContainer(ttkb.Frame):
         self.create_serial_subscriptions()
         self.joint_table_controller.create_joint_entries(num_joints)
         self.robot_controller.set_joints(self.robot_model.robot.q)
+        #self.robot_controller.generate_pose_data()
 
 
     def create_serial_subscriptions(self):
