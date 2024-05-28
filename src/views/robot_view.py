@@ -4,8 +4,7 @@ import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from ttkbootstrap.constants import GROOVE
 from ttkbootstrap import BooleanVar, StringVar
-#from src.views.slider_controls_view import SliderControls
-from src.utils import to_degrees
+from src.utils import to_degrees, rot_mat_to_euler
 
 
 class RobotView(ttkb.Frame):
@@ -51,6 +50,7 @@ class RobotView(ttkb.Frame):
             markeredgecolor = 'red'
         xs, ys, zs = joint_coords
         ee_pose = [xs[-1], ys[-1], zs[-1]]       
+        euler_angles = rot_mat_to_euler(rotation_mat)
         if self.robot_plot:
             self.robot_plot.remove()
             for quiver in self.ee_axis:
@@ -58,12 +58,14 @@ class RobotView(ttkb.Frame):
             self.ee_axis.clear()
         if not self.plot_readouts:
             self.draw_readouts()
-            self.draw_end_effector_pose([j[-1] for j in joint_coords])
+            self.draw_end_effector_pose([j[-1] for j in joint_coords], euler_angles)
         else:
             joint_angles = to_degrees(self.root.main_container.robot_controller.model.robot.q)
             for i in range(len(joint_angles)):
                 self.plot_readouts[i].set_text(f'J{i+1}: {joint_angles[i]}')
-            self.ee_pose.set_text("End Effector: " + ", ".join([str(round(j[-1], 2)) for j in joint_coords]))
+            self.ee_pose.remove()
+            self.draw_end_effector_pose([j[-1] for j in joint_coords], euler_angles)
+
         self.robot_plot, = self.ax.plot(xs=xs, 
                                         ys=ys, 
                                         zs=zs,
@@ -98,16 +100,26 @@ class RobotView(ttkb.Frame):
             y_coord -= 0.03
 
 
-    def draw_end_effector_pose(self, pose):
-        pose_text = str(pose).replace("[","")
-        pose_text = pose_text.replace("]","")
+    def draw_end_effector_pose(self, pose, angles):
+        linear = ["x", "y", "z"]
+        angular = ["r", "p", "y"]
+        pose_text = [linear[i]+":"+str(round(pose[i],3))+" "  for i in range(len(linear))]
+        angle_text = [angular[i]+":"+str(round(angles[i],2))+" " for i in range(len(angular))]
+        ee_text = pose_text + angle_text
+        ee_text = "".join(ee_text)
         self.ee_pose = None
         x = 0.025
-        y = 0.78
+        y = 0.96
         #ee_frame = axis drawn on the end effector point representing its orientation
-        self.ee_pose = self.fig.text(x=x, y=y, s=f'End Effector: {str(pose_text)}',color='lime',fontsize='x-large')
+        self.ee_pose = self.fig.text(x=x, y=y, s=f'End Effector: {ee_text}',color='lime',fontsize='x-large')
         
 
+    def draw_square(self, square_points):
+        pass
+
+
+    def draw_circle(self, circle_points):
+        pass
 
     def close(self):
         self.fig.clf()

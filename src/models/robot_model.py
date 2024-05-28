@@ -2,7 +2,7 @@ import roboticstoolbox as rtb
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-from src.utils import to_radians
+from src.utils import to_radians, rot_mat_to_euler
 
 
 class RobotArm:
@@ -23,6 +23,27 @@ class RobotArm:
 
     def get_joints(self) -> list:
         return self.robot.q
+   
+
+    def get_ee_pose(self) -> list:
+        joint_angles = self.get_joints()
+        joint_coordinates = [[0],[0],[0]]
+        rot_mat = None
+        for i in range(len(joint_angles)):
+            t_matrix = self.links[i].A(self.robot.q[i])  
+            t_matrix = np.array(t_matrix)
+            new_transform = t_matrix
+            if i > 0:
+                new_transform = np.dot(prev_transform, t_matrix)
+            prev_transform = new_transform
+            j_coords = new_transform[:3,3]
+            joint_coordinates[0].append(j_coords[0])
+            joint_coordinates[1].append(j_coords[1])
+            joint_coordinates[2].append(j_coords[2])
+            if i == len(joint_angles)-1:
+                rot_mat = new_transform[:3,:3]
+
+        return joint_coordinates, rot_mat
 
 
     def create_robot_from_dh(self, dh_params:dict, initial_joint_states:list):
