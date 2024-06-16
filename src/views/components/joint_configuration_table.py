@@ -39,15 +39,15 @@ class JointConfigurationTable(ttkb.Frame):
                 coldata=self.headers,
                 rowdata=[],
                 height=10,
-                bootstyle='dark', 
+                bootstyle='dark',
                 autofit=True
                 )
         self.joint_config_entry = TableRow(self.joint_entry_frame, n, 'Configure Joints',width=10)
         self.joint_config_entry.pack(anchor='nw', side='left')
         self.add_to_table_btn.pack(anchor='ne')
         self.joint_entry_frame.pack(pady=20)
-        self.table_btn_group.pack(side='left',padx=0, pady=10, fill='x', anchor='ne')
-        self.joint_table.pack(expand=True, anchor='nw')
+        self.table_btn_group.pack(side='left',padx=0, pady=10, fill='x', anchor='nw')
+        self.joint_table.pack(padx=(0,50),expand=True, anchor='nw', fill='both')
 
 
     def error_msg(self, msg:str):

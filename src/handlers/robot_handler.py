@@ -69,7 +69,7 @@ class RobotHandler:
             self.joint_coordinates = joint_coordinates
         else:
             #print(f"final transformation matrix: {rot_mat}")
-            self.view.draw_robot(joint_coordinates, rot_mat)
+            self.view.draw_robot(self.model.robot.q, joint_coordinates, rot_mat)
 
 
     def update_joint_data(self, new_data:str):

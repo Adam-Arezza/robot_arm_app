@@ -44,9 +44,9 @@ class SerialService:
         self.subscribers[e].append(fn)
 
 
-    def publish_serial_event(self,e:str,d:str):
-        for fn in self.subscribers[e]:
-            fn(d)
+    def publish_serial_event(self, event:str, data:str):
+        for fn in self.subscribers[event]:
+            fn(data)
 
 
     def get_serial_msg(self):

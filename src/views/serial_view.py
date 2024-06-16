@@ -15,7 +15,7 @@ class SerialView(ttkb.Frame):
         self.serial_window.configure(state="disabled", bg='black', fg='lime')
         self.inputs_frame = ttkb.Frame(self)
         self.serial_list_dropdown = ttkb.Combobox(self.inputs_frame, textvariable=self.ser_port, width=15)
-        self.inputs_label = ttkb.Label(self.inputs_frame, text="Available ports: ")
+        self.inputs_label = ttkb.Label(self.inputs_frame, text="Available ports: ", font=('Helvetica', 12, 'bold'))
         self.serial_btns = ButtonGroup(self.inputs_frame, [('Connect', self.handler.connect_to_port),
                                                            ('Scan', self.handler.get_port_list),
                                                            ('Clear', self.clear_window)
@@ -24,8 +24,8 @@ class SerialView(ttkb.Frame):
         self.inputs_label.pack(side='left')
         self.serial_list_dropdown.pack(pady=0, padx=5, side='left')
         self.serial_btns.pack()
-        self.inputs_frame.pack(pady=20)
-        self.serial_window.pack(padx=20, pady=20)
+        self.inputs_frame.pack(pady=50)
+        self.serial_window.pack(padx=(50,100), pady=(20,50), expand=True, fill='both')
 
 
     def show_connected_msg(self, port:str):

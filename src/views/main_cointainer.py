@@ -8,7 +8,6 @@ from src.handlers.joint_table_handler import JointTableHandler
 from src.handlers.controls_handler import ControlsHandler
 from src.utils import to_degrees, to_radians
 from ttkbootstrap.dialogs.dialogs import Messagebox
-from src.views.components.joint_configuration_table import JointConfigurationTable
 from src.views.camera_view import CameraView
 from src.layout_manager import LayoutManager
 
@@ -38,7 +37,6 @@ class MainContainer(ttkb.Frame):
         self.create_serial_subscriptions()
         self.joint_table_handler.create_joint_entries(num_joints)
         self.robot_handler.set_joints(self.robot_model.robot.q)
-        #self.robot_handler.generate_pose_data()
 
 
     def create_serial_subscriptions(self):

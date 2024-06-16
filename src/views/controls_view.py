@@ -28,14 +28,12 @@ class ControlsView(ttkb.Frame):
         self.toggle_mode_switch.pack(side='left', padx=10, pady=5)
         self.check_btn_frame.pack(pady=20)
         self.reset_btn.pack()
-        self.add_sliders(cb,links )
+        self.add_sliders(cb,links)
 
 
     def add_sliders(self, cb, links:list):
         if self.slider_controls:
-            self.slider_controls.destroyI()
+            self.slider_controls.destroy()
         self.slider_controls = SliderControls(self, cb, links)
-        self.slider_controls.pack(padx=20)
+        self.slider_controls.pack(padx=(0,25), pady=15, expand=True, fill='both')
 
-
-    

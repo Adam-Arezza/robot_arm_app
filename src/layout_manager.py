@@ -1,10 +1,12 @@
 from src.utils import find
 from ttkbootstrap import Frame
 
+
 class LayoutManager:
     def __init__(self):
         self.views = []
         self.main_grid = None
+
 
     def add_view(self, view:Frame):
         self.views.append(view)
@@ -29,6 +31,6 @@ class LayoutManager:
         controls_view = find(self.views, lambda v: v.name == 'controls_view')
         serial_view.grid(column=0, row=0,rowspan=2, sticky='nsew')
         robot_view.grid(column=1, row=0, columnspan=2, sticky='nsew')
-        joint_table_view.grid(column=1, row=1, sticky='nsew')
-        controls_view.grid(column=2, row=1, sticky='nsew')
+        joint_table_view.grid(column=2, row=1, sticky='nsew')
+        controls_view.grid(column=1, row=1, sticky='nsew')
 
