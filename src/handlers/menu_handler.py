@@ -8,7 +8,7 @@ from src.views.components.menu import Menu
 from src.views.calibration_view import CalibrationView
 
 
-class MenuController:
+class MenuHandler:
     def __init__(self, root):
         self.root = root
         self.view = Menu(root, {}, self)
@@ -20,7 +20,7 @@ class MenuController:
         #Add joint limits into the saved file
         save_file = fd.asksaveasfilename(defaultextension='json')
         with open(save_file,'w') as params_file:
-            json.dump(self.root.main_container.robot_controller.model.dh_params, params_file)
+            json.dump(self.root.main_container.robot_handler.model.dh_params, params_file)
             params_file.close()
 
 
@@ -50,7 +50,7 @@ class MenuController:
     def open_calibration(self):
         if not self.calibration_window:
             self.calibration_window = ttkb.window.Toplevel(self.root)
-            self.calibration_view = CalibrationView(self.calibration_window, self.root.main_container.robot_controller.model.robot.links)
+            self.calibration_view = CalibrationView(self.calibration_window, self.root.main_container.robot_handler.model.robot.links)
             self.calibration_view.pack()
         else:
             return

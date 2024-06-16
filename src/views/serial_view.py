@@ -6,9 +6,9 @@ from ttkbootstrap.dialogs.dialogs import Messagebox
 
 
 class SerialView(ttkb.Frame):
-    def __init__(self, parent, controller):
+    def __init__(self, parent, handler):
         super().__init__(parent)
-        self.controller = controller
+        self.handler = handler
         self.name = 'serial_view'
         self.ser_port = ttkb.StringVar()
         self.serial_window = ScrolledText(self, width=60, height=40, wrap=ttkb.WORD)
@@ -16,8 +16,8 @@ class SerialView(ttkb.Frame):
         self.inputs_frame = ttkb.Frame(self)
         self.serial_list_dropdown = ttkb.Combobox(self.inputs_frame, textvariable=self.ser_port, width=15)
         self.inputs_label = ttkb.Label(self.inputs_frame, text="Available ports: ")
-        self.serial_btns = ButtonGroup(self.inputs_frame, [('Connect', self.controller.connect_to_port),
-                                                           ('Scan', self.controller.get_port_list),
+        self.serial_btns = ButtonGroup(self.inputs_frame, [('Connect', self.handler.connect_to_port),
+                                                           ('Scan', self.handler.get_port_list),
                                                            ('Clear', self.clear_window)
                                                            ], container_style='default', style=None, horizontal=True)
         #Layout
@@ -36,7 +36,7 @@ class SerialView(ttkb.Frame):
 
 
     def serial_connected(self):
-        self.serial_btns.buttons['connect'].configure(text="Disconnect", command=self.controller.disconnect)
+        self.serial_btns.buttons['connect'].configure(text="Disconnect", command=self.handler.disconnect)
 
 
     def sending_message(self, msg:str):
@@ -70,7 +70,7 @@ class SerialView(ttkb.Frame):
 
 
     def serial_disconnected(self):
-        self.serial_btns.buttons['connect'].configure(text="Connect", command=self.controller.connect_to_port)
+        self.serial_btns.buttons['connect'].configure(text="Connect", command=self.handler.connect_to_port)
         self.serial_window.configure(state="normal")
         self.serial_window.delete(1.0, END)
 

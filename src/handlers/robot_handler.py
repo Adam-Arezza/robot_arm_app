@@ -2,16 +2,14 @@ import numpy as np
 from random import randint
 import time
 import os
-from src.utils import rot_mat_to_euler
-import math
 from ttkbootstrap.dialogs.dialogs import Messagebox
 from src.views.robot_view import RobotView
 from src.utils import to_radians, to_degrees
-from src.models.robot_model import RobotArm
+from src.robot_model import RobotArm
 from src.serial_service import SerialService
 
 
-class RobotController:
+class RobotHandler:
     def __init__(self, root, parent, serial_command, model):
         self.root = root
         self.model = model
@@ -50,11 +48,27 @@ class RobotController:
 
 
     def update_joint_positions(self, data_gen:bool = False):
-        joint_coordinates, rot_mat = self.model.get_ee_pose()
+        joint_angles = self.model.get_joints()
+        prev_transform = None
+        joint_coordinates = [[0],[0],[0]]
+        rot_mat = None
+        for i in range(len(joint_angles)):
+            t_matrix = self.model.robot.links[i].A(self.model.robot.q[i])  
+            t_matrix = np.array(t_matrix)
+            new_transform = t_matrix
+            if i > 0:
+                new_transform = np.dot(prev_transform, t_matrix)
+            prev_transform = new_transform
+            j_coords = new_transform[:3,3]
+            joint_coordinates[0].append(j_coords[0])
+            joint_coordinates[1].append(j_coords[1])
+            joint_coordinates[2].append(j_coords[2])
+            if i == len(joint_angles)-1:
+                rot_mat = new_transform[:3,:3]
         if data_gen:
-            self.euler_angles = rot_mat_to_euler(rot_mat)
             self.joint_coordinates = joint_coordinates
         else:
+            #print(f"final transformation matrix: {rot_mat}")
             self.view.draw_robot(joint_coordinates, rot_mat)
 
 
@@ -66,7 +80,7 @@ class RobotController:
             data.pop()
             self.set_joints(data)
         except Exception as e:
-            print("Robot Controller - Error in feedback data")
+            print("Robot Handler - Error in feedback data")
             print(e)
 
 
@@ -74,9 +88,7 @@ class RobotController:
         poses = []
         links = self.model.links
         joints = []
-        angles = []
-        dist_to_base = []
-        for i in range(80000):
+        for i in range(20000):
             pose_joints = []
             for j in range(len(links)):
                 min_deg = links[j].qlim[0]
@@ -85,30 +97,13 @@ class RobotController:
             self.set_joints(pose_joints, data_gen=True)
             poses.append([str(round(j[-1],3)) for j in self.joint_coordinates])
             joints.append([str(joint) for joint in pose_joints])
-            angles.append([str(angle) for angle in self.euler_angles])
-            d_to_b = math.sqrt(float(poses[i][0])**2 + float(poses[i][1])**2 + float(poses[i][2])**2)
-            dist_to_base.append([str(d_to_b)])
-            print(f"finished {i}")
         if "pose_data.txt" in os.listdir("test\\"):
             os.remove("test\\pose_data.txt")
         with open("test/pose_data.txt", "a") as data_file:
             for line in range(len(poses)):
-                data = poses[line] + angles[line] + dist_to_base[line] + joints[line]
+                data = poses[line] + joints[line]
                 data = str(data)              
                 data_file.write(data)
                 data_file.write("\n")
             data_file.close()
 
-
-    def generate_square(self, square_dims:tuple, solver):
-        #define the corners of the square
-        #use rtb IK to generate the joint angles for the corners
-        #use rtb traj to generate the points between the corners
-        #store all points starting from one corner and ending at the same corner
-        #simulate the trajectory of the robot
-        #include the points in the simulation for visualizing the path
-        pass
-
-    def generate_circle(self):
-
-        pass

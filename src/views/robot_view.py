@@ -60,7 +60,7 @@ class RobotView(ttkb.Frame):
             self.draw_readouts()
             self.draw_end_effector_pose([j[-1] for j in joint_coords], euler_angles)
         else:
-            joint_angles = to_degrees(self.root.main_container.robot_controller.model.robot.q)
+            joint_angles = to_degrees(self.root.main_container.robot_handler.model.robot.q)
             for i in range(len(joint_angles)):
                 self.plot_readouts[i].set_text(f'J{i+1}: {joint_angles[i]}')
             self.ee_pose.remove()
@@ -89,7 +89,7 @@ class RobotView(ttkb.Frame):
         self.plot_readouts = []
         x_coord = 0.025
         y_coord = 0.9
-        joint_angles = to_degrees(self.root.main_container.robot_controller.model.robot.q)
+        joint_angles = to_degrees(self.root.main_container.robot_handler.model.robot.q)
         for i in range(len(joint_angles)):
             joint_readout = self.fig.text(x=x_coord,
                                           y=y_coord,

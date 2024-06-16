@@ -6,7 +6,7 @@ from ttkbootstrap.constants import *
 from src.views.serial_view import SerialView
 
 
-class SerialController:
+class SerialHandler:
     def __init__(self, serial_service, parent):
         self.serial_service = serial_service
         self.view = SerialView(parent, self)

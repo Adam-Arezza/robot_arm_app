@@ -4,7 +4,7 @@ from src.views.d_h_table import DHTable
 from tkinter import filedialog as fd
 from src.utils import find
 
-class StartViewController:
+class StartViewHandler:
     def __init__(self, root, parent):
         self.root = root
         self.view = StartView(parent)

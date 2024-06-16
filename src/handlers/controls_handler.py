@@ -2,7 +2,7 @@ from src.views.controls_view import ControlsView
 from ttkbootstrap.dialogs.dialogs import Messagebox
 
 
-class ControlsController:
+class ControlsHandler:
     def __init__(self, root, parent, serial_command, model):
         self.root = root
         self.model = model

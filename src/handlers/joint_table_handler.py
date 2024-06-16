@@ -5,7 +5,7 @@ from ttkbootstrap.dialogs.dialogs import Messagebox
 from ttkbootstrap.constants import *
 
 
-class JointTableController:
+class JointTableHandler:
     def __init__(self, root, serial_command, parent):
         self.root = root
         self.serial_connection = None
@@ -49,11 +49,11 @@ class JointTableController:
     def add_joint_configuration(self):
         rows = self.view.joint_table.get_rows(visible=True)
         for row in rows:
-            are_equal = all(i == j for i, j in zip(row.values, self.root.robot_controller.get_joints()))
+            are_equal = all(i == j for i, j in zip(row.values, self.root.robot_handler.get_joints()))
             if are_equal:
                 Messagebox.ok(message='The table already has this configuration')
                 return 
-        self.view.joint_table.insert_row(values=to_degrees(self.root.robot_controller.get_joints()))
+        self.view.joint_table.insert_row(values=to_degrees(self.root.robot_handler.get_joints()))
         self.view.joint_table.load_table_data()
 
 

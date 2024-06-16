@@ -1,8 +1,8 @@
 import ttkbootstrap as ttkb
 from ttkbootstrap.constants import *
 from src.views.main_cointainer import MainContainer
-from src.models.robot_model import RobotArm
-from src.controllers.robot_controller import RobotController
+from src.robot_model import RobotArm
+from src.handlers.robot_handler import RobotHandler
 from src.views.robot_view import RobotView
 
 
@@ -27,11 +27,11 @@ class App(ttkb.Window):
 
 
     def show_configuration(self, cfg:list):
-        self.main_container.robot_controller.show_joint_config(cfg)
+        self.main_container.robot_handler.show_joint_config(cfg)
 
 
     def simulate_trajectory(self, trajectory:list):
-        self.main_container.robot_controller.simulate_trajectory(trajectory)
+        self.main_container.robot_handler.simulate_trajectory(trajectory)
 
 
     def set_online_mode(self, mode:bool):
@@ -39,7 +39,7 @@ class App(ttkb.Window):
 
 
     def update_robot_state(self):
-        self.main_container.robot_controller.update_joint_positions()
+        self.main_container.robot_handler.update_joint_positions()
 
 
     def on_close(self):
