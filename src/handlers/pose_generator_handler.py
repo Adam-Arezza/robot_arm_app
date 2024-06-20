@@ -1,5 +1,7 @@
 import numpy as np
+import math
 from random import randint
+from src.utils import rot_mat_to_euler
 
 
 class PoseGeneratorHandler:
@@ -7,14 +9,12 @@ class PoseGeneratorHandler:
         self.view = view
         self.model = model
         self.view.generate_btn.configure(command=self.generate)
+        self.pose_data = []
 
 
     def generate(self):
-        poses = []
         links = self.model.links
-        joints = []
         num_poses = int(self.view.pose_number_input.get()) 
-        save_location = self.view.save_location.get()
         for i in range(num_poses):
             pose_joints = []
             for j in range(len(links)):
@@ -39,17 +39,18 @@ class PoseGeneratorHandler:
                 joint_coordinates[2].append(j_coords[2])
                 if i == len(joint_angles)-1:
                     rot_mat = new_transform[:3,:3]
-            poses.append([str(round(j[-1],3)) for j in joint_coordinates])
-            joints.append([str(joint) for joint in pose_joints])
-            #add euclidian distance from base to ee point
-            #add roll pitch yaw of ee
+            angles = rot_mat_to_euler(rot_mat).tolist()
+            poses = [round(j[-1],3) for j in joint_coordinates]
+            dist = [math.sqrt((poses[0]**2 + poses[1]**2 + poses[2]**2))]
+            data = poses + angles + dist + pose_joints
+            self.pose_data.append(data)
+            self.write_pose_data()
 
+
+    def write_pose_data(self):
+        save_location = self.view.save_location.get()
         with open(f"{save_location}/pose_data.txt", "w") as data_file:
-            for line in range(len(poses)):
-                data = poses[line] + joints[line]
-                data = str(data)              
-                data_file.write(data)
-                data_file.write("\n")
+            for line in self.pose_data:
+                data_file.write(f"{line}\n")
             data_file.close()
-
 
