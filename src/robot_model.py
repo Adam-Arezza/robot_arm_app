@@ -11,6 +11,7 @@ class RobotArm:
         self.dh_params = dh_params
         self.target = None 
         self.default_state = []
+        self.joint_coordinates = []
 
         if len(dh_params) > 0:
            self.create_robot_from_dh(dh_params, initial_joint_states)

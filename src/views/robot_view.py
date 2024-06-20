@@ -36,9 +36,7 @@ class RobotView(ttkb.Frame):
         self.canvas_plot = FigureCanvasTkAgg(self.fig, self)
         #self.canvas_plot.get_tk_widget().pack(anchor='ne', side='right', padx=(0,20), pady=0)
         self.canvas_plot.get_tk_widget().pack(side='right', padx=(0,50), pady=0, expand=True, fill='both')
-        self.gen_data_btn = ttkb.Button(self, text="Generate Pose Data")
-        self.gen_data_btn.pack()
-       
+              
 
     def draw_robot(self, joint_config:list, joint_coords:list, rotation_mat:list):
         color = 'red'

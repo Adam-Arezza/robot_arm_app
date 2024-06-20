@@ -6,6 +6,8 @@ from tkinter import filedialog as fd
 from src.views.d_h_table import DHTable
 from src.views.components.menu import Menu
 from src.views.calibration_view import CalibrationView
+from src.views.pose_generator_view import PoseGenerator
+from src.handlers.pose_generator_handler import PoseGeneratorHandler
 
 
 class MenuHandler:
@@ -13,6 +15,7 @@ class MenuHandler:
         self.root = root
         self.view = Menu(root, {}, self)
         self.calibration_window = None
+        self.pose_generator_window = None
         self.dh_window = None
 
 
@@ -52,6 +55,16 @@ class MenuHandler:
             self.calibration_window = ttkb.window.Toplevel(self.root)
             self.calibration_view = CalibrationView(self.calibration_window, self.root.main_container.robot_handler.model.robot.links)
             self.calibration_view.pack()
+        else:
+            return
+
+
+    def open_pose_generator(self):
+        if not self.pose_generator_window:
+            self.pose_generator_window = ttkb.window.Toplevel(self.root)
+            pose_generator_view = PoseGenerator(self.pose_generator_window)
+            pose_generator_handler = PoseGeneratorHandler(pose_generator_view, self.root.robot_model)
+            pose_generator_view.pack(padx=30, pady=30)
         else:
             return
 

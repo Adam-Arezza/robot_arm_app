@@ -15,9 +15,7 @@ class RobotHandler:
         self.model = model
         self.serial_command = serial_command
         self.view = RobotView(root, parent)
-        self.view.gen_data_btn.configure(command=self.generate_pose_data)
         self.serial_connected = None
-        self.joint_coordinates = []
 
 
     def show_joint_config(self,cfg:list):
@@ -38,16 +36,16 @@ class RobotHandler:
             time.sleep(0.025)
 
 
-    def set_joints(self, joints:list, data_gen:bool = False):
+    def set_joints(self, joints:list):
         self.model.set_joint_states(joints)
-        self.update_joint_positions(data_gen = data_gen)
+        self.update_joint_positions()
 
 
     def get_joints(self) -> list:
         return self.model.get_joints()
 
 
-    def update_joint_positions(self, data_gen:bool = False):
+    def update_joint_positions(self):
         joint_angles = self.model.get_joints()
         prev_transform = None
         joint_coordinates = [[0],[0],[0]]
@@ -65,11 +63,7 @@ class RobotHandler:
             joint_coordinates[2].append(j_coords[2])
             if i == len(joint_angles)-1:
                 rot_mat = new_transform[:3,:3]
-        if data_gen:
-            self.joint_coordinates = joint_coordinates
-        else:
-            #print(f"final transformation matrix: {rot_mat}")
-            self.view.draw_robot(self.model.robot.q, joint_coordinates, rot_mat)
+        self.view.draw_robot(self.model.robot.q, joint_coordinates, rot_mat)
 
 
     def update_joint_data(self, new_data:str):
@@ -82,28 +76,4 @@ class RobotHandler:
         except Exception as e:
             print("Robot Handler - Error in feedback data")
             print(e)
-
-
-    def generate_pose_data(self):
-        poses = []
-        links = self.model.links
-        joints = []
-        for i in range(20000):
-            pose_joints = []
-            for j in range(len(links)):
-                min_deg = links[j].qlim[0]
-                max_deg = links[j].qlim[1]
-                pose_joints.append(randint(min_deg,max_deg))
-            self.set_joints(pose_joints, data_gen=True)
-            poses.append([str(round(j[-1],3)) for j in self.joint_coordinates])
-            joints.append([str(joint) for joint in pose_joints])
-        if "pose_data.txt" in os.listdir("test\\"):
-            os.remove("test\\pose_data.txt")
-        with open("test/pose_data.txt", "a") as data_file:
-            for line in range(len(poses)):
-                data = poses[line] + joints[line]
-                data = str(data)              
-                data_file.write(data)
-                data_file.write("\n")
-            data_file.close()
 
