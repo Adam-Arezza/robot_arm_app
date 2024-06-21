@@ -11,19 +11,21 @@ class JointConfigurationTable(ttkb.Frame):
         self.joint_entry_frame = ttkb.Frame(self)
         self.joint_table = None
         self.headers = None
-        self.name = 'joint_table_view'
+        self.name = "joint_table_view"
         self.add_to_table_btn = ttkb.Button(self.joint_entry_frame, 
-                                            text='Add to table', 
-                                            bootstyle='secondary.TButton')
+                                            text="Add to table", 
+                                            bootstyle="secondary.TButton")
 
         self.table_btn_group = ButtonGroup(self,
-                                           [('Add Joint Configuration',),
-                                            ('Show Configuration',),
-                                            ('Simulate Trajectory',),
-                                            ('Send To Robot',)],
-                                            'default',
+                                           [("Add Joint Configuration",),
+                                            ("Show Configuration",),
+                                            ("Simulate Trajectory",),
+                                            ("Send To Robot",),
+                                            ("Save Trajectory Data",),
+                                            ("Clear table",)],
+                                            "default",
                                             horizontal=False,
-                                            style='secondary.TButton')
+                                            style="secondary.TButton")
 
     def create_joint_entries(self, n:int):
         if self.headers or self.joint_table:
@@ -33,21 +35,21 @@ class JointConfigurationTable(ttkb.Frame):
             self.joint_config_entry.destroy()
             self.joint_config_entry = None
 
-        self.headers = [f'Joint{i+1}' for i in range(n)]
+        self.headers = [f"Joint{i+1}" for i in range(n)]
         self.joint_table = Tableview(
                 self,
                 coldata=self.headers,
                 rowdata=[],
                 height=10,
-                bootstyle='dark',
+                bootstyle="dark",
                 autofit=True
                 )
-        self.joint_config_entry = TableRow(self.joint_entry_frame, n, 'Configure Joints',width=10)
-        self.joint_config_entry.pack(anchor='nw', side='left')
-        self.add_to_table_btn.pack(anchor='ne')
+        self.joint_config_entry = TableRow(self.joint_entry_frame, n, "Configure Joints",width=10)
+        self.joint_config_entry.pack(anchor="nw", side="left")
+        self.add_to_table_btn.pack(anchor="ne")
         self.joint_entry_frame.pack(pady=20)
-        self.table_btn_group.pack(side='left',padx=0, pady=10, fill='x', anchor='nw')
-        self.joint_table.pack(padx=(0,50),expand=True, anchor='nw', fill='both')
+        self.table_btn_group.pack(side="left",padx=0, pady=10, fill="x", anchor="nw")
+        self.joint_table.pack(padx=(0,50),expand=True, anchor="nw", fill="both")
 
 
     def error_msg(self, msg:str):

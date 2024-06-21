@@ -6,7 +6,7 @@ class ControlsHandler:
     def __init__(self, root, parent, serial_command, model):
         self.root = root
         self.model = model
-        self.view = ControlsView(parent, self.slider_callback, self.model.robot.links)
+        self.view = ControlsView(parent, self.slider_callback, self.model.robot.links, self.model.default_state)
         self.serial_connected = None
         self.serial_command = serial_command
         self.view.toggle_mode_switch.configure(command=self.toggle_online_offline)

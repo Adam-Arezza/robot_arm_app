@@ -41,12 +41,18 @@ class SerialHandler:
             try:
                 new_msg = self.serial_service.message_queue.get_nowait()
                 if new_msg and len(new_msg) > 0:
-                    self.serial_service.publish_serial_event('new_data', new_msg)
+                    if new_msg[0] != "<":
+                        print("Invalid data format for received message")
+                    else:
+                        new_msg = new_msg.removeprefix("<")
+                        new_msg = new_msg.replace(">", "")
+                        print("data received, publishing new data event")
+                        self.serial_service.publish_serial_event('new_data', new_msg)
             except queue.Empty:
                 pass
             except Exception as e:
                 if e:
-                    print("Serial Controller - Error updating window")
+                    print("Serial handler - Error updating window")
                     print(e)
             time.sleep(0.02)
 

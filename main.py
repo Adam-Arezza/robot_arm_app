@@ -22,7 +22,7 @@ class App(ttkb.Window):
 
 
     def create_robot(self, dh_params:dict):
-        self.robot_model = RobotArm(dh_params, mode=False)
+        self.robot_model = RobotArm(dh_params, mode=False, initial_joint_states=[180, 90, 0, 0])
         self.main_container.main_view(self.robot_model)
 
 

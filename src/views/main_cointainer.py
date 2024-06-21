@@ -42,6 +42,7 @@ class MainContainer(ttkb.Frame):
     def create_serial_subscriptions(self):
         self.serial_service.add_subscriber('new_data', self.serial_handler.update_serial_window_received)
         self.serial_service.add_subscriber('new_data', self.robot_handler.update_joint_data)
+        #self.serial_service.add_subscriber('new_data', self.joint_table_handler.response_handler)
         self.serial_service.add_subscriber('connected', self.serial_handler.add_serial_connection)
         self.serial_service.add_subscriber('connected', self.joint_table_handler.add_serial_connection)
         self.serial_service.add_subscriber('connected', self.controls_handler.add_serial_connection)

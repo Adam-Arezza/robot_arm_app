@@ -68,12 +68,12 @@ class RobotHandler:
 
     def update_joint_data(self, new_data:str):
         try:
-            data = new_data.strip()
-            data = data.split(":")
-            data = [int(i) for i in data]
-            data.pop()
-            self.set_joints(data)
+           data = new_data.strip()
+           data = data.split(":")
+           data = [int(i) for i in data]
+           data.pop()
+           self.set_joints(data)
         except Exception as e:
-            print("Robot Handler - Error in feedback data")
-            print(e)
+           print("Robot Handler - Error in feedback data")
+           print(e)
 
