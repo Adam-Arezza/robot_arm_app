@@ -1,4 +1,5 @@
 import roboticstoolbox as rtb
+import numpy as np
 from src.views.components.joint_configuration_table import JointConfigurationTable
 from src.utils import to_degrees, to_radians
 from ttkbootstrap.dialogs.dialogs import Messagebox
@@ -10,6 +11,7 @@ class JointTableHandler:
         self.root = root
         self.serial_connection = None
         self.serial_command = serial_command
+        self.command_list = []
         self.view = JointConfigurationTable(parent)
         self.view.add_to_table_btn.configure(command=self.add_configuration)
         self.view.table_btn_group.buttons["add_joint_configuration"].configure(command=self.add_joint_configuration)
@@ -49,22 +51,32 @@ class JointTableHandler:
     def add_joint_configuration(self):
         rows = self.view.joint_table.get_rows(visible=True)
         for row in rows:
-            are_equal = all(i == j for i, j in zip(row.values, self.root.robot_handler.get_joints()))
+            are_equal = all(i == j for i, j in zip(row.values, self.root.main_container.robot_handler.get_joints()))
             if are_equal:
                 Messagebox.ok(message='The table already has this configuration')
                 return 
-        self.view.joint_table.insert_row(values=to_degrees(self.root.robot_handler.get_joints()))
+        self.view.joint_table.insert_row(values=to_degrees(self.root.main_container.robot_handler.get_joints()))
         self.view.joint_table.load_table_data()
 
 
     def simulate_trajectory(self):
+        final_trajectory = None
         joint_configurations = self.view.joint_table.get_rows(selected=True)
-        if len(joint_configurations) != 2:
-            Messagebox.ok(message='Select 2 joint configurations to compute a trajectory')
+        if len(joint_configurations) < 2:
+            Messagebox.ok(message='Select at least 2 joint configurations to compute a trajectory')
             return
         row_values = [to_radians(i.values) for i in joint_configurations]
-        trajectory = rtb.jtraj(row_values[0], row_values[1], t=25)
-        self.root.simulate_trajectory(trajectory.q)
+        for i in range(len(row_values)):
+            if i == 0:
+                continue
+            partial_trajectory = rtb.jtraj(row_values[i-1],row_values[i], t=25)
+            print(partial_trajectory.q)
+            if i == 1:
+                final_trajectory = partial_trajectory.q
+            else:
+                final_trajectory = np.concatenate((final_trajectory,partial_trajectory.q), axis=0)
+            print(final_trajectory)
+        self.root.simulate_trajectory(final_trajectory)
 
 
     def show_configuration(self):
