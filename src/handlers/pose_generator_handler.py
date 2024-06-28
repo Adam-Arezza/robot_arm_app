@@ -1,11 +1,13 @@
 import numpy as np
 import math
+from ttkbootstrap import Frame
+from src.robot_model import RobotArm
 from random import randint
 from src.utils import rot_mat_to_euler
 
 
 class PoseGeneratorHandler:
-    def __init__(self, view, model):
+    def __init__(self, view:Frame, model:RobotArm):
         self.view = view
         self.model = model
         self.view.generate_btn.configure(command=self.generate)

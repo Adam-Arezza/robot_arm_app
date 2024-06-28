@@ -1,10 +1,11 @@
 from src.serial_service import SerialService
+from ttkbootstrap import Frame
 from ttkbootstrap.constants import *
 from src.views.serial_view import SerialView
 
 
 class SerialHandler:
-    def __init__(self, root,  serial_service, parent):
+    def __init__(self, root,  serial_service:SerialService, parent:Frame):
         self.root = root
         self.serial_service = serial_service
         self.view = SerialView(parent, self)
@@ -25,11 +26,11 @@ class SerialHandler:
         self.view.serial_connected()
 
    
-    def update_serial_window_received(self, data):
+    def update_serial_window_received(self, data:str):
         self.view.update_serial_window_received(data)
 
 
-    def update_serial_window_sent(self, data):
+    def update_serial_window_sent(self, data:str):
         self.view.update_serial_window_sent(data)
 
 
@@ -37,7 +38,7 @@ class SerialHandler:
         pass
 
 
-    def log_message(self, msg):
+    def log_message(self, msg:str):
         self.view.update_serial_log(msg)
     
 

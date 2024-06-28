@@ -4,20 +4,22 @@ import time
 import os
 import queue
 from ttkbootstrap.dialogs.dialogs import Messagebox
+from ttkbootstrap import Frame
+from src.serial_service import SerialService
 from src.views.robot_view import RobotView
 from src.utils import to_radians, to_degrees
 from src.robot_model import RobotArm
 
 
 class RobotHandler:
-    def __init__(self, root, parent, serial_service, model):
+    def __init__(self, root, parent:Frame, serial_service:SerialService, model:RobotArm):
         self.root = root
         self.model = model
         self.serial_service = serial_service
         self.view = RobotView(root, parent)
 
 
-    def show_joint_config(self,cfg:list):
+    def show_joint_config(self, cfg:list):
         if not self.root.online_mode:
             self.set_joints(cfg)
         else:
@@ -25,7 +27,7 @@ class RobotHandler:
             return
 
 
-    def simulate_trajectory(self,traj:list):
+    def simulate_trajectory(self, traj:list):
         if self.root.online_mode:
             Messagebox.ok("Must be in offline mode")
             return
@@ -89,11 +91,11 @@ class RobotHandler:
            print(e)
 
 
-    def set_new_target(self, target):
+    def set_new_target(self, target:list):
         self.model.set_target(target)
                 
 
-    def check_target_reached(self):
+    def check_target_reached(self) -> bool:
         current_joint_state = to_degrees(self.get_joints())
         #print(f"Current state: {current_joint_state}")
         #print(f"Target state: {self.model.target}")

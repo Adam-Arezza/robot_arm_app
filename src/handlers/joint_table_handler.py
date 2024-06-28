@@ -1,14 +1,16 @@
 import roboticstoolbox as rtb
 import numpy as np
 import time
+from src.serial_service import SerialService
 from src.views.components.joint_configuration_table import JointConfigurationTable
 from src.utils import to_degrees, to_radians
 from ttkbootstrap.dialogs.dialogs import Messagebox
 from ttkbootstrap.constants import *
+from ttkbootstrap import Frame
 
 
 class JointTableHandler:
-    def __init__(self, root, serial_service, parent):
+    def __init__(self, root, serial_service:SerialService, parent:Frame):
         self.root = root
         self.serial_service = serial_service
         self.view = JointConfigurationTable(parent)
@@ -25,7 +27,7 @@ class JointTableHandler:
         self.root.reset_robot()
 
 
-    def create_joint_entries(self,n:int):
+    def create_joint_entries(self, n:int):
         self.view.create_joint_entries(n)
 
 
@@ -56,7 +58,7 @@ class JointTableHandler:
         self.root.simulate_trajectory(trajectory)
 
 
-    def generate_trajectory(self):
+    def generate_trajectory(self) -> np.ndarray:
         final_trajectory = None
         joint_configurations = self.view.joint_table.get_rows(selected=True)
         if len(joint_configurations) < 2:
@@ -77,7 +79,7 @@ class JointTableHandler:
 
     def show_configuration(self):
         config = self.view.joint_table.get_rows(selected=True)
-        if len(config) > 1:
+        if not len(config) == 1:
             self.view.error_msg('Select 1 joint configuration to show')
             return
         config = config[0].values

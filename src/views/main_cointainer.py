@@ -10,6 +10,7 @@ from src.utils import to_degrees, to_radians
 from ttkbootstrap.dialogs.dialogs import Messagebox
 from src.views.camera_view import CameraView
 from src.layout_manager import LayoutManager
+from src.robot_model import RobotArm
 
 
 class MainContainer(ttkb.Frame):
@@ -24,7 +25,7 @@ class MainContainer(ttkb.Frame):
         self.start_handler.show_view()
 
 
-    def main_view(self, model):
+    def main_view(self, model:RobotArm):
         self.root.config(menu=self.menu_handler.view)
         self.robot_model = model
         self.add_handlers()

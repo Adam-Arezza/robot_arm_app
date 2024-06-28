@@ -2,10 +2,11 @@ import ttkbootstrap as ttkb
 import json
 from src.views.components.button_group import ButtonGroup
 from PIL import Image, ImageTk
+from ttkbootstrap import Frame
 
 
 class StartView(ttkb.Frame):
-    def __init__(self, parent):
+    def __init__(self, parent:Frame):
         super().__init__(parent)
         self.image = Image.open('assets/robot.png')
         width = self.image.width

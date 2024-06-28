@@ -1,10 +1,13 @@
 from src.views.controls_view import ControlsView
 from ttkbootstrap.dialogs.dialogs import Messagebox
 from src.utils import to_degrees
+from ttkbootstrap import Frame
+from src.serial_service import SerialService
+from src.robot_model import RobotArm
 
 
 class ControlsHandler:
-    def __init__(self, root, parent, serial_service, model):
+    def __init__(self, root, parent:Frame, serial_service:SerialService, model:RobotArm):
         self.root = root
         self.model = model
         self.view = ControlsView(parent, self.slider_callback, self.model.robot.links, self.model.default_state)
@@ -12,23 +15,14 @@ class ControlsHandler:
         self.view.toggle_mode_switch.configure(command=self.toggle_online_offline)
         self.view.reset_btn.configure(command=self.reset)
         
-    #def add_serial_connection(self, port:str):
-    #    self.serial_connected = port
-
-
-    def slider_callback(self, slider_idx):
-       # slider_values = []
-       # for slider in self.view.slider_controls.sliders:
-       #     slider_values.append(slider.slider_value.get())
+    
+    def slider_callback(self, slider_idx:int):
         joint_angles = to_degrees(self.model.get_joints())
         joint_angles[slider_idx] = self.view.slider_controls.sliders[slider_idx].slider_value.get()
         self.model.set_joint_states(joint_angles)
         if not self.root.online_mode:
             self.root.update_robot_state()
-        #else:
-        #    command = self.serial_service.format_msg(joint_angles)
-        #    self.serial_service.send_serial_msg(command)
-
+        
 
     def toggle_online_offline(self):
         if self.serial_service.serial_connection:

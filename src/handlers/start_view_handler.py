@@ -1,11 +1,12 @@
 import json
+from ttkbootstrap import Frame
 from src.views.start_view import StartView
 from src.views.d_h_table import DHTable
 from tkinter import filedialog as fd
 from src.utils import find
 
 class StartViewHandler:
-    def __init__(self, root, parent):
+    def __init__(self, root, parent:Frame):
         self.root = root
         self.view = StartView(parent)
         self.parent = parent

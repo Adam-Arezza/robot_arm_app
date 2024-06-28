@@ -69,7 +69,7 @@ class SerialService:
             self.publish_serial_event('send', msg)
 
 
-    def start_command_queue(self, commands):
+    def start_command_queue(self, commands:list):
         for command in commands:
             self.command_queue.put(command, block=True)
         self.next_command()
@@ -83,7 +83,7 @@ class SerialService:
         self.send_serial_msg(formatted_command)
 
 
-    def format_msg(self, msg_data):
+    def format_msg(self, msg_data:list):
         string_arr = [str(i) for i in msg_data]
         separator = ':'
         result = f'<{separator.join(string_arr)}>'.encode()
@@ -91,7 +91,7 @@ class SerialService:
 
 
     def broadcast_responses(self):
-        print(f"Response queue: {self.response_queue.qsize()}")
+        #print(f"Response queue: {self.response_queue.qsize()}")
         if self.response_queue.qsize() > 0:
             try:
                 new_msg = self.response_queue.get_nowait()
@@ -124,5 +124,5 @@ class SerialService:
         print("Serial port closed")
 
 
-    def log_msg(self, msg):
+    def log_msg(self, msg:str):
         self.publish_serial_event('log', msg)

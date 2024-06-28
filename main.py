@@ -7,7 +7,7 @@ from src.views.robot_view import RobotView
 
 
 class App(ttkb.Window):
-    def __init__(self, theme, title, minsize):
+    def __init__(self, theme, title:str, minsize:tuple):
         super().__init__(themename=theme, 
                          title=title,
                          minsize=minsize
