@@ -8,12 +8,9 @@ from ttkbootstrap.constants import *
 
 
 class JointTableHandler:
-    def __init__(self, root, serial_command, parent):
+    def __init__(self, root, serial_service, parent):
         self.root = root
-        self.serial_connection = None
-        self.serial_command = serial_command
-        self.position_reached = False
-        self.position_target = []
+        self.serial_service = serial_service
         self.view = JointConfigurationTable(parent)
         self.view.add_to_table_btn.configure(command=self.add_configuration)
         self.view.table_btn_group.buttons["add_joint_configuration"].configure(command=self.add_joint_configuration)
@@ -30,15 +27,6 @@ class JointTableHandler:
 
     def create_joint_entries(self,n:int):
         self.view.create_joint_entries(n)
-
-
-    def add_serial_connection(self, port:str):
-        self.serial_connection = port
-
-
-    def remove_serial_connection(self, port:str):
-        if self.serial_connection and port == '':
-            self.serial_connection = None
 
 
     def add_configuration(self): 
@@ -64,6 +52,11 @@ class JointTableHandler:
 
 
     def simulate_trajectory(self):
+        trajectory = self.generate_trajectory()
+        self.root.simulate_trajectory(trajectory)
+
+
+    def generate_trajectory(self):
         final_trajectory = None
         joint_configurations = self.view.joint_table.get_rows(selected=True)
         if len(joint_configurations) < 2:
@@ -79,8 +72,7 @@ class JointTableHandler:
                 final_trajectory = partial_trajectory.q
             else:
                 final_trajectory = np.concatenate((final_trajectory,partial_trajectory.q), axis=0)
-            #print(final_trajectory)
-        self.root.simulate_trajectory(final_trajectory)
+        return final_trajectory
 
 
     def show_configuration(self):
@@ -94,8 +86,11 @@ class JointTableHandler:
 
     def send_to_robot(self):
         selected_rows = self.view.joint_table.get_rows(selected=True)
+        new_trajectory = [i.values for i in selected_rows]
+        for trajectory in new_trajectory:
+            print(trajectory)
 
-        if not self.serial_connection:
+        if not self.serial_service.serial_connection:
             self.view.error_msg('There is no serial connection')
             return
 
@@ -106,31 +101,8 @@ class JointTableHandler:
         if len(selected_rows) == 0:
             self.view.error_msg("Need to select one or more rows to send data")
             return
-        #TODO
-        #Fix logic, while loop hangs after sending data to controller
-        selected_rows_copy = selected_rows.copy()
-        while len(selected_rows_copy) > 0:
-            j_vals = selected_rows_copy[0].values
-            serial_msg = self.format_msg(j_vals)
-            try:
-                if self.position_target != j_vals:
-                    self.serial_command(serial_msg)
-                    self.position_target = j_vals
-                    print('sending message from joint table')
-                if self.position_reached:
-                    print('target reached')
-                    selected_rows_copy.pop(0)
-                    self.position_reached = False
-                    self.position_target = []
-                self.check_target_reached()
-                time.sleep(0.01)
-            except KeyboardInterrupt():
-                print("Cancelled sending data")
-                break
 
-            except Exception as e:
-                print("Something went wrong sending data to controller")
-                print(e)
+        self.serial_service.start_command_queue(new_trajectory)
                 
 
     def clear_table(self):
@@ -140,23 +112,3 @@ class JointTableHandler:
     def save_trajectory_data(self):
         self.view.joint_table.export_all_records()
 
-
-    def format_msg(self, msg_data):
-        j_vals_string_arr = [str(i) for i in msg_data]
-        separator = ':'
-        result = f'<{separator.join(j_vals_string_arr)}>'.encode()
-        return result
-
-
-    def check_target_reached(self):
-        print("checking if target is reached") 
-        current_joint_state = to_degrees(self.root.robot_model.get_joints())
-        joints_at_position = [False for j in current_joint_state]
-        for i in range(len(current_joint_state)):
-            if abs(int(self.position_target[i]) - int(current_joint_state[i])) <= 2:
-                joints_at_position[i] = True
-            else:
-                joints_at_position[i] = False
-        if all(joints_at_position) == True:
-            self.position_reached = True
-            print("Reached target!")

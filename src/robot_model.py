@@ -2,7 +2,7 @@ import roboticstoolbox as rtb
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-from src.utils import to_radians, rot_mat_to_euler
+from src.utils import to_radians, rot_mat_to_euler, to_degrees
 
 
 class RobotArm:
@@ -12,6 +12,8 @@ class RobotArm:
         self.target = None 
         self.default_state = []
         self.joint_coordinates = []
+        self.target = None
+        self.target_reached = False
 
         if len(dh_params) > 0:
            self.create_robot_from_dh(dh_params, initial_joint_states)
@@ -66,3 +68,13 @@ class RobotArm:
         else:
             self.robot.q = initial_joint_states
             self.default_state = initial_joint_states
+
+
+    def set_target(self, target):
+        if target and self.target != target:
+            self.target = target
+            self.target_reached = False
+        else:
+            print(f"Target has already been reached for: {target}")
+            return
+

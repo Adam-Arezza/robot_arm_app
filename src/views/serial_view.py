@@ -11,7 +11,7 @@ class SerialView(ttkb.Frame):
         self.handler = handler
         self.name = 'serial_view'
         self.ser_port = ttkb.StringVar()
-        self.serial_window = ScrolledText(self, width=60, height=40, wrap=ttkb.WORD)
+        self.serial_window = ScrolledText(self, width=60, height=40, wrap=ttkb.WORD, font=('Console', 12, 'normal'))
         self.serial_window.configure(state="disabled", bg='black', fg='lime')
         self.inputs_frame = ttkb.Frame(self)
         self.serial_list_dropdown = ttkb.Combobox(self.inputs_frame, textvariable=self.ser_port, width=15)
@@ -81,4 +81,11 @@ class SerialView(ttkb.Frame):
 
     def error_msg(self, msg:str):
         Messagebox.ok(msg)
+
+
+    def update_serial_log(self, msg:str):
+        self.serial_window.configure(state="normal")
+        self.serial_window.insert(END,f'LOG:  {msg} \n')
+        self.serial_window.yview(END)
+        self.serial_window.configure(state="disabled")
 

@@ -13,7 +13,8 @@ class SliderControls(ttkb.Frame):
                                  f"joint_{i+1}", 
                                  self.slider_cb, 
                                  [links[i].qlim[0], links[i].qlim[1]],
-                                 default_state[i])
+                                 default_state[i],
+                                 i)
             slider.pack(padx=(150,0), expand=True, fill='x')
             self.sliders.append(slider)
 
