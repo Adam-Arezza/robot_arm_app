@@ -4,6 +4,7 @@ from src.utils import to_degrees
 from ttkbootstrap import Frame
 from src.serial_service import SerialService
 from src.robot_model import RobotArm
+from queue import Queue
 
 
 class ControlsHandler:
@@ -14,15 +15,17 @@ class ControlsHandler:
         self.serial_service = serial_service
         self.view.toggle_mode_switch.configure(command=self.toggle_online_offline)
         self.view.reset_btn.configure(command=self.reset)
-        
+        self.command_queue = Queue()
+
     
     def slider_callback(self, slider_idx:int):
         joint_angles = to_degrees(self.model.get_joints())
         joint_angles[slider_idx] = self.view.slider_controls.sliders[slider_idx].slider_value.get()
         self.model.set_joint_states(joint_angles)
-        if not self.root.online_mode:
-            self.root.update_robot_state()
-        
+        self.root.update_robot_state()
+        if self.root.online_mode:
+            self.serial_service.add_slider_command(joint_angles)
+
 
     def toggle_online_offline(self):
         if self.serial_service.serial_connection:
@@ -35,6 +38,7 @@ class ControlsHandler:
 
 
     def reset(self):
+        print("resetting")
         self.model.set_joint_states(self.model.default_state)
         sliders = self.view.slider_controls.sliders
         for i in range(len(sliders)):

@@ -16,7 +16,7 @@ class RobotHandler:
         self.root = root
         self.model = model
         self.serial_service = serial_service
-        self.view = RobotView(root, parent)
+        self.view = RobotView(parent)
 
 
     def show_joint_config(self, cfg:list):
@@ -39,7 +39,8 @@ class RobotHandler:
 
     def set_joints(self, joints:list):
         self.model.set_joint_states(joints)
-        self.update_joint_positions()
+        if not self.root.online_mode:
+            self.update_joint_positions()
         if self.model.target and not self.model.target_reached:
             if self.check_target_reached():
                 self.model.target_reached = True
@@ -48,9 +49,6 @@ class RobotHandler:
                 self.serial_service.log_msg(msg)
                 if self.serial_service.command_queue.qsize() > 0:
                     self.serial_service.next_command() 
-            else:
-                print(f"Target: {self.model.target}")
-                print(f"Current: {to_degrees(self.get_joints())}")
 
 
     def get_joints(self) -> list:
@@ -58,7 +56,7 @@ class RobotHandler:
 
 
     def update_joint_positions(self):
-        joint_angles = self.model.get_joints()
+        joint_angles = self.get_joints()
         prev_transform = None
         joint_coordinates = [[0],[0],[0]]
         rot_mat = None
@@ -85,7 +83,6 @@ class RobotHandler:
            data = [int(i) for i in data]
            data.pop()
            self.set_joints(data)
-          # print(f"update joint data: {data}")
         except Exception as e:
            print("Robot Handler - Error in feedback data")
            print(e)
@@ -97,8 +94,6 @@ class RobotHandler:
 
     def check_target_reached(self) -> bool:
         current_joint_state = to_degrees(self.get_joints())
-        #print(f"Current state: {current_joint_state}")
-        #print(f"Target state: {self.model.target}")
         joints_at_position = [False for j in current_joint_state]
         for i in range(len(current_joint_state)):
             if abs(int(self.model.target[i]) - int(current_joint_state[i])) == 0:

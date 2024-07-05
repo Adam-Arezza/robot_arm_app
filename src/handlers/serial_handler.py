@@ -27,7 +27,8 @@ class SerialHandler:
 
    
     def update_serial_window_received(self, data:str):
-        self.view.update_serial_window_received(data)
+        pass
+        #self.view.update_serial_window_received(data)
 
 
     def update_serial_window_sent(self, data:str):

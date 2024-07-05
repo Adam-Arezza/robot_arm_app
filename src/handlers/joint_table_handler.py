@@ -104,7 +104,7 @@ class JointTableHandler:
             self.view.error_msg("Need to select one or more rows to send data")
             return
 
-        self.serial_service.start_command_queue(new_trajectory)
+        self.serial_service.start_trajectory_queue(new_trajectory)
                 
 
     def clear_table(self):

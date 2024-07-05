@@ -8,9 +8,8 @@ from src.utils import to_degrees, rot_mat_to_euler
 
 
 class RobotView(ttkb.Frame):
-    def __init__(self, root, parent):
+    def __init__(self, parent):
         super().__init__(parent)
-        self.root = root
         self.name = 'robot_view'
         self.configure(padding=(0,0))
         self.plot_readouts = None
@@ -34,23 +33,18 @@ class RobotView(ttkb.Frame):
         self.ax.set_ylim3d([y_limits[0], y_limits[0] + 0.4])
         self.ax.set_zlim3d([z_limits[0], z_limits[0] + 0.4])
         self.canvas_plot = FigureCanvasTkAgg(self.fig, self)
-        #self.canvas_plot.get_tk_widget().pack(anchor='ne', side='right', padx=(0,20), pady=0)
         self.canvas_plot.get_tk_widget().pack(side='right', padx=(0,50), pady=0, expand=True, fill='both')
               
 
     def draw_robot(self, joint_config:list, joint_coords:list, rotation_mat:list):
-        color = 'red'
-        markerfacecolor = 'blue'
-        markeredgecolor = 'blue'
-        #if not in online mode, draw with inverted colors
-        if not self.root.online_mode:
-            color = 'blue'
-            markerfacecolor = 'red'
-            markeredgecolor = 'red'
+        color = 'blue'
+        markerfacecolor = 'red'
+        markeredgecolor = 'red'
         xs, ys, zs = joint_coords
         ee_pose = [xs[-1], ys[-1], zs[-1]]       
         euler_angles = rot_mat_to_euler(rotation_mat)
         if self.robot_plot:
+            self.robot_plot.set_data(xs,ys)
             self.robot_plot.remove()
             for quiver in self.ee_axis:
                 quiver.remove()
