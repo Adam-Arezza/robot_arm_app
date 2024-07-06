@@ -28,39 +28,8 @@ class SerialView(ttkb.Frame):
         self.serial_window.pack(padx=(50,100), pady=(20,50), expand=True, fill='both')
 
 
-    def show_connected_msg(self, port:str):
-        self.serial_window.configure(state="normal")
-        self.serial_window.insert(END, f'Connected to serial device on port: {port}')
-        self.serial_window.yview(END)
-        self.serial_window.configure(state="disabled")
-
-
     def serial_connected(self):
         self.serial_btns.buttons['connect'].configure(text="Disconnect", command=self.handler.disconnect)
-
-
-    def sending_message(self, msg:str):
-        if len(msg) > 0:
-            self.serial_window.configure(state="normal")
-            self.serial_window.insert(END,f'Sending: {msg} \n')
-            self.serial_window.yview(END)
-            self.serial_window.configure(state="disabled")
-
-
-    def update_serial_window_received(self, msg:str):
-        if len(msg) > 0:
-            self.serial_window.configure(state="normal")
-            self.serial_window.insert(END,f'Received:  {msg} \n')
-            self.serial_window.yview(END)
-            self.serial_window.configure(state="disabled")
-
-
-    def update_serial_window_sent(self, msg:str):
-        if len(msg) > 0:
-            self.serial_window.configure(state="normal")
-            self.serial_window.insert(END,f'Sent:  {msg} \n')
-            self.serial_window.yview(END)
-            self.serial_window.configure(state="disabled")
 
 
     def clear_window(self):
@@ -83,9 +52,9 @@ class SerialView(ttkb.Frame):
         Messagebox.ok(msg)
 
 
-    def update_serial_log(self, msg:str):
+    def update_serial_log(self, msg:str, log_type:str):
         self.serial_window.configure(state="normal")
-        self.serial_window.insert(END,f'LOG:  {msg} \n')
+        self.serial_window.insert(END,f'{log_type}:  {msg} \n')
         self.serial_window.yview(END)
         self.serial_window.configure(state="disabled")
 

@@ -30,6 +30,7 @@ class SerialService:
                     self.start_thread()
                     self.start_slider_thread()
         except serial.SerialException as e:
+            self.log_msg(f"Error during serial connection: {e}", "ERROR")
             print(e)
 
 
@@ -69,6 +70,7 @@ class SerialService:
                     self.response_queue.put_nowait(data)
                     self.broadcast_responses()
             except Exception as e:
+                self.log_msg(f"Serial Service error: {e}", "ERROR")
                 print(f"Serial Service error: {e}")
 
 
@@ -81,6 +83,7 @@ class SerialService:
             except queue.Empty:
                 pass
             except Exception as e:
+                self.log_msg(f"Error processing slider commands: {e}", "ERROR")
                 print(f"Error processing slider commands: {e}")
             time.sleep(0.05)
 
@@ -89,8 +92,9 @@ class SerialService:
         if self.serial_connection:
             try:
                 self.serial_connection.write(msg)
-                self.publish_serial_event('send', msg)
+                self.publish_serial_event('log', f"sent to robot controller -> {msg}")
             except Exception as e:
+                self.log_msg(f"Error sending serial data: {e}", "ERROR")
                 print("Error writing serial message:")
                 print(e)
 
@@ -110,6 +114,7 @@ class SerialService:
         formatted_command = self.format_msg(command)
         print(f"The next command is: {command}")
         self.publish_serial_event('new_target', command)
+        self.log_msg(f"New target -> {command}", "INFO")
         self.send_serial_msg(formatted_command)
 
 
@@ -130,12 +135,13 @@ class SerialService:
                     else:
                         new_msg = new_msg.removeprefix("<")
                         new_msg = new_msg.replace(">", "")
-                        self.publish_serial_event('new_data', new_msg)
+                        self.log_msg(f"New data received -> {new_msg}", "INFO")
             except queue.Empty:
                 pass
             except Exception as e:
                 if e:
-                    print("Serial handler - Error updating window")
+                    self.log_msg(f"Serial handler -> {e}", "ERROR")
+                    print(f"Serial handler -> {e}")
                     print(e)
 
 
@@ -153,5 +159,5 @@ class SerialService:
         print("Serial port closed")
 
 
-    def log_msg(self, msg:str):
-        self.publish_serial_event('log', msg)
+    def log_msg(self, msg:str, log_type:str):
+        self.publish_serial_event('log', [msg, log_type])

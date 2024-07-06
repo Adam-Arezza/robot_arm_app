@@ -46,7 +46,7 @@ class RobotHandler:
                 self.model.target_reached = True
                 self.model.target = None
                 msg = "Reached Target!"
-                self.serial_service.log_msg(msg)
+                self.serial_service.log_msg(msg, "INFO")
                 if self.serial_service.command_queue.qsize() > 0:
                     self.serial_service.next_command() 
 
@@ -78,19 +78,20 @@ class RobotHandler:
 
     def update_joint_data(self, new_data:str):
         try:
-           data = new_data.strip()
-           data = data.split(":")
-           data = [int(i) for i in data]
-           data.pop()
-           self.set_joints(data)
+            data = new_data.strip()
+            data = data.split(":")
+            data = [int(i) for i in data]
+            data.pop()
+            self.set_joints(data)
         except Exception as e:
-           print("Robot Handler - Error in feedback data")
-           print(e)
+            self.serial_service.log_msg(f"There was an error updating joint data -> {e}", "ERROR")
+            print("Robot Handler - Error in feedback data")
+            print(e)
 
 
     def set_new_target(self, target:list):
         self.model.set_target(target)
-                
+
 
     def check_target_reached(self) -> bool:
         current_joint_state = to_degrees(self.get_joints())

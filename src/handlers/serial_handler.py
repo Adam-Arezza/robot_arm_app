@@ -22,25 +22,25 @@ class SerialHandler:
         
 
     def add_serial_connection(self, port:str):
-        self.view.show_connected_msg(port)
         self.view.serial_connected()
+        self.serial_service.log_msg(f"Connected to device on port: {port}", "INFO")
 
    
-    def update_serial_window_received(self, data:str):
-        pass
-        #self.view.update_serial_window_received(data)
+   # def update_serial_window_received(self, data:str):
+   #     pass
+   #     #self.view.update_serial_window_received(data)
 
 
-    def update_serial_window_sent(self, data:str):
-        self.view.update_serial_window_sent(data)
+   # def update_serial_window_sent(self, data:str):
+   #     self.view.update_serial_window_sent(data)
 
 
-    def remove_serial_connection(self,port):
-        pass
+   # def remove_serial_connection(self,port):
+   #     pass
 
 
-    def log_message(self, msg:str):
-        self.view.update_serial_log(msg)
+    def log_message(self, log:list):
+        self.view.update_serial_log(log[0], log[1])
     
 
     def disconnect(self):
