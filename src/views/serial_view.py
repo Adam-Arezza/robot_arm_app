@@ -11,7 +11,7 @@ class SerialView(ttkb.Frame):
         self.handler = handler
         self.name = 'serial_view'
         self.ser_port = ttkb.StringVar()
-        self.serial_window = ScrolledText(self, width=60, height=40, wrap=ttkb.WORD, font=('Console', 12, 'normal'))
+        self.serial_window = ScrolledText(self, width=40, height=40, wrap=ttkb.WORD, font=('Console', 12, 'normal'))
         self.serial_window.configure(state="disabled", bg='black', fg='lime')
         self.inputs_frame = ttkb.Frame(self)
         self.serial_list_dropdown = ttkb.Combobox(self.inputs_frame, textvariable=self.ser_port, width=15)

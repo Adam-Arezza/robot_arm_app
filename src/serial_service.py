@@ -66,9 +66,10 @@ class SerialService:
         while self.thread_running:
             try:
                 data = self.serial_connection.readline().decode()
-                if len(data) > 0:
+                if data and len(data) > 0 and data[0] == "<" and data[-1] == ">":
                     self.response_queue.put_nowait(data)
                     self.broadcast_responses()
+                    self.log_msg(f"New data received -> {data}", "INFO")
             except Exception as e:
                 self.log_msg(f"Serial Service error: {e}", "ERROR")
                 print(f"Serial Service error: {e}")
@@ -135,28 +136,26 @@ class SerialService:
                     else:
                         new_msg = new_msg.removeprefix("<")
                         new_msg = new_msg.replace(">", "")
-                        self.log_msg(f"New data received -> {new_msg}", "INFO")
+                        self.publish_serial_event('new_data', new_msg)
+                        #self.log_msg(f"New data received -> {new_msg}", "INFO")
             except queue.Empty:
                 pass
             except Exception as e:
                 if e:
-                    self.log_msg(f"Serial handler -> {e}", "ERROR")
-                    print(f"Serial handler -> {e}")
+                    self.log_msg(f"Serial service -> {e}", "ERROR")
+                    print(f"Serial service -> {e}")
                     print(e)
 
 
-    def disconnect(self):
+    def disconnect(self, port:str):
         print("Closing serial port")
         self.serial_kill_loop.set()
         if self.serial_connection and self.serial_connection.is_open:
             self.serial_connection.close()
             self.serial_connection = None
-        print("connection closed")
         self.thread_running = False
         self.slider_thread_running = False
-        self.publish_serial_event('disconnected', '')
-        print("thread not running")
-        print("Serial port closed")
+        self.log_msg(f"Disconnected from device on port: {port}", "INFO")
 
 
     def log_msg(self, msg:str, log_type:str):
