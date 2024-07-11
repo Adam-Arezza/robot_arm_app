@@ -1,12 +1,14 @@
 import roboticstoolbox as rtb
 import numpy as np
 import time
+import ttkbootstrap as ttkb
 from src.serial_service import SerialService
 from src.views.components.joint_configuration_table import JointConfigurationTable
 from src.utils import to_degrees, to_radians
 from ttkbootstrap.dialogs.dialogs import Messagebox
 from ttkbootstrap.constants import *
 from ttkbootstrap import Frame
+from src.views.goal_point_view import GoalPointView
 
 
 class JointTableHandler:
@@ -21,6 +23,8 @@ class JointTableHandler:
         self.view.table_btn_group.buttons["send_to_robot"].configure(command=self.send_to_robot)
         self.view.table_btn_group.buttons["save_trajectory_data"].configure(command=self.save_trajectory_data)
         self.view.table_btn_group.buttons["clear_table"].configure(command=self.clear_table)
+        self.view.table_btn_group.buttons["define_goal_point"].configure(command=self.open_goal_point_configuration)
+        self.point_definition_window = None
 
 
     def set_to_initial_state(self):
@@ -113,4 +117,20 @@ class JointTableHandler:
 
     def save_trajectory_data(self):
         self.view.joint_table.export_all_records()
+
+
+    def get_point(self):
+        point = [self.point_definition_view.x.get(), self.point_definition_view.y.get(), self.point_definition_view.z.get()]
+        print(f"new goal point: {point}")
+
+
+    def open_goal_point_configuration(self):
+        if not self.point_definition_window:
+            self.point_definition_window = ttkb.window.Toplevel(self.root)
+            self.point_definition_view = GoalPointView(self.point_definition_window)
+            self.point_definition_view.define_point_btn.configure(command=self.get_point)
+#            point_definition_view = GoalPointView(point_definition_view)
+            self.point_definition_view.pack(padx=30, pady=30)
+        else:
+            return
 

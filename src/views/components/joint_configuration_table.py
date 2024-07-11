@@ -20,6 +20,7 @@ class JointConfigurationTable(ttkb.Frame):
                                            [("Add Joint Configuration",),
                                             ("Show Configuration",),
                                             ("Simulate Trajectory",),
+                                            ("Define Goal Point",),
                                             ("Send To Robot",),
                                             ("Save Trajectory Data",),
                                             ("Clear table",)],
