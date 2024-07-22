@@ -105,3 +105,9 @@ class RobotHandler:
             return True
         else:
             return False
+
+
+    def add_goal_point(self, point):
+        point = [float(point[i]) for i in range(len(point))]
+        self.model.add_goal_point(point)
+        self.view.draw_point(point)

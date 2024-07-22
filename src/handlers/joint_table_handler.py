@@ -121,7 +121,8 @@ class JointTableHandler:
 
     def get_point(self):
         point = [self.point_definition_view.x.get(), self.point_definition_view.y.get(), self.point_definition_view.z.get()]
-        print(f"new goal point: {point}")
+        self.root.main_container.robot_handler.add_goal_point(point)
+        self.point_definition_window.destroy()
 
 
     def open_goal_point_configuration(self):
@@ -129,7 +130,6 @@ class JointTableHandler:
             self.point_definition_window = ttkb.window.Toplevel(self.root)
             self.point_definition_view = GoalPointView(self.point_definition_window)
             self.point_definition_view.define_point_btn.configure(command=self.get_point)
-#            point_definition_view = GoalPointView(point_definition_view)
             self.point_definition_view.pack(padx=30, pady=30)
         else:
             return

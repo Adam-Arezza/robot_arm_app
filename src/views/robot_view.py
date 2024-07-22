@@ -123,3 +123,9 @@ class RobotView(ttkb.Frame):
         self.fig.clf()
         self.ax.cla()
         plt.close()
+
+
+    def draw_point(self,point):
+        point = [float(point[i]) for i in range(len(point))]
+        self.ax.scatter(xs=point[0], ys=point[1], zs=point[2])
+        self.canvas_plot.draw()
