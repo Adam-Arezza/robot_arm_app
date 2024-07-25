@@ -27,7 +27,7 @@ class RobotArm:
 
     def get_joints(self) -> list:
         return self.robot.q
-   
+
 
     def get_ee_pose(self) -> list:
         joint_angles = self.get_joints()
@@ -59,7 +59,7 @@ class RobotArm:
             d = float(d)
             ql = float(ql)
             qu = float(qu)
-            link = rtb.RevoluteDH(d=d, a=r, alpha=math.radians(a), qlim=[ql,qu])
+            link = rtb.RevoluteDH(d=d, a=r, alpha=math.radians(a), qlim=[math.radians(ql),math.radians(qu)])
             self.links.append(link)
 
         self.robot = rtb.DHRobot(self.links) 

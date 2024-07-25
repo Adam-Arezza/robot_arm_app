@@ -24,6 +24,7 @@ class JointTableHandler:
         self.view.table_btn_group.buttons["save_trajectory_data"].configure(command=self.save_trajectory_data)
         self.view.table_btn_group.buttons["clear_table"].configure(command=self.clear_table)
         self.view.table_btn_group.buttons["define_goal_point"].configure(command=self.open_goal_point_configuration)
+        self.view.table_btn_group.buttons["go_to_goal"].configure(command=self.go_to_goal)
         self.point_definition_window = None
 
 
@@ -134,3 +135,6 @@ class JointTableHandler:
         else:
             return
 
+
+    def go_to_goal(self):
+        self.root.main_container.robot_handler.go_to_goal()

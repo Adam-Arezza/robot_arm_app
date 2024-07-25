@@ -3,6 +3,8 @@ from random import randint
 import time
 import os
 import queue
+import spatialmath as sm
+import roboticstoolbox as rtb
 from ttkbootstrap.dialogs.dialogs import Messagebox
 from ttkbootstrap import Frame
 from src.serial_service import SerialService
@@ -32,7 +34,9 @@ class RobotHandler:
             Messagebox.ok("Must be in offline mode")
             return
         for i in traj:
+            #print(i)
             deg = to_degrees(i)
+            #print(deg)
             self.set_joints(deg)
             time.sleep(0.025)
 
@@ -56,11 +60,10 @@ class RobotHandler:
 
 
     def update_joint_positions(self):
-        joint_angles = self.get_joints()
+        rot_mat = None
         prev_transform = None
         joint_coordinates = [[0],[0],[0]]
-        rot_mat = None
-        for i in range(len(joint_angles)):
+        for i in range(len(self.model.links)):
             t_matrix = self.model.robot.links[i].A(self.model.robot.q[i])  
             t_matrix = np.array(t_matrix)
             new_transform = t_matrix
@@ -71,8 +74,8 @@ class RobotHandler:
             joint_coordinates[0].append(j_coords[0])
             joint_coordinates[1].append(j_coords[1])
             joint_coordinates[2].append(j_coords[2])
-            if i == len(joint_angles)-1:
-                rot_mat = new_transform[:3,:3]
+        rot_mat = new_transform[:3,:3]
+        #self.fabrik_ik()
         self.view.draw_robot(self.model.robot.q, joint_coordinates, rot_mat)
 
 
@@ -111,3 +114,71 @@ class RobotHandler:
         point = [float(point[i]) for i in range(len(point))]
         self.model.add_goal_point(point)
         self.view.draw_point(point)
+
+
+    def go_to_goal(self):
+        robot = self.model.robot
+        point = self.model.goal_point
+        T_trans = sm.SE3(point[0], point[1], point[2])
+        T_rot = sm.SO3.RPY(0,0,0, unit='rad') 
+        T = T_trans * sm.SE3(T_rot)
+        solution = robot.ikine_LM(Tep=T_trans, q0=self.model.robot.q, mask=[1,1,1,0,0,0], joint_limits=True) 
+        fabrik_solution = 
+        if solution.success:
+            trajectory = self.generate_trajectory(robot, solution)
+            self.simulate_trajectory(trajectory)
+        else:
+            self.serial_service.log_msg("No soluton could be found", "INFO")
+
+
+    def generate_trajectory(self, robot, goal_pose) -> np.ndarray:
+        print(f"Current position: {robot.q}")
+        print(f"Goal position: {goal_pose.q}")
+        trajectory = rtb.jtraj(robot.q, goal_pose.q, t=20)
+        return trajectory.q
+
+    
+    def fabrik_ik(self, target):
+        rot_mat = None
+        prev_transform = None
+        joint_coordinates = [np.array([0,0,0])]
+        link_lengths = []
+        for i in range(len(self.model.links)):
+            t_matrix = self.model.robot.links[i].A(self.model.robot.q[i])  
+            t_matrix = np.array(t_matrix)
+            new_transform = t_matrix
+            if i > 0:
+                new_transform = np.dot(prev_transform, t_matrix)
+            prev_transform = new_transform
+            j_coords = new_transform[:3,3]
+            joint_coordinates.append(j_coords)
+            rot_mat = new_transform[:3,:3]
+            link_lengths.append(round(np.linalg.norm(j_coords - joint_coordinates[i]),3))
+
+        #determine if the target point is reachable (at least doesn't extend further than the full extent of links)
+        target_distance = np.linalg.norm(target - joint_coordinates[0])
+        total_reach = np.sum(link_lengths)
+        if target_distance > total_reach:
+            self.serial_service.log_msg("target is not reachable", "INFO")
+            return
+        else:
+            root = joint_coordinates[0]
+            dist_to_target = np.linalg.norm(joint_coordinates[-1] - target)
+            tolerance = 0.1
+            while dist_to_target > tolerance:
+
+                #backwards pass
+                joint_coordinates[-1] = target
+                for i in reversed(range(len(link_length))):
+                    #new vector from the target to the next joint
+                    #the joint will be placed on this new vector link length distance from target
+                    new_vec = np.linalg.norm(joint_coordinates[i] - joint_coordinates[i-1])
+                    joint_coordinates[i - 1] = joint_coordinates[i] + link_lengths[i] * (joint_coordinates[i] / new_vec)
+
+                #forwards pass
+                for j in range(len(link_lengths)):
+                    joint_coordinates[j] = root
+                    new_vec = np.linalg.norm(joint_coordinates[i] - joint_coordinates[i+1])
+                    joint_coordinates[i + 1] = joint_coordinates[i] + link_lengths[i] * (joint_coordinates[i] / new_vec) 
+                dist_to_target = np.linalg.norm(joint_coordinates[-1] - target)
+                
