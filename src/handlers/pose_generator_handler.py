@@ -23,8 +23,8 @@ class PoseGeneratorHandler:
             print(count)
             pose_joints = []
             for j in range(len(links)):
-                min_deg = links[j].qlim[0]
-                max_deg = links[j].qlim[1]
+                min_deg = math.degrees(links[j].qlim[0])
+                max_deg = math.degrees(links[j].qlim[1])
                 pose_joints.append(randint(min_deg,max_deg))
             self.model.set_joint_states(pose_joints)
             joint_angles = self.model.get_joints()

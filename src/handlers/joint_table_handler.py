@@ -26,6 +26,7 @@ class JointTableHandler:
         self.view.table_btn_group.buttons["define_goal_point"].configure(command=self.open_goal_point_configuration)
         self.view.table_btn_group.buttons["go_to_goal"].configure(command=self.go_to_goal)
         self.point_definition_window = None
+        self.previous_point = None
 
 
     def set_to_initial_state(self):
@@ -124,12 +125,17 @@ class JointTableHandler:
         point = [self.point_definition_view.x.get(), self.point_definition_view.y.get(), self.point_definition_view.z.get()]
         self.root.main_container.robot_handler.add_goal_point(point)
         self.point_definition_window.destroy()
+        self.point_definition_window = None
+
+    def preview_point(self, e):
+        point = [self.point_definition_view.x.get(), self.point_definition_view.y.get(), self.point_definition_view.z.get()]
+        self.root.main_container.robot_handler.preview_point(point)
 
 
     def open_goal_point_configuration(self):
         if not self.point_definition_window:
             self.point_definition_window = ttkb.window.Toplevel(self.root)
-            self.point_definition_view = GoalPointView(self.point_definition_window)
+            self.point_definition_view = GoalPointView(self.point_definition_window, self.preview_point)
             self.point_definition_view.define_point_btn.configure(command=self.get_point)
             self.point_definition_view.pack(padx=30, pady=30)
         else:

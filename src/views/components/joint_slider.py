@@ -12,7 +12,7 @@ class JointSlider(ttkb.Frame):
                           from_=joint_range[0], 
                           to=joint_range[1], 
                           value=default_value,
-                         # length=250,
+                          length=200,
                           command=lambda s : self.set_slider_value(int(float(s))))
             
         #value = ttkb.Label(parent, textvariable=self.slider_value, font=('Helvetica', 12, 'bold'))

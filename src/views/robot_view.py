@@ -15,6 +15,8 @@ class RobotView(ttkb.Frame):
         self.plot_readouts = None
         self.robot_plot = None
         self.ee_axis = []
+        self.preview_point_list = []
+        self.preview_label_list = []        
         self.fig, self.ax = plt.subplots(subplot_kw=dict(projection="3d"))
         self.fig.figure.subplots_adjust(left=0, right=1, bottom=0, top=1, wspace=0)
         self.fig.figure.set_figwidth(8)
@@ -29,9 +31,9 @@ class RobotView(ttkb.Frame):
         y_range = abs(y_limits[1] - y_limits[0])
         z_range = abs(z_limits[1] - z_limits[0])
         max_range = max(x_range, y_range, z_range)
-        self.ax.set_xlim3d([x_limits[0], x_limits[0] + 0.4])
-        self.ax.set_ylim3d([y_limits[0], y_limits[0] + 0.4])
-        self.ax.set_zlim3d([z_limits[0], z_limits[0] + 0.4])
+        self.ax.set_xlim3d([-max_range / 2, max_range / 2])
+        self.ax.set_ylim3d([-max_range / 2, max_range / 2])
+        self.ax.set_zlim3d([0, max_range])
         self.canvas_plot = FigureCanvasTkAgg(self.fig, self)
         self.canvas_plot.get_tk_widget().pack(side='right', padx=(0,50), pady=0, expand=True, fill='both')
               
@@ -119,13 +121,27 @@ class RobotView(ttkb.Frame):
     def draw_circle(self, circle_points):
         pass
 
+
     def close(self):
         self.fig.clf()
         self.ax.cla()
         plt.close()
 
 
-    def draw_point(self,point):
-        #point = [float(point[i]) for i in range(len(point))]
-        self.ax.scatter(xs=point[0], ys=point[1], zs=point[2])
+    def draw_point(self, point, preview):
+        if self.preview_point_list and len(self.preview_point_list) > 0:
+            self.preview_point_list.clear()
+            self.preview_label_list.clear()
+            self.preview_point.remove()
+            self.preview_label.remove()
+        if preview:
+            self.preview_point = self.ax.scatter(xs=point[0], ys=point[1], zs=point[2])
+            self.preview_label = self.ax.text(x=point[0], y=point[1], z=point[2], s=f"{point[0]}, {point[1]}, {point[2]}")
+            self.preview_point_list.append(self.preview_point)
+            self.preview_label_list.append(self.preview_label)
+        else:
+            self.ax.scatter(xs=point[0], ys=point[1], zs=point[2])
         self.canvas_plot.draw()
+
+
+

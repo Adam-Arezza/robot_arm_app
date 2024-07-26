@@ -75,7 +75,6 @@ class RobotHandler:
             joint_coordinates[1].append(j_coords[1])
             joint_coordinates[2].append(j_coords[2])
         rot_mat = new_transform[:3,:3]
-        #self.fabrik_ik()
         self.view.draw_robot(self.model.robot.q, joint_coordinates, rot_mat)
 
 
@@ -113,7 +112,7 @@ class RobotHandler:
     def add_goal_point(self, point):
         point = [float(point[i]) for i in range(len(point))]
         self.model.add_goal_point(point)
-        self.view.draw_point(point)
+        self.view.draw_point(point, False)
 
 
     def go_to_goal(self):
@@ -123,7 +122,6 @@ class RobotHandler:
         T_rot = sm.SO3.RPY(0,0,0, unit='rad') 
         T = T_trans * sm.SE3(T_rot)
         solution = robot.ikine_LM(Tep=T_trans, q0=self.model.robot.q, mask=[1,1,1,0,0,0], joint_limits=True) 
-        fabrik_solution = 
         if solution.success:
             trajectory = self.generate_trajectory(robot, solution)
             self.simulate_trajectory(trajectory)
@@ -134,8 +132,17 @@ class RobotHandler:
     def generate_trajectory(self, robot, goal_pose) -> np.ndarray:
         print(f"Current position: {robot.q}")
         print(f"Goal position: {goal_pose.q}")
-        trajectory = rtb.jtraj(robot.q, goal_pose.q, t=20)
+        trajectory = rtb.jtraj(robot.q, goal_pose.q, t=25)
         return trajectory.q
+
+
+    def preview_point(self, point):
+        point = [round(float(point[i]), 3) for i in range(len(point))]
+        self.view.draw_point(point, True)
+
+
+    def ccd_ik(self, target):
+        pass
 
     
     def fabrik_ik(self, target):

@@ -5,7 +5,7 @@ from ttkbootstrap.constants import GROOVE
 
 class SliderControls(ttkb.Frame):
     def __init__(self, parent, slider_cb, links, default_state):
-        super().__init__(parent, borderwidth=2, relief=GROOVE)
+        super().__init__(parent)
         self.parent = parent
         self.slider_cb = slider_cb
         self.sliders = []
