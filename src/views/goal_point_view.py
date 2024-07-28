@@ -25,6 +25,7 @@ class GoalPointView(ttkb.Frame):
         self.y_slider = ttkb.Scale(y_frame, from_=-1, to=1, length=250, variable=self.y, command=preview_point)
         self.z_slider = ttkb.Scale(z_frame, from_=-1, to=1, length=250, variable=self.z, command=preview_point)
         self.define_point_btn = ttkb.Button(self, text="Define Point")
+        self.cancel_btn = ttkb.Button(self, text="Close")
 
 
         self.header.pack()
@@ -42,7 +43,8 @@ class GoalPointView(ttkb.Frame):
         x_frame.pack()
         y_frame.pack()
         z_frame.pack()
-        self.define_point_btn.pack()
+        self.define_point_btn.pack(anchor='e', side='left', padx=5, pady=10)
+        self.cancel_btn.pack(anchor='w', pady=10)
 
     
   

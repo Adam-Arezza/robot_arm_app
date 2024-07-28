@@ -121,11 +121,16 @@ class JointTableHandler:
         self.view.joint_table.export_all_records()
 
 
-    def get_point(self):
+    def define_goal(self):
         point = [self.point_definition_view.x.get(), self.point_definition_view.y.get(), self.point_definition_view.z.get()]
-        self.root.main_container.robot_handler.add_goal_point(point)
-        self.point_definition_window.destroy()
-        self.point_definition_window = None
+        valid_point = self.root.main_container.robot_handler.check_valid_point(point)
+        if valid_point:
+            self.root.main_container.robot_handler.add_goal_point(point)
+            self.cancel_goal_point()
+        else:
+            Messagebox.ok('Invalid point, robot cannot reach the desired goal.')
+            return
+
 
     def preview_point(self, e):
         point = [self.point_definition_view.x.get(), self.point_definition_view.y.get(), self.point_definition_view.z.get()]
@@ -133,13 +138,20 @@ class JointTableHandler:
 
 
     def open_goal_point_configuration(self):
-        if not self.point_definition_window:
-            self.point_definition_window = ttkb.window.Toplevel(self.root)
-            self.point_definition_view = GoalPointView(self.point_definition_window, self.preview_point)
-            self.point_definition_view.define_point_btn.configure(command=self.get_point)
-            self.point_definition_view.pack(padx=30, pady=30)
-        else:
-            return
+        self.point_definition_window = ttkb.window.Toplevel(self.root)
+        self.point_definition_view = GoalPointView(self.point_definition_window, self.preview_point)
+        self.point_definition_window.protocol("WM_DELETE_WINDOW", self.cancel_goal_point)
+        self.point_definition_view.define_point_btn.configure(command=self.define_goal)
+        self.point_definition_view.cancel_btn.configure(command=self.cancel_goal_point)
+        self.point_definition_view.pack(padx=30, pady=30)
+
+
+    def cancel_goal_point(self):
+        print('closing window')
+        self.point_definition_view.destroy()
+        self.point_definition_view = None
+        self.point_definition_window.destroy()
+        self.point_definition_window = None
 
 
     def go_to_goal(self):

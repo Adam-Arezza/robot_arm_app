@@ -140,6 +140,19 @@ class RobotHandler:
         point = [round(float(point[i]), 3) for i in range(len(point))]
         self.view.draw_point(point, True)
 
+    
+    def check_valid_point(self, point) -> bool:
+        robot = self.model.robot
+        point = [float(point[i]) for i in range(len(point))]
+        T_trans = sm.SE3(point[0], point[1], point[2])
+        T_rot = sm.SO3.RPY(0,0,0, unit='rad') 
+        T = T_trans * sm.SE3(T_rot)
+        solution = robot.ikine_LM(Tep=T_trans, q0=self.model.robot.q, mask=[1,1,1,0,0,0], joint_limits=True) 
+        if solution.success:
+            return True
+        else:
+            return False
+
 
     def ccd_ik(self, target):
         pass
