@@ -17,7 +17,6 @@ class SerialService:
         self.thread_running = False
         self.slider_thread_running = False
         self.subscribers = {}
-        
 
 
     def connect(self, port:str):

@@ -35,5 +35,5 @@ class ControlsView(ttkb.Frame):
         if self.slider_controls:
             self.slider_controls.destroy()
         self.slider_controls = SliderControls(self, cb, links, default_state)
-        self.slider_controls.pack(padx=(0,25), pady=15, expand=True, fill='both')
+        self.slider_controls.pack(pady=15, expand=True, fill='y')
 

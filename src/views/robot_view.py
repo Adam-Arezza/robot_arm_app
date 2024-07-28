@@ -19,7 +19,7 @@ class RobotView(ttkb.Frame):
         self.preview_label_list = []        
         self.fig, self.ax = plt.subplots(subplot_kw=dict(projection="3d"))
         self.fig.figure.subplots_adjust(left=0, right=1, bottom=0, top=1, wspace=0)
-        self.fig.figure.set_figwidth(8)
+        self.fig.figure.set_figwidth(5)
         self.fig.figure.set_facecolor('black')
         self.ax.set_facecolor('black')
         self.ax.set_box_aspect([1,1,1])
@@ -35,7 +35,7 @@ class RobotView(ttkb.Frame):
         self.ax.set_ylim3d([-max_range / 2, max_range / 2])
         self.ax.set_zlim3d([0, max_range])
         self.canvas_plot = FigureCanvasTkAgg(self.fig, self)
-        self.canvas_plot.get_tk_widget().pack(side='right', padx=(0,50), pady=0, expand=True, fill='both')
+        self.canvas_plot.get_tk_widget().pack(side='right', padx=10, pady=0, expand=True, fill='both')
               
 
     def draw_robot(self, joint_config:list, joint_coords:list, rotation_mat:list):

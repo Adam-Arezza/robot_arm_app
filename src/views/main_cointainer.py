@@ -9,7 +9,6 @@ from src.handlers.controls_handler import ControlsHandler
 from src.utils import to_degrees, to_radians
 from ttkbootstrap.dialogs.dialogs import Messagebox
 from src.views.camera_view import CameraView
-from src.layout_manager import LayoutManager
 from src.robot_model import RobotArm
 
 
@@ -18,11 +17,17 @@ class MainContainer(ttkb.Frame):
         super().__init__(root, style='secondary.TFrame')
         self.root = root
         self.serial_service = SerialService()
-        self.layout_mgr = LayoutManager()
         self.main_grid_frame = ttkb.Frame(self)
         self.start_handler = StartViewHandler(root,self)
         self.menu_handler = MenuHandler(root)
         self.start_handler.show_view()
+        self.notebook = ttkb.Notebook(self.main_grid_frame)
+
+        #configure the main grid layout
+        self.main_grid_frame.columnconfigure(1, weight=1)
+        self.main_grid_frame.columnconfigure(0, weight=1)
+        self.main_grid_frame.rowconfigure(0, weight=1)         
+        self.main_grid_frame.rowconfigure(1, weight=1)
 
 
     def main_view(self, model:RobotArm):
@@ -30,10 +35,16 @@ class MainContainer(ttkb.Frame):
         self.robot_model = model
         self.add_handlers()
         self.start_handler.kill_view()
-        self.initialize_layout_manager()
-        num_joints = len(self.robot_model.robot.links)
+        self.camera_view = CameraView(self.notebook)
+        self.main_grid_frame.grid(column=0, row=0, rowspan=2, columnspan=2, sticky="nsew")
+        self.notebook.add(self.joint_table_handler.view, text="Joint configurations")
+        self.notebook.add(self.serial_handler.view, text="Serial")
+        self.notebook.add(self.camera_view, text="Vision")
+        self.notebook.grid(column=0,row=0, rowspan=2, sticky='nsew')
+        self.robot_handler.view.grid(column=1, row=0, columnspan=2,rowspan=1, sticky='nsew')
+        self.controls_handler.view.grid(column=1, row=1, sticky='n')
         self.create_serial_subscriptions()
-        self.joint_table_handler.create_joint_entries(num_joints)
+        self.joint_table_handler.create_joint_entries(len(self.robot_model.links))
         self.robot_handler.set_joints(self.robot_model.robot.q)
 
 
@@ -53,32 +64,18 @@ class MainContainer(ttkb.Frame):
                                                 self.robot_model)
         self.joint_table_handler = JointTableHandler(self.root, 
                                                            self.serial_service, 
-                                                           self.main_grid_frame)
+                                                           self.notebook)
         self.serial_handler = SerialHandler(self.root,
                                             self.serial_service, 
-                                            self.main_grid_frame)
+                                            self.notebook)
         self.controls_handler = ControlsHandler(self.root, 
                                                       self.main_grid_frame, 
                                                       self.serial_service,
                                                       self.robot_model)
 
-    def initialize_layout_manager(self):
-        #add views to layout manager
-        self.layout_mgr.add_main_grid(self.main_grid_frame)
-        self.layout_mgr.add_view(self.serial_handler.view)
-        self.layout_mgr.add_view(self.joint_table_handler.view)
-        self.layout_mgr.add_view(self.robot_handler.view)
-        #self.layout_mgr.add_view(self.camera_view)
-        self.layout_mgr.add_view(self.controls_handler.view)
-        self.layout_mgr.create_main_grid()
-        self.layout_mgr.create_grid()
-
 
     def on_close(self):
-        for view in self.layout_mgr.views:
-            view.destroy()
         self.robot_handler.view.close()
-        self.layout_mgr.main_grid.destroy()
         self.serial_service.disconnect()
         print("Shutting down...")
         self.destroy()

@@ -79,5 +79,6 @@ class RobotArm:
             print(f"Target has already been reached for: {target}")
             return
 
+
     def add_goal_point(self, point):
         self.goal_point = point
