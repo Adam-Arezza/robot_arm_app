@@ -1,4 +1,5 @@
 import ttkbootstrap as ttkb
+from src.views.components.button_group import ButtonGroup
 
 
 class GoalPointView(ttkb.Frame):
@@ -9,7 +10,6 @@ class GoalPointView(ttkb.Frame):
         y_frame = ttkb.Frame(self)
         z_frame = ttkb.Frame(self)
 
-        self.header = ttkb.Label(self,text="Goal Point Definition", font=('Helvetica', 12, 'bold'))
         self.label = ttkb.Label(first_row,text="XYZ: ", font=('Helvetica', 12, 'bold'))
         self.x = ttkb.StringVar(value=0)
         self.y = ttkb.StringVar(value=0)
@@ -26,9 +26,19 @@ class GoalPointView(ttkb.Frame):
         self.z_slider = ttkb.Scale(z_frame, from_=-1, to=1, length=250, variable=self.z, command=preview_point)
         self.define_point_btn = ttkb.Button(self, text="Define Point")
         self.cancel_btn = ttkb.Button(self, text="Close")
+        self.go_to_goal_btn = ttkb.Button(self, text="Go to goal")
+        self.points_table = ttkb.tableview.Tableview(self, coldata=["Point_ID", "Coordinates"], rowdata=[], height=10)
+        self.points_button_group = ButtonGroup(self, [("Define Point",),
+                                                      ("Go to Goal",),
+                                                      ("Cancel",)],
+                                                     "default",
+                                                     horizontal=True,
+                                                     style="secondary.TButton")
 
+        #table for all points
+        #selectable points
+        #go to selection
 
-        self.header.pack()
         first_row.pack(padx=20, pady=20)
         self.label.pack(side='left')
         self.z_input.pack(side='right')
@@ -43,8 +53,7 @@ class GoalPointView(ttkb.Frame):
         x_frame.pack()
         y_frame.pack()
         z_frame.pack()
-        self.define_point_btn.pack(anchor='e', side='left', padx=5, pady=10)
-        self.cancel_btn.pack(anchor='w', pady=10)
+        self.points_table.pack()
+        self.points_button_group.pack()
 
     
-  

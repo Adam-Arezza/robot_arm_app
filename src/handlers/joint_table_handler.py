@@ -23,10 +23,6 @@ class JointTableHandler:
         self.view.table_btn_group.buttons["send_to_robot"].configure(command=self.send_to_robot)
         self.view.table_btn_group.buttons["save_trajectory_data"].configure(command=self.save_trajectory_data)
         self.view.table_btn_group.buttons["clear_table"].configure(command=self.clear_table)
-        self.view.table_btn_group.buttons["define_goal_point"].configure(command=self.open_goal_point_configuration)
-        self.view.table_btn_group.buttons["go_to_goal"].configure(command=self.go_to_goal)
-        self.point_definition_window = None
-        self.previous_point = None
 
 
     def set_to_initial_state(self):
@@ -121,38 +117,3 @@ class JointTableHandler:
         self.view.joint_table.export_all_records()
 
 
-    def define_goal(self):
-        point = [self.point_definition_view.x.get(), self.point_definition_view.y.get(), self.point_definition_view.z.get()]
-        valid_point = self.root.main_container.robot_handler.check_valid_point(point)
-        if valid_point:
-            self.root.main_container.robot_handler.add_goal_point(point)
-            self.cancel_goal_point()
-        else:
-            Messagebox.ok('Invalid point, robot cannot reach the desired goal.')
-            return
-
-
-    def preview_point(self, e):
-        point = [self.point_definition_view.x.get(), self.point_definition_view.y.get(), self.point_definition_view.z.get()]
-        self.root.main_container.robot_handler.preview_point(point)
-
-
-    def open_goal_point_configuration(self):
-        self.point_definition_window = ttkb.window.Toplevel(self.root)
-        self.point_definition_view = GoalPointView(self.point_definition_window, self.preview_point)
-        self.point_definition_window.protocol("WM_DELETE_WINDOW", self.cancel_goal_point)
-        self.point_definition_view.define_point_btn.configure(command=self.define_goal)
-        self.point_definition_view.cancel_btn.configure(command=self.cancel_goal_point)
-        self.point_definition_view.pack(padx=30, pady=30)
-
-
-    def cancel_goal_point(self):
-        print('closing window')
-        self.point_definition_view.destroy()
-        self.point_definition_view = None
-        self.point_definition_window.destroy()
-        self.point_definition_window = None
-
-
-    def go_to_goal(self):
-        self.root.main_container.robot_handler.go_to_goal()

@@ -14,7 +14,7 @@ class RobotArm:
         self.joint_coordinates = []
         self.target = None
         self.target_reached = False
-        self.goal_point = None
+        #self.goal_point = None
 
         if len(dh_params) > 0:
            self.create_robot_from_dh(dh_params, initial_joint_states)
@@ -80,5 +80,5 @@ class RobotArm:
             return
 
 
-    def add_goal_point(self, point):
-        self.goal_point = point
+    #def add_goal_point(self, point):
+    #    self.goal_point = point

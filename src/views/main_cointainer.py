@@ -6,6 +6,7 @@ from src.handlers.start_view_handler import StartViewHandler
 from src.handlers.serial_handler import SerialHandler
 from src.handlers.joint_table_handler import JointTableHandler
 from src.handlers.controls_handler import ControlsHandler
+from src.handlers.points_handler import PointsHandler
 from src.utils import to_degrees, to_radians
 from ttkbootstrap.dialogs.dialogs import Messagebox
 from src.views.camera_view import CameraView
@@ -38,6 +39,7 @@ class MainContainer(ttkb.Frame):
         self.camera_view = CameraView(self.notebook)
         self.main_grid_frame.grid(column=0, row=0, rowspan=2, columnspan=2, sticky="nsew")
         self.notebook.add(self.joint_table_handler.view, text="Joint configurations")
+        self.notebook.add(self.points_handler.view, text="Points")
         self.notebook.add(self.serial_handler.view, text="Serial")
         self.notebook.add(self.camera_view, text="Vision")
         self.notebook.grid(column=0,row=0, rowspan=2, sticky='nsew')
@@ -72,6 +74,7 @@ class MainContainer(ttkb.Frame):
                                                       self.main_grid_frame, 
                                                       self.serial_service,
                                                       self.robot_model)
+        self.points_handler = PointsHandler(self.root, self.notebook)
 
 
     def on_close(self):

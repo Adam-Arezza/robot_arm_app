@@ -135,13 +135,22 @@ class RobotView(ttkb.Frame):
             self.preview_point.remove()
             self.preview_label.remove()
         if preview:
-            self.preview_point = self.ax.scatter(xs=point[0], ys=point[1], zs=point[2])
+            self.preview_point = self.ax.scatter(xs=point[0], ys=point[1], zs=point[2], c='yellow')
             self.preview_label = self.ax.text(x=point[0], y=point[1], z=point[2], s=f"{point[0]}, {point[1]}, {point[2]}")
             self.preview_point_list.append(self.preview_point)
             self.preview_label_list.append(self.preview_label)
         else:
-            self.ax.scatter(xs=point[0], ys=point[1], zs=point[2])
+            self.ax.scatter(xs=point[0], ys=point[1], zs=point[2], c='yellow')
         self.canvas_plot.draw()
+
+
+    def clear_point_preview(self):
+        if self.preview_point_list and len(self.preview_point_list) > 0:
+            self.preview_point_list.clear()
+            self.preview_label_list.clear()
+            self.preview_point.remove()
+            self.preview_label.remove()
+            self.canvas_plot.draw()
 
 
 

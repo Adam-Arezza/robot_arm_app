@@ -38,6 +38,7 @@ class RobotHandler:
             deg = to_degrees(i)
             #print(deg)
             self.set_joints(deg)
+            self.serial_service.log_msg(f"Moving to: {i}", "INFO")
             time.sleep(0.025)
 
 
@@ -111,27 +112,29 @@ class RobotHandler:
 
     def add_goal_point(self, point):
         point = [float(point[i]) for i in range(len(point))]
-        self.model.add_goal_point(point)
+        #self.model.add_goal_point(point)
         self.view.draw_point(point, False)
 
 
-    def go_to_goal(self):
+    def go_to_goal(self, goal:list):
         robot = self.model.robot
-        point = self.model.goal_point
-        T_trans = sm.SE3(point[0], point[1], point[2])
-        T_rot = sm.SO3.RPY(0,0,0, unit='rad') 
-        T = T_trans * sm.SE3(T_rot)
-        solution = robot.ikine_LM(Tep=T_trans, q0=self.model.robot.q, mask=[1,1,1,0,0,0], joint_limits=True) 
-        if solution.success:
+        #TODO
+        #get points from goal
+        #create a trajectory from point to point
+        #simulate trajectory
+        #if online, send to robot
+        #point = self.model.goal_point
+        previous_point = self.model.robot.q
+        for point in goal:
+            T_trans = sm.SE3(point[0], point[1], point[2])
+            solution = robot.ikine_LM(Tep=T_trans, q0=previous_point, mask=[1,1,1,0,0,0], joint_limits=True) 
             trajectory = self.generate_trajectory(robot, solution)
             self.simulate_trajectory(trajectory)
-        else:
-            self.serial_service.log_msg("No soluton could be found", "INFO")
 
 
     def generate_trajectory(self, robot, goal_pose) -> np.ndarray:
-        print(f"Current position: {robot.q}")
-        print(f"Goal position: {goal_pose.q}")
+        #print(f"Current position: {robot.q}")
+        #print(f"Goal position: {goal_pose.q}")
         trajectory = rtb.jtraj(robot.q, goal_pose.q, t=25)
         return trajectory.q
 
@@ -139,6 +142,10 @@ class RobotHandler:
     def preview_point(self, point):
         point = [round(float(point[i]), 3) for i in range(len(point))]
         self.view.draw_point(point, True)
+
+
+    def clear_point_preview(self):
+        self.view.clear_point_preview()
 
     
     def check_valid_point(self, point) -> bool:
