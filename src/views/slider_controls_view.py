@@ -9,6 +9,8 @@ class SliderControls(ttkb.Frame):
         self.parent = parent
         self.slider_cb = slider_cb
         self.sliders = []
+
+
         for i in range(len(links)):
             slider = JointSlider(self, 
                                  f"joint_{i+1}", 
@@ -16,6 +18,7 @@ class SliderControls(ttkb.Frame):
                                  [math.degrees(links[i].qlim[0]), math.degrees(links[i].qlim[1])],
                                  default_state[i],
                                  i)
-            slider.pack(padx=10, expand=True, fill='x')
+            slider.pack(padx=10,pady=10, expand=True, fill='x')
             self.sliders.append(slider)
+
 

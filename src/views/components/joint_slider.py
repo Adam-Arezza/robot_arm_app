@@ -17,7 +17,7 @@ class JointSlider(ttkb.Frame):
             
         #value = ttkb.Label(parent, textvariable=self.slider_value, font=('Helvetica', 12, 'bold'))
         label.pack(padx=10, side='left')
-        self.slider.pack()
+        self.slider.pack(pady=5)
         #value.pack()
         self.slider_cb = cb
 

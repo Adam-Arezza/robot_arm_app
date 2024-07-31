@@ -146,7 +146,7 @@ class SerialService:
                     print(e)
 
 
-    def disconnect(self, port:str):
+    def disconnect(self, port=None):
         print("Closing serial port")
         self.serial_kill_loop.set()
         if self.serial_connection and self.serial_connection.is_open:
@@ -154,7 +154,8 @@ class SerialService:
             self.serial_connection = None
         self.thread_running = False
         self.slider_thread_running = False
-        self.log_msg(f"Disconnected from device on port: {port}", "INFO")
+        if port:
+            self.log_msg(f"Disconnected from device on port: {port}", "INFO")
 
 
     def log_msg(self, msg:str, log_type:str):

@@ -9,6 +9,7 @@ from src.views.robot_view import RobotView
 class App(ttkb.Window):
     def __init__(self, theme, title:str):
         super().__init__(themename=theme, title=title)
+        self.robot_model = None
         self.maxsize = (self.winfo_screenwidth(),self.winfo_screenheight())
         self.resizable(True,True)
         self.geometry(f"{int(self.maxsize[0]/2)}x{int(self.maxsize[1]/2)}")
@@ -43,11 +44,11 @@ class App(ttkb.Window):
 
     def on_close(self):
         try:
-            self.main_container.on_close()
-            self.destroy()
+            self.main_container.destroy()
+            exit(0)
         except Exception as e:
             print(e)
-            self.destroy()
+            exit(0)
 
 if __name__ == "__main__":
     app = App('flatly', 'Robot Arm Application')
