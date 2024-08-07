@@ -59,12 +59,20 @@ class MenuHandler:
             return
 
 
+    def close_pose_generator(self):
+        self.pose_generator_view.destroy()
+        self.pose_generator_handler = None
+        self.pose_generator_window.destroy()
+        self.pose_generator_window = None
+
+
     def open_pose_generator(self):
         if not self.pose_generator_window:
             self.pose_generator_window = ttkb.window.Toplevel(self.root)
-            pose_generator_view = PoseGenerator(self.pose_generator_window)
-            pose_generator_handler = PoseGeneratorHandler(pose_generator_view, self.root.robot_model)
-            pose_generator_view.pack(padx=30, pady=30)
+            self.pose_generator_window.protocol('WM_DELETE_WINDOW', self.close_pose_generator)
+            self.pose_generator_view = PoseGenerator(self.pose_generator_window)
+            self.pose_generator_handler = PoseGeneratorHandler(self.pose_generator_view, self.root.robot_model)
+            self.pose_generator_view.pack(padx=30, pady=30)
         else:
             return
 

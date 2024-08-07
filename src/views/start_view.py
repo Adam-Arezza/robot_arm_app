@@ -13,7 +13,7 @@ class StartView(ttkb.Frame):
         height = self.image.height
         self.robot_img = self.image.resize((int(width/3), int(height/3)))
         self.robot_image = ImageTk.PhotoImage(self.robot_img)
-        self.image_label = ttkb.Label(self,image=self.robot_image)
+        self.image_label = ttkb.Label(self, image=self.robot_image)
         self.image_label.pack(pady=80)
         self.initial_btns = ButtonGroup(self,
                                         buttons=[('Create DH robot',),

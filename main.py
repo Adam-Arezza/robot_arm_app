@@ -4,6 +4,7 @@ from src.views.main_cointainer import MainContainer
 from src.robot_model import RobotArm
 from src.handlers.robot_handler import RobotHandler
 from src.views.robot_view import RobotView
+from src.views.styles import create_style_set
 
 
 class App(ttkb.Window):
@@ -13,6 +14,7 @@ class App(ttkb.Window):
         self.maxsize = (self.winfo_screenwidth(),self.winfo_screenheight())
         self.resizable(True,True)
         self.geometry(f"{int(self.maxsize[0]/2)}x{int(self.maxsize[1]/2)}")
+        create_style_set()
         self.main_container = MainContainer(self)
         self.main_container.pack(padx=0, pady=0, fill='both', expand=True)
         self.main_container.columnconfigure(0, weight=1)
@@ -51,6 +53,7 @@ class App(ttkb.Window):
             exit(0)
 
 if __name__ == "__main__":
+    #create_style_set()
     app = App('flatly', 'Robot Arm Application')
     app.protocol("WM_DELETE_WINDOW", app.on_close)
     app.mainloop()

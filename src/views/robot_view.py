@@ -35,7 +35,7 @@ class RobotView(ttkb.Frame):
         self.ax.set_ylim3d([-max_range / 2, max_range / 2])
         self.ax.set_zlim3d([0, max_range])
         self.canvas_plot = FigureCanvasTkAgg(self.fig, self)
-        self.canvas_plot.get_tk_widget().pack(side='right', padx=10, pady=0, expand=True, fill='both')
+        self.canvas_plot.get_tk_widget().pack(side='right', padx=0, pady=0, expand=True, fill='both')
               
 
     def draw_robot(self, joint_config:list, joint_coords:list, rotation_mat:list):

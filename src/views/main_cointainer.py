@@ -7,7 +7,6 @@ from src.handlers.serial_handler import SerialHandler
 from src.handlers.joint_table_handler import JointTableHandler
 from src.handlers.controls_handler import ControlsHandler
 from src.handlers.points_handler import PointsHandler
-from src.utils import to_degrees, to_radians
 from ttkbootstrap.dialogs.dialogs import Messagebox
 from src.views.camera_view import CameraView
 from src.robot_model import RobotArm
@@ -15,7 +14,7 @@ from src.robot_model import RobotArm
 
 class MainContainer(ttkb.Frame):
     def __init__(self, root):
-        super().__init__(root, style='secondary.TFrame')
+        super().__init__(root)
         self.root = root
         self.mode_string = ttkb.StringVar(value='Offline')
         self.mode_value = ttkb.BooleanVar(value=False)
@@ -25,17 +24,18 @@ class MainContainer(ttkb.Frame):
         self.menu_handler = MenuHandler(root)
         self.start_handler.show_view()
         self.notebook = ttkb.Notebook(self.main_grid_frame)
-        self.check_btn_frame = ttkb.Frame(self, style='default')
+        self.check_btn_frame = ttkb.Frame(self, style='Custom.TFrame')
         self.toggle_label = ttkb.Label(self.check_btn_frame, 
                                        textvariable=self.mode_string, 
-                                       bootstyle='default',
+                                       style='Custom.TLabel',
                                        font=('Helvetica',10,'bold'))
 
         self.toggle_mode_switch = ttkb.Checkbutton(self.check_btn_frame,
                                                    onvalue=True,
                                                    offvalue=False,
                                                    variable=self.mode_value,
-                                                   bootstyle='default',
+                                                   style='Custom.TCheckbutton',
+                                                   #bootstyle='light-round-toggle',
                                                    command=self.toggle_online_offline)
 
         self.reset_btn = ttkb.Button(self.check_btn_frame, 
@@ -44,7 +44,7 @@ class MainContainer(ttkb.Frame):
                                      command=self.reset)
         self.toggle_label.pack(side='left')
         self.toggle_mode_switch.pack(side='left', padx=10, pady=5)
-        self.reset_btn.pack()
+        self.reset_btn.pack(padx=(5,0))
 
         #configure the main grid layout
         self.main_grid_frame.columnconfigure(1, weight=1)

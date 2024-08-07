@@ -1,7 +1,7 @@
 import ttkbootstrap as ttkb
 import math
 from src.views.components.joint_slider import JointSlider
-from ttkbootstrap.constants import GROOVE
+
 
 class SliderControls(ttkb.Frame):
     def __init__(self, parent, slider_cb, links, default_state):
@@ -18,7 +18,7 @@ class SliderControls(ttkb.Frame):
                                  [math.degrees(links[i].qlim[0]), math.degrees(links[i].qlim[1])],
                                  default_state[i],
                                  i)
-            slider.pack(padx=10,pady=10, expand=True, fill='x')
+            slider.pack(pady=5)
             self.sliders.append(slider)
 
 

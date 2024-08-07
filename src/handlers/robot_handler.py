@@ -1,15 +1,12 @@
 import numpy as np
-from random import randint
 import time
-import os
-import queue
 import spatialmath as sm
 import roboticstoolbox as rtb
 from ttkbootstrap.dialogs.dialogs import Messagebox
 from ttkbootstrap import Frame
 from src.serial_service import SerialService
 from src.views.robot_view import RobotView
-from src.utils import to_radians, to_degrees
+from src.utils import to_degrees
 from src.robot_model import RobotArm
 
 

@@ -1,5 +1,4 @@
 import ttkbootstrap as ttkb
-from ttkbootstrap.constants import GROOVE
 
 class JointSlider(ttkb.Frame):
     def __init__(self, parent, joint_name, cb, joint_range, default_value, slider_idx):
@@ -16,8 +15,8 @@ class JointSlider(ttkb.Frame):
                           command=lambda s : self.set_slider_value(int(float(s))))
             
         #value = ttkb.Label(parent, textvariable=self.slider_value, font=('Helvetica', 12, 'bold'))
-        label.pack(padx=10, side='left')
-        self.slider.pack(pady=5)
+        label.pack(padx=10,side='left')
+        self.slider.pack()
         #value.pack()
         self.slider_cb = cb
 
