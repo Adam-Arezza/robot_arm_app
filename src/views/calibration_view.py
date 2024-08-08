@@ -1,22 +1,19 @@
 import ttkbootstrap as ttkb
-from src.views.components.joint_readouts import ReadoutsFrame
 from src.views.components.button_group import ButtonGroup
 
+
 class CalibrationView(ttkb.Frame):
-    def __init__(self,parent,joints):
+    def __init__(self, parent):
         super().__init__(parent)
         self.header = ttkb.Label(self, text='Calibration', font=('default', 12,'bold'))
         self.header.pack()
+        self.offset = ttkb.StringVar(value=0)
         self.calibration_btns = ButtonGroup(self,
-                                            [('Start',),
-                                             ('Stop',),
-                                             ('Set',)],
+                                            [('Set',)],
                                             horizontal=True,
-                                            style='primary.TButton',
+                                            style='secondary.TButton',
                                             container_style='default'
                                             )
-
-
-        self.readouts = ReadoutsFrame(self,len(joints))
+        self.offset_entry = ttkb.Entry(self, textvariable=self.offset)
+        self.offset_entry.pack()
         self.calibration_btns.pack()
-        self.readouts.pack()

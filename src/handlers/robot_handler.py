@@ -73,7 +73,8 @@ class RobotHandler:
             joint_coordinates[1].append(j_coords[1])
             joint_coordinates[2].append(j_coords[2])
         rot_mat = new_transform[:3,:3]
-        self.view.draw_robot(self.model.robot.q, joint_coordinates, rot_mat)
+        self.view.draw_robot(self.model.robot.q, joint_coordinates, rot_mat, self.model.ee_offset)
+
 
 
     def update_joint_data(self, new_data:str):

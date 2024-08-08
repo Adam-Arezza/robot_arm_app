@@ -16,7 +16,8 @@ class RobotView(ttkb.Frame):
         self.robot_plot = None
         self.ee_axis = []
         self.preview_point_list = []
-        self.preview_label_list = []        
+        self.preview_label_list = []
+        self.ee_offset = None  
         self.fig, self.ax = plt.subplots(subplot_kw=dict(projection="3d"))
         self.fig.figure.subplots_adjust(left=0, right=1, bottom=0, top=1, wspace=0)
         self.fig.figure.set_figwidth(5)
@@ -38,10 +39,16 @@ class RobotView(ttkb.Frame):
         self.canvas_plot.get_tk_widget().pack(side='right', padx=0, pady=0, expand=True, fill='both')
               
 
-    def draw_robot(self, joint_config:list, joint_coords:list, rotation_mat:list):
+    def draw_robot(self, joint_config:list, joint_coords:list, rotation_mat:list, offset:float):
         color = 'blue'
-        markerfacecolor = 'red'
-        markeredgecolor = 'red'
+        if offset > 0.0:
+            markerfacecolor = 'lime'
+            markeredgecolor = 'lime'
+            if not self.ee_offset:
+                self.draw_offset_text(offset)
+        else:
+            markerfacecolor = 'red'
+            markeredgecolor = 'red'
         xs, ys, zs = joint_coords
         ee_pose = [xs[-1], ys[-1], zs[-1]]       
         euler_angles = rot_mat_to_euler(rotation_mat)
@@ -61,7 +68,7 @@ class RobotView(ttkb.Frame):
                 self.plot_readouts[i].set_text(f'J{i+1}: {joint_angles[i]}')
             self.ee_pose.remove()
             self.draw_end_effector_pose([j[-1] for j in joint_coords], euler_angles)
-
+        
         self.robot_plot, = self.ax.plot(xs=xs, 
                                         ys=ys, 
                                         zs=zs,
@@ -70,7 +77,9 @@ class RobotView(ttkb.Frame):
                                         marker='o',
                                         markersize=5,
                                         markerfacecolor=markerfacecolor,
-                                        markeredgecolor=markeredgecolor)
+                                        markeredgecolor=markeredgecolor
+                                        )
+
         self.draw_ee_frame(ee_pose, rotation_mat)
         self.canvas_plot.draw()
         self.canvas_plot.flush_events()
@@ -151,6 +160,8 @@ class RobotView(ttkb.Frame):
             self.preview_point.remove()
             self.preview_label.remove()
             self.canvas_plot.draw()
+    
 
-
-
+    def draw_offset_text(self, offset):
+        self.ee_offset = self.fig.text(0.8,0.9, f"End effector offset: {offset}")
+        self.ee_offset.set_color('lime')

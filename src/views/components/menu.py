@@ -1,9 +1,4 @@
 import ttkbootstrap as ttkb
-from src.views.components.button_group import ButtonGroup
-from ttkbootstrap.dialogs.dialogs import Messagebox
-from src.utils import to_degrees, to_radians
-from ttkbootstrap.constants import GROOVE
-from ttkbootstrap import BooleanVar, StringVar
 
 
 class Menu(ttkb.Menu):

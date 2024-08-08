@@ -14,7 +14,7 @@ class RobotArm:
         self.joint_coordinates = []
         self.target = None
         self.target_reached = False
-        #self.goal_point = None
+        self.ee_offset = 0.0
 
         if len(dh_params) > 0:
            self.create_robot_from_dh(dh_params, initial_joint_states)
