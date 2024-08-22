@@ -65,10 +65,12 @@ class SerialService:
         while self.thread_running:
             try:
                 data = self.serial_connection.readline().decode()
-                if data and len(data) > 0 and data[0] == "<" and data[-1] == ">":
+                #print(f"Raw data: {data}")
+                if data and len(data) > 0 and data[0] == "<":
                     self.response_queue.put_nowait(data)
                     self.broadcast_responses()
                     self.log_msg(f"New data received -> {data}", "INFO")
+                    #print(f"New data received: {data}")
             except Exception as e:
                 self.log_msg(f"Serial Service error: {e}", "ERROR")
                 print(f"Serial Service error: {e}")
@@ -131,19 +133,21 @@ class SerialService:
                 new_msg = self.response_queue.get_nowait()
                 if new_msg and len(new_msg) > 0:
                     if new_msg[0] != "<":
+                        print("invalid message from robot controller")
+                        print(new_msg)
                         pass
                     else:
                         new_msg = new_msg.removeprefix("<")
                         new_msg = new_msg.replace(">", "")
                         self.publish_serial_event('new_data', new_msg)
-                        #self.log_msg(f"New data received -> {new_msg}", "INFO")
+                        self.log_msg(f"New data received -> {new_msg}", "INFO")
             except queue.Empty:
+                print("Nothing in response queue")
                 pass
             except Exception as e:
-                if e:
-                    self.log_msg(f"Serial service -> {e}", "ERROR")
-                    print(f"Serial service -> {e}")
-                    print(e)
+                self.log_msg(f"Serial service -> {e}", "ERROR")
+                print(f"Serial service -> {e}")
+                print(e)
 
 
     def disconnect(self, port=None):
