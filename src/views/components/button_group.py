@@ -23,4 +23,4 @@ class ButtonGroup(ttkb.Frame):
             if horizontal:
                 b.pack(side='left', padx=5, pady=0)
             else:
-                b.pack(fill='x', pady=10, padx=20)
+                b.pack(fill='x', pady=5, padx=10)

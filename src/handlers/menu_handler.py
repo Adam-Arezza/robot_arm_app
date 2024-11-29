@@ -1,13 +1,12 @@
 import roboticstoolbox as rtb
 import ttkbootstrap as ttkb
 import json
-from ttkbootstrap.dialogs.dialogs import Messagebox
 from tkinter import filedialog as fd
 from src.views.d_h_table import DHTable
 from src.views.components.menu import Menu
-from src.views.calibration_view import CalibrationView
 from src.views.pose_generator_view import PoseGenerator
 from src.handlers.pose_generator_handler import PoseGeneratorHandler
+from src.handlers.calibration_handler import CalibrationHandler
 
 
 class MenuHandler:
@@ -50,21 +49,34 @@ class MenuHandler:
         pass
 
 
+    def close_calibration(self):
+        self.calibration_window.destroy()
+        self.calibration_window = None
+
+
     def open_calibration(self):
         if not self.calibration_window:
             self.calibration_window = ttkb.window.Toplevel(self.root)
-            self.calibration_view = CalibrationView(self.calibration_window, self.root.main_container.robot_handler.model.robot.links)
-            self.calibration_view.pack()
+            self.calibration_window.protocol('WM_DELETE_WINDOW', self.close_calibration)
+            self.calibration_handler = CalibrationHandler(self.calibration_window, self.root.robot_model)
         else:
             return
+
+
+    def close_pose_generator(self):
+        self.pose_generator_view.destroy()
+        self.pose_generator_handler = None
+        self.pose_generator_window.destroy()
+        self.pose_generator_window = None
 
 
     def open_pose_generator(self):
         if not self.pose_generator_window:
             self.pose_generator_window = ttkb.window.Toplevel(self.root)
-            pose_generator_view = PoseGenerator(self.pose_generator_window)
-            pose_generator_handler = PoseGeneratorHandler(pose_generator_view, self.root.robot_model)
-            pose_generator_view.pack(padx=30, pady=30)
+            self.pose_generator_window.protocol('WM_DELETE_WINDOW', self.close_pose_generator)
+            self.pose_generator_view = PoseGenerator(self.pose_generator_window)
+            self.pose_generator_handler = PoseGeneratorHandler(self.pose_generator_view, self.root.robot_model)
+            self.pose_generator_view.pack(padx=30, pady=30)
         else:
             return
 

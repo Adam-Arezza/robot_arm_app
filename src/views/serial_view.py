@@ -11,11 +11,11 @@ class SerialView(ttkb.Frame):
         self.handler = handler
         self.name = 'serial_view'
         self.ser_port = ttkb.StringVar()
-        self.serial_window = ScrolledText(self, width=60, height=40, wrap=ttkb.WORD)
+        self.serial_window = ScrolledText(self, width=40, height=20, wrap=ttkb.WORD, font=('Console', 11, 'normal'))
         self.serial_window.configure(state="disabled", bg='black', fg='lime')
         self.inputs_frame = ttkb.Frame(self)
         self.serial_list_dropdown = ttkb.Combobox(self.inputs_frame, textvariable=self.ser_port, width=15)
-        self.inputs_label = ttkb.Label(self.inputs_frame, text="Available ports: ", font=('Helvetica', 12, 'bold'))
+        self.inputs_label = ttkb.Label(self.inputs_frame, text="Available ports: ", font=('Helvetica', 11, 'bold'))
         self.serial_btns = ButtonGroup(self.inputs_frame, [('Connect', self.handler.connect_to_port),
                                                            ('Scan', self.handler.get_port_list),
                                                            ('Clear', self.clear_window)
@@ -24,43 +24,12 @@ class SerialView(ttkb.Frame):
         self.inputs_label.pack(side='left')
         self.serial_list_dropdown.pack(pady=0, padx=5, side='left')
         self.serial_btns.pack()
-        self.inputs_frame.pack(pady=50)
-        self.serial_window.pack(padx=(50,100), pady=(20,50), expand=True, fill='both')
-
-
-    def show_connected_msg(self, port:str):
-        self.serial_window.configure(state="normal")
-        self.serial_window.insert(END, f'Connected to serial device on port: {port}')
-        self.serial_window.yview(END)
-        self.serial_window.configure(state="disabled")
+        self.inputs_frame.pack(pady=10)
+        self.serial_window.pack(padx=20, pady=20, expand=True, fill='y')
 
 
     def serial_connected(self):
         self.serial_btns.buttons['connect'].configure(text="Disconnect", command=self.handler.disconnect)
-
-
-    def sending_message(self, msg:str):
-        if len(msg) > 0:
-            self.serial_window.configure(state="normal")
-            self.serial_window.insert(END,f'Sending: {msg} \n')
-            self.serial_window.yview(END)
-            self.serial_window.configure(state="disabled")
-
-
-    def update_serial_window_received(self, msg:str):
-        if len(msg) > 0:
-            self.serial_window.configure(state="normal")
-            self.serial_window.insert(END,f'Received:  {msg} \n')
-            self.serial_window.yview(END)
-            self.serial_window.configure(state="disabled")
-
-
-    def update_serial_window_sent(self, msg:str):
-        if len(msg) > 0:
-            self.serial_window.configure(state="normal")
-            self.serial_window.insert(END,f'Sent:  {msg} \n')
-            self.serial_window.yview(END)
-            self.serial_window.configure(state="disabled")
 
 
     def clear_window(self):
@@ -81,4 +50,11 @@ class SerialView(ttkb.Frame):
 
     def error_msg(self, msg:str):
         Messagebox.ok(msg)
+
+
+    def update_serial_log(self, msg:str, log_type:str):
+        self.serial_window.configure(state="normal")
+        self.serial_window.insert(END,f'{log_type}:  {msg} \n')
+        self.serial_window.yview(END)
+        self.serial_window.configure(state="disabled")
 

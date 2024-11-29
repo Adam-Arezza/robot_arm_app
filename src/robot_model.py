@@ -2,7 +2,7 @@ import roboticstoolbox as rtb
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-from src.utils import to_radians, rot_mat_to_euler
+from src.utils import to_radians, rot_mat_to_euler, to_degrees
 
 
 class RobotArm:
@@ -12,6 +12,9 @@ class RobotArm:
         self.target = None 
         self.default_state = []
         self.joint_coordinates = []
+        self.target = None
+        self.target_reached = False
+        self.ee_offset = 0.0
 
         if len(dh_params) > 0:
            self.create_robot_from_dh(dh_params, initial_joint_states)
@@ -24,7 +27,7 @@ class RobotArm:
 
     def get_joints(self) -> list:
         return self.robot.q
-   
+
 
     def get_ee_pose(self) -> list:
         joint_angles = self.get_joints()
@@ -56,7 +59,7 @@ class RobotArm:
             d = float(d)
             ql = float(ql)
             qu = float(qu)
-            link = rtb.RevoluteDH(d=d, a=r, alpha=math.radians(a), qlim=[ql,qu])
+            link = rtb.RevoluteDH(d=d, a=r, alpha=math.radians(a), qlim=[math.radians(ql),math.radians(qu)])
             self.links.append(link)
 
         self.robot = rtb.DHRobot(self.links) 
@@ -66,3 +69,16 @@ class RobotArm:
         else:
             self.robot.q = initial_joint_states
             self.default_state = initial_joint_states
+
+
+    def set_target(self, target):
+        if target and self.target != target:
+            self.target = target
+            self.target_reached = False
+        else:
+            print(f"Target has already been reached for: {target}")
+            return
+
+
+    #def add_goal_point(self, point):
+    #    self.goal_point = point

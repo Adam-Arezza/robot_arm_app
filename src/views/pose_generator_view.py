@@ -12,10 +12,10 @@ class PoseGenerator(ttkb.Frame):
         self.pose_number_input = ttkb.Entry(first_row)
         self.save_location = ttkb.StringVar()
         self.save_location_entry = ttkb.Entry(second_row)
-        self.save_location_btn = ttkb.Button(second_row,text="save location", command=self.open_file_dialog)
+        self.save_location_btn = ttkb.Button(second_row,text="save location", command=self.open_file_dialog, style='secondary.TButton')
         self.show_poses = ttkb.BooleanVar(value=False)
         self.show_poses_checkbox = ttkb.Checkbutton(self,variable=self.show_poses)
-        self.generate_btn = ttkb.Button(self,text="Generate Poses")
+        self.generate_btn = ttkb.Button(self,text="Generate Poses", style='secondary.TButton')
 
         self.header.pack()
         first_row.pack(padx=20, pady=20)
@@ -25,6 +25,7 @@ class PoseGenerator(ttkb.Frame):
         self.save_location_btn.pack(side='left')
         self.save_location_entry.pack(side='right')
         self.generate_btn.pack()
+
     
     def open_file_dialog(self):
         self.save_location.set(fd.askdirectory())

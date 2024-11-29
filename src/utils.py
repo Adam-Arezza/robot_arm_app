@@ -21,7 +21,7 @@ def find(arr:list, fn):
     return False
 
 
-def rot_mat_to_euler(rot_mat) :
+def rot_mat_to_euler(rot_mat:np.ndarray) :
     sy = math.sqrt(rot_mat[0,0] * rot_mat[0,0] +  rot_mat[1,0] * rot_mat[1,0])
     singular = sy < 1e-6
     if  not singular :
