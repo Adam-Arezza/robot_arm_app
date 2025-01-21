@@ -18,7 +18,10 @@ class SliderControls(ttkb.Frame):
                                  [math.degrees(links[i].qlim[0]), math.degrees(links[i].qlim[1])],
                                  default_state[i],
                                  i)
-            slider.pack(pady=5)
+            if i == 0:
+                slider.pack(pady=(150,5))
+            else:
+                slider.pack(pady=5)
             self.sliders.append(slider)
 
 
