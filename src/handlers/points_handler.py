@@ -13,7 +13,7 @@ class PointsHandler:
         self.view.points_button_group.buttons["go_to_goal"].configure(command=self.go_to_goal)
 
 
-    def preview_point(self, e):
+    def preview_point(self):
         point = self.get_point()
         self.root.main_container.robot_handler.preview_point(point)
 

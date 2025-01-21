@@ -23,7 +23,7 @@ class MainContainer(ttkb.Frame):
         self.start_handler = StartViewHandler(root,self)
         self.menu_handler = MenuHandler(root)
         self.start_handler.show_view()
-        self.notebook = ttkb.Notebook(self.main_grid_frame)
+        self.notebook = ttkb.Notebook(self.main_grid_frame, bootstyle="primary")
         self.check_btn_frame = ttkb.Frame(self, style='Custom.TFrame')
         self.toggle_label = ttkb.Label(self.check_btn_frame, 
                                        textvariable=self.mode_string, 

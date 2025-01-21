@@ -21,9 +21,9 @@ class GoalPointView(ttkb.Frame):
         self.xlabel = ttkb.Label(x_frame,text="x: ", font=('Helvetica', 10, 'bold'))
         self.ylabel = ttkb.Label(y_frame,text="y: ", font=('Helvetica', 10, 'bold'))
         self.zlabel = ttkb.Label(z_frame,text="z: ", font=('Helvetica', 10, 'bold'))
-        self.x_slider = ttkb.Scale(x_frame, from_=-1, to=1, length=250, variable=self.x, command=preview_point)
-        self.y_slider = ttkb.Scale(y_frame, from_=-1, to=1, length=250, variable=self.y, command=preview_point)
-        self.z_slider = ttkb.Scale(z_frame, from_=-1, to=1, length=250, variable=self.z, command=preview_point)
+        self.x_slider = ttkb.Scale(x_frame, from_=-1, to=1, length=250, command=lambda value: self.update_variable(self.x, value, preview_point))
+        self.y_slider = ttkb.Scale(y_frame, from_=-1, to=1, length=250, command=lambda value: self.update_variable(self.y, value, preview_point))
+        self.z_slider = ttkb.Scale(z_frame, from_=-1, to=1, length=250, command=lambda value: self.update_variable(self.z, value, preview_point))
         self.define_point_btn = ttkb.Button(self, text="Define Point")
         self.cancel_btn = ttkb.Button(self, text="Close")
         self.go_to_goal_btn = ttkb.Button(self, text="Go to goal")
@@ -55,5 +55,10 @@ class GoalPointView(ttkb.Frame):
         z_frame.pack()
         self.points_table.pack()
         self.points_button_group.pack()
+
+    def update_variable(self, var, value, preview_point):
+        rounded_value = round(float(value), 3)
+        var.set(rounded_value)
+        preview_point()
 
     

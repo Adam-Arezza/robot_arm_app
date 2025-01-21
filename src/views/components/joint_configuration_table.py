@@ -49,8 +49,8 @@ class JointConfigurationTable(ttkb.Frame):
         self.joint_config_entry = TableRow(self.joint_entry_frame, n, "Configure Joints",width=10)
         self.joint_config_entry.pack(pady=(150,0))
         self.add_to_table_btn.pack(anchor="ne")
-        self.joint_entry_frame.pack()
-        self.table_btn_group.pack(side="left")
+        self.joint_entry_frame.pack(pady=15)
+        self.table_btn_group.pack(side="left", anchor="ne")
         self.joint_table.pack()
         self.joint_table_frame.pack()
 
