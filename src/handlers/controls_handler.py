@@ -6,6 +6,8 @@ from src.serial_service import SerialService
 from src.robot_model import RobotArm
 from queue import Queue
 
+#TODO
+#add end effector controls (move in x y z directions)
 
 class ControlsHandler:
     def __init__(self, root, parent:Frame, serial_service:SerialService, model:RobotArm):
