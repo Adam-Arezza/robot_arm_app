@@ -46,7 +46,6 @@ class RobotArm:
             joint_coordinates[2].append(j_coords[2])
             if i == len(joint_angles)-1:
                 rot_mat = new_transform[:3,:3]
-
         return joint_coordinates, rot_mat
 
 
@@ -79,6 +78,3 @@ class RobotArm:
             print(f"Target has already been reached for: {target}")
             return
 
-
-    #def add_goal_point(self, point):
-    #    self.goal_point = point

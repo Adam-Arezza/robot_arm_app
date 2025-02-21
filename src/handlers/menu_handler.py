@@ -57,6 +57,7 @@ class MenuHandler:
     def open_calibration(self):
         if not self.calibration_window:
             self.calibration_window = ttkb.window.Toplevel(self.root)
+            self.calibration_window.geometry('250x150')
             self.calibration_window.protocol('WM_DELETE_WINDOW', self.close_calibration)
             self.calibration_handler = CalibrationHandler(self.calibration_window, self.root.robot_model)
         else:

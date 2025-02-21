@@ -123,6 +123,7 @@ class RobotHandler:
         #if online, send to robot
         #point = self.model.goal_point
         previous_point = self.model.robot.q
+        print(previous_point)
         for point in goal:
             T_trans = sm.SE3(point[0], point[1], point[2])
             solution = robot.ikine_LM(Tep=T_trans, q0=previous_point, mask=[1,1,1,0,0,0], joint_limits=True) 
@@ -148,11 +149,12 @@ class RobotHandler:
     
     def check_valid_point(self, point) -> bool:
         robot = self.model.robot
+        print(robot.links)
         point = [float(point[i]) for i in range(len(point))]
         T_trans = sm.SE3(point[0], point[1], point[2])
         T_rot = sm.SO3.RPY(0,0,0, unit='rad') 
         T = T_trans * sm.SE3(T_rot)
-        solution = robot.ikine_LM(Tep=T_trans, q0=self.model.robot.q, mask=[1,1,1,0,0,0], joint_limits=True) 
+        solution = robot.ikine_LM(Tep=T, q0=self.model.robot.q, mask=[1,1,1,0,0,0], joint_limits=True) 
         if solution.success:
             return True
         else:
