@@ -35,7 +35,6 @@ class MainContainer(ttkb.Frame):
                                                    offvalue=False,
                                                    variable=self.mode_value,
                                                    style='Custom.TCheckbutton',
-                                                   #bootstyle='light-round-toggle',
                                                    command=self.toggle_online_offline)
 
         self.reset_btn = ttkb.Button(self.check_btn_frame, 
@@ -90,7 +89,6 @@ class MainContainer(ttkb.Frame):
                                             self.notebook)
         self.controls_handler = ControlsHandler(self.root, 
                                                       self.notebook, 
-                                                      self.serial_service,
                                                       self.robot_model)
         self.points_handler = PointsHandler(self.root, self.notebook)
 
@@ -99,6 +97,7 @@ class MainContainer(ttkb.Frame):
         if len(self.notebook.tabs()) > 0:
             for tab in self.notebook.tabs():
                 self.notebook.forget(tab)
+        #add views to tabs
         self.notebook.add(self.joint_table_handler.view, text="Joint configurations")
         self.notebook.add(self.controls_handler.view, text="Joint Sliders")
         self.notebook.add(self.points_handler.view, text="Points")
@@ -107,6 +106,9 @@ class MainContainer(ttkb.Frame):
         self.notebook.grid(column=0,row=0, rowspan=2, sticky='nsew')
 
 
+#toggles robot to online/offline mode
+#online will allow robot motion
+#offline will show simulated motion
     def toggle_online_offline(self):
         if self.serial_service.serial_connection:
             self.root.set_online_mode(self.mode_value.get())

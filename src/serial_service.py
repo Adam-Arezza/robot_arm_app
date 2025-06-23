@@ -8,26 +8,22 @@ from serial.tools import list_ports
 
 class SerialService:
     def __init__(self):
-        self.response_queue = queue.Queue()
         self.command_queue = queue.Queue()
-        self.slider_command_queue = queue.Queue()
         self.port_list = [i.name for i in list_ports.comports()]
         self.serial_connection = None
         self.serial_kill_loop = threading.Event()
         self.thread_running = False
-        self.slider_thread_running = False
         self.subscribers = {}
 
 
     def connect(self, port:str):
         try:
-            self.serial_connection = serial.Serial(port=port, baudrate=115200, timeout=0.05)
+            self.serial_connection = serial.Serial(port=port, baudrate=115200, timeout=0.1)
             self.serial_kill_loop.clear()
             if self.serial_connection and self.serial_connection.isOpen():
                 self.publish_serial_event('connected', port)
                 if not self.thread_running:
                     self.start_thread()
-                    self.start_slider_thread()
         except serial.SerialException as e:
             self.log_msg(f"Error during serial connection: {e}", "ERROR")
             print(e)
@@ -37,12 +33,6 @@ class SerialService:
         self.thread = threading.Thread(target=self.get_serial_msg, daemon=True)
         self.thread_running = True 
         self.thread.start()
-
-
-    def start_slider_thread(self):
-        self.slider_thread = threading.Thread(target=self.check_slider_command_queue, daemon=True)
-        self.slider_thread_running = True
-        self.slider_thread.start()
 
 
     def get_ports(self) -> list:
@@ -62,38 +52,26 @@ class SerialService:
 
 
     def get_serial_msg(self):
-        while self.thread_running:
-            try:
-                data = self.serial_connection.readline().decode()
-                #print(f"Raw data: {data}")
-                if data and len(data) > 0 and data[0] == "<":
-                    self.response_queue.put_nowait(data)
-                    self.broadcast_responses()
-                    self.log_msg(f"New data received -> {data}", "INFO")
-                    #print(f"New data received: {data}")
-            except Exception as e:
-                self.log_msg(f"Serial Service error: {e}", "ERROR")
-                print(f"Serial Service error: {e}")
-
-
-    def check_slider_command_queue(self):
-        while self.slider_thread_running:
-            try:
-                new_command = self.slider_command_queue.get_nowait()
-                new_command = self.format_msg(new_command)
-                self.send_serial_msg(new_command)
-            except queue.Empty:
-                pass
-            except Exception as e:
-                self.log_msg(f"Error processing slider commands: {e}", "ERROR")
-                print(f"Error processing slider commands: {e}")
-            time.sleep(0.05)
+        try:
+            while self.thread_running:
+                try:
+                    data = self.serial_connection.readline().decode(errors="ignore").strip()
+                    if data and len(data) > 0 and data[0] == "<":
+                        self.broadcast_response(data)
+                    else:
+                        print(".", end="", flush=True)
+                except Exception as e:
+                        self.log_msg(f"Serial Service error: {e}", "ERROR")
+                        print(f"Serial Service error: {e}")
+        except Exception as e:
+            print(f"Serial read error: ", e)
 
 
     def send_serial_msg(self, msg:str):
         if self.serial_connection:
             try:
                 self.serial_connection.write(msg)
+                self.serial_connection.flush()
                 self.publish_serial_event('log', f"sent to robot controller -> {msg}")
             except Exception as e:
                 self.log_msg(f"Error sending serial data: {e}", "ERROR")
@@ -101,13 +79,9 @@ class SerialService:
                 print(e)
 
 
-    def add_slider_command(self, command:list):
-        self.slider_command_queue.put_nowait(command)
-
-
     def start_trajectory_queue(self, commands:list):
         for command in commands:
-            self.command_queue.put(command, block=True)
+            self.command_queue.put(command, block=False)
         self.next_command()
 
 
@@ -115,6 +89,7 @@ class SerialService:
         command = self.command_queue.get_nowait()
         formatted_command = self.format_msg(command)
         print(f"The next command is: {command}")
+        print(f"The command queue has: {self.command_queue.qsize()} tasks left.")
         self.publish_serial_event('new_target', command)
         self.log_msg(f"New target -> {command}", "INFO")
         self.send_serial_msg(formatted_command)
@@ -127,27 +102,23 @@ class SerialService:
         return result
 
 
-    def broadcast_responses(self):
-        if self.response_queue.qsize() > 0:
-            try:
-                new_msg = self.response_queue.get_nowait()
-                if new_msg and len(new_msg) > 0:
-                    if new_msg[0] != "<":
-                        print("invalid message from robot controller")
-                        print(new_msg)
-                        pass
-                    else:
-                        new_msg = new_msg.removeprefix("<")
-                        new_msg = new_msg.replace(">", "")
-                        self.publish_serial_event('new_data', new_msg)
-                        self.log_msg(f"New data received -> {new_msg}", "INFO")
-            except queue.Empty:
-                print("Nothing in response queue")
-                pass
-            except Exception as e:
-                self.log_msg(f"Serial service -> {e}", "ERROR")
-                print(f"Serial service -> {e}")
-                print(e)
+    def broadcast_response(self, new_msg):
+        print(f"data received: {new_msg}")
+        try:
+            if new_msg and len(new_msg) > 0:
+               if new_msg[0] != "<":
+                   print("invalid message from robot controller")
+                   print(new_msg)
+                   pass
+               else:
+                   new_msg = new_msg.removeprefix("<")
+                   new_msg = new_msg.replace(">", "")
+                   self.publish_serial_event('new_data', new_msg)
+                   self.log_msg(f"New data received -> {new_msg}", "INFO")
+        except Exception as e:
+           self.log_msg(f"Serial service -> {e}", "ERROR")
+           print(f"Serial service -> {e}")
+           print(e)
 
 
     def disconnect(self, port=None):

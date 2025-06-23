@@ -4,14 +4,13 @@ import spatialmath as sm
 import roboticstoolbox as rtb
 from ttkbootstrap.dialogs.dialogs import Messagebox
 from ttkbootstrap import Frame
-from src.serial_service import SerialService
 from src.views.robot_view import RobotView
 from src.utils import to_degrees
 from src.robot_model import RobotArm
 
 
 class RobotHandler:
-    def __init__(self, root, parent:Frame, serial_service:SerialService, model:RobotArm):
+    def __init__(self, root, parent:Frame, serial_service, model:RobotArm):
         self.root = root
         self.model = model
         self.serial_service = serial_service
@@ -35,7 +34,6 @@ class RobotHandler:
             deg = to_degrees(i)
             #print(deg)
             self.set_joints(deg)
-            self.serial_service.log_msg(f"Moving to: {i}", "INFO")
             time.sleep(0.025)
 
 
@@ -47,11 +45,8 @@ class RobotHandler:
             if self.check_target_reached():
                 self.model.target_reached = True
                 self.model.target = None
-                msg = "Reached Target!"
-                self.serial_service.log_msg(msg, "INFO")
-                if self.serial_service.command_queue.qsize() > 0:
-                    self.serial_service.next_command() 
-
+                print("Reached target")
+                self.serial_service.next_command()
 
     def get_joints(self) -> list:
         return self.model.get_joints()
@@ -76,7 +71,6 @@ class RobotHandler:
         self.view.draw_robot(self.model.robot.q, joint_coordinates, rot_mat, self.model.ee_offset)
 
 
-
     def update_joint_data(self, new_data:str):
         try:
             data = new_data.strip()
@@ -85,7 +79,6 @@ class RobotHandler:
             data.pop()
             self.set_joints(data)
         except Exception as e:
-            self.serial_service.log_msg(f"There was an error updating joint data -> {e}", "ERROR")
             print("Robot Handler - Error in feedback data")
             print(e)
 
@@ -186,7 +179,8 @@ class RobotHandler:
         target_distance = np.linalg.norm(target - joint_coordinates[0])
         total_reach = np.sum(link_lengths)
         if target_distance > total_reach:
-            self.serial_service.log_msg("target is not reachable", "INFO")
+            print("target is not reachable")
+            #self.serial_service.log_msg("target is not reachable", "INFO")
             return
         else:
             root = joint_coordinates[0]

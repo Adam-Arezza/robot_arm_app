@@ -24,7 +24,7 @@ class App(ttkb.Window):
 
     def create_robot(self, dh_params:dict):
         #TODO create input for initial joint states in dh table
-        self.robot_model = RobotArm(dh_params, mode=False, initial_joint_states=[180, 90, 0, 0])
+        self.robot_model = RobotArm(dh_params, mode=False, initial_joint_states=[0, 90, 0, 0])
         self.main_container.main_view(self.robot_model)
 
 
@@ -53,7 +53,6 @@ class App(ttkb.Window):
             exit(0)
 
 if __name__ == "__main__":
-    #create_style_set()
     app = App('flatly', 'Robot Arm Application')
     app.protocol("WM_DELETE_WINDOW", app.on_close)
     app.mainloop()
