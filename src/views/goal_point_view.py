@@ -4,7 +4,7 @@ from src.views.components.button_group import ButtonGroup
 
 class GoalPointView(ttkb.Frame):
     def __init__(self, parent, preview_point):
-        super().__init__(parent)
+        super().__init__(parent, relief=ttkb.constants.GROOVE, borderwidth=2)
         first_row = ttkb.Frame(self)
         x_frame = ttkb.Frame(self)
         y_frame = ttkb.Frame(self)
@@ -39,7 +39,7 @@ class GoalPointView(ttkb.Frame):
         #selectable points
         #go to selection
 
-        first_row.pack(padx=20, pady=(100,20))
+        first_row.pack(padx=10, pady=(50,20))
         self.label.pack(side='left')
         self.z_input.pack(side='right')
         self.y_input.pack(side='right')

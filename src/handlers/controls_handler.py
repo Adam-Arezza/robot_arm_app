@@ -1,4 +1,4 @@
-from src.views.slider_controls_view import SliderControls
+from src.views.joint_controls_view import JointControls
 from ttkbootstrap.dialogs.dialogs import Messagebox
 from src.utils import to_degrees
 from ttkbootstrap import Frame
@@ -12,7 +12,7 @@ class ControlsHandler:
     def __init__(self, root, parent:Frame, model:RobotArm):
         self.root = root
         self.model = model
-        self.view = SliderControls(parent, slider_cb=self.slider_callback, links=self.model.links, default_state=self.model.default_state)
+        self.view = JointControls(parent, cb=self.slider_callback, links=self.model.links, default_state=self.model.default_state)
 
     
     def slider_callback(self, slider_idx:int):

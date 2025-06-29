@@ -54,6 +54,7 @@ class App(ttkb.Window):
 
 if __name__ == "__main__":
     app = App('flatly', 'Robot Arm Application')
+    app.state("zoomed")
     app.protocol("WM_DELETE_WINDOW", app.on_close)
     app.mainloop()
 

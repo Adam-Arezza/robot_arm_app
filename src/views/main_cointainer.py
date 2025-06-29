@@ -23,7 +23,6 @@ class MainContainer(ttkb.Frame):
         self.start_handler = StartViewHandler(root,self)
         self.menu_handler = MenuHandler(root)
         self.start_handler.show_view()
-        self.notebook = ttkb.Notebook(self.main_grid_frame, bootstyle="primary")
         self.check_btn_frame = ttkb.Frame(self, style='Custom.TFrame')
         self.toggle_label = ttkb.Label(self.check_btn_frame, 
                                        textvariable=self.mode_string, 
@@ -46,10 +45,16 @@ class MainContainer(ttkb.Frame):
         self.reset_btn.pack(padx=(5,0))
 
         #configure the main grid layout
+        self.main_grid_frame.columnconfigure(0, weight=0)
         self.main_grid_frame.columnconfigure(1, weight=1)
-        self.main_grid_frame.columnconfigure(0, weight=1)
-        self.main_grid_frame.rowconfigure(0, weight=1)         
+        self.main_grid_frame.columnconfigure(2, weight=1)
+        self.main_grid_frame.columnconfigure(3, weight=1)
+
+        self.main_grid_frame.rowconfigure(0, weight=1)
         self.main_grid_frame.rowconfigure(1, weight=1)
+        self.main_grid_frame.rowconfigure(2, weight=1)
+        self.main_grid_frame.rowconfigure(3, weight=1)
+
 
 
     def main_view(self, model:RobotArm):
@@ -57,11 +62,11 @@ class MainContainer(ttkb.Frame):
         self.robot_model = model
         self.add_handlers()
         self.start_handler.kill_view()
-        self.camera_view = CameraView(self.notebook)
-        self.main_grid_frame.grid(column=0, row=0, rowspan=2, columnspan=2, sticky="nsew")
+        self.camera_view = CameraView(self.main_grid_frame)
+        self.main_grid_frame.grid(column=0, row=0, rowspan=4, columnspan=4, sticky="nsew")
         self.add_notebook_tabs()
         self.check_btn_frame.grid(column=1, row=0, padx=10)
-        self.robot_handler.view.grid(column=1, row=0, columnspan=2,rowspan=2, sticky='nsew')
+        self.robot_handler.view.grid(column=2, row=0, columnspan=2,rowspan=3, sticky='nsew')
         self.create_serial_subscriptions()
         self.joint_table_handler.create_joint_entries(len(self.robot_model.links))
         self.robot_handler.set_joints(self.robot_model.robot.q)
@@ -83,28 +88,21 @@ class MainContainer(ttkb.Frame):
                                                 self.robot_model)
         self.joint_table_handler = JointTableHandler(self.root, 
                                                            self.serial_service, 
-                                                           self.notebook)
+                                                           self.main_grid_frame)
         self.serial_handler = SerialHandler(self.root,
                                             self.serial_service, 
-                                            self.notebook)
+                                            self.main_grid_frame)
         self.controls_handler = ControlsHandler(self.root, 
-                                                      self.notebook, 
+                                                      self.main_grid_frame, 
                                                       self.robot_model)
-        self.points_handler = PointsHandler(self.root, self.notebook)
+        self.points_handler = PointsHandler(self.root, self.main_grid_frame)
 
 
     def add_notebook_tabs(self):
-        if len(self.notebook.tabs()) > 0:
-            for tab in self.notebook.tabs():
-                self.notebook.forget(tab)
-        #add views to tabs
-        self.notebook.add(self.joint_table_handler.view, text="Joint configurations")
-        self.notebook.add(self.controls_handler.view, text="Joint Sliders")
-        self.notebook.add(self.points_handler.view, text="Points")
-        self.notebook.add(self.serial_handler.view, text="Serial")
-        self.notebook.add(self.camera_view, text="Vision")
-        self.notebook.grid(column=0,row=0, rowspan=2, sticky='nsew')
-
+        self.serial_handler.view.grid(column=0, row=0, columnspan=1)
+        self.points_handler.view.grid(column=1, row=0, columnspan=1)
+        self.joint_table_handler.view.grid(column=0, row=1, columnspan=1)
+        self.controls_handler.view.grid(column=1, row=1)
 
 #toggles robot to online/offline mode
 #online will allow robot motion

@@ -8,7 +8,7 @@ from ttkbootstrap.constants import GROOVE
 
 class JointConfigurationTable(ttkb.Frame):
     def __init__(self, parent):
-        super().__init__(parent)
+        super().__init__(parent, relief=GROOVE, borderwidth=2)
         self.joint_entry_frame = ttkb.Frame(self)
         self.joint_table = None
         self.headers = None
@@ -47,9 +47,9 @@ class JointConfigurationTable(ttkb.Frame):
                 )
         self.joint_table.autofit_columns()
         self.joint_config_entry = TableRow(self.joint_entry_frame, n, "Configure Joints",width=10)
-        self.joint_config_entry.pack(pady=(150,0))
+        self.joint_config_entry.pack(pady=(20,0))
         self.add_to_table_btn.pack(anchor="ne")
-        self.joint_entry_frame.pack(pady=15)
+        self.joint_entry_frame.pack(pady=5)
         self.table_btn_group.pack(side="left", anchor="ne")
         self.joint_table.pack()
         self.joint_table_frame.pack()
