@@ -39,7 +39,7 @@ class GoalPointView(ttkb.Frame):
         #selectable points
         #go to selection
 
-        first_row.pack(padx=10, pady=(50,20))
+        first_row.pack(padx=10)
         self.label.pack(side='left')
         self.z_input.pack(side='right')
         self.y_input.pack(side='right')

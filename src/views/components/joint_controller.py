@@ -3,7 +3,7 @@ from ttkbootstrap.constants import GROOVE
 
 class JointController(ttkb.Frame):
     def __init__(self, parent, joint_name, cb, joint_range, default_value, joint_idx, increment):
-        super().__init__(parent)
+        super().__init__(parent, relief=GROOVE)
         #self.configure(borderwidth=1, relief=GROOVE)
         self.joint_value = ttkb.IntVar()
         self.joint_value.set(default_value)
@@ -11,17 +11,17 @@ class JointController(ttkb.Frame):
         self.joint_range = joint_range
         label = ttkb.Label(self, text=joint_name.replace("_", " ").capitalize(), font=('Helvetica', 10, 'bold'))
         self.joint_idx = joint_idx
-        self.increase_angle_btn = ttkb.Button(text=">", command=self.increase_joint_angle)
-        self.decrease_angle_btn = ttkb.Button(text="<", command=self.decrease_joint_angle)
-        self.increase_speed_btn = ttkb.Button(text="+", command=self.increase_speed)
-        self.decrease_speed_btn = ttkb.Button(text="-", command=self.decrease_speed)
-        value = ttkb.Label(parent, textvariable=self.joint_value, font=('Helvetica', 12, 'bold'))
-        self.increase_angle_btn.pack()
+        self.increase_angle_btn = ttkb.Button(self, text=">", command=self.increase_joint_angle)
+        self.decrease_angle_btn = ttkb.Button(self, text="<", command=self.decrease_joint_angle)
+        self.increase_speed_btn = ttkb.Button(self, text="+", command=self.increase_speed)
+        self.decrease_speed_btn = ttkb.Button(self, text="-", command=self.decrease_speed)
+        value = ttkb.Label(self, textvariable=self.joint_value, font=('Helvetica', 12, 'bold'))
+        label.pack()
+        value.pack()
+        self.increase_angle_btn.pack(side='left')
         self.decrease_angle_btn.pack()
         self.increase_speed_btn.pack()
         self.decrease_speed_btn.pack()
-        label.pack()
-        value.pack()
         self.cb = cb
 
     def set_joint_value(self, s:int):

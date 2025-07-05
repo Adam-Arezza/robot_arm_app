@@ -23,8 +23,8 @@ class SerialView(ttkb.Frame):
         #Layout
         self.inputs_label.pack(side='left')
         self.serial_list_dropdown.pack(pady=0, padx=5, side='left')
-        self.serial_btns.pack()
-        self.inputs_frame.pack(pady=10)
+        self.serial_btns.pack(fill='both', expand=True)
+        self.inputs_frame.pack(fill='both', expand=True)
         self.serial_window.pack(padx=10, pady=10, expand=True, fill='y')
 
 

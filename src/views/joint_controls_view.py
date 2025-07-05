@@ -5,7 +5,7 @@ from src.views.components.joint_controller import JointController
 
 class JointControls(ttkb.Frame):
     def __init__(self, parent, cb, links, default_state):
-        super().__init__(parent)
+        super().__init__(parent, relief=ttkb.constants.GROOVE)
         self.parent = parent
         self.cb = cb
         self.joints = []
@@ -19,6 +19,6 @@ class JointControls(ttkb.Frame):
                                  default_state[i],
                                  i,
                                  self.increment)
-            joint_controller.pack()          
+            joint_controller.pack(side='left')          
             self.joints.append(joint_controller)
 

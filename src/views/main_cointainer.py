@@ -19,11 +19,32 @@ class MainContainer(ttkb.Frame):
         self.mode_string = ttkb.StringVar(value='Offline')
         self.mode_value = ttkb.BooleanVar(value=False)
         self.serial_service = SerialService()
-        self.main_grid_frame = ttkb.Frame(self)
         self.start_handler = StartViewHandler(root,self)
         self.menu_handler = MenuHandler(root)
         self.start_handler.show_view()
-        self.check_btn_frame = ttkb.Frame(self, style='Custom.TFrame')
+
+        #configure the main grid layout
+        self.columnconfigure(0,weight=0)
+        self.columnconfigure(1,weight=0)
+        self.columnconfigure(2,weight=1)
+        self.rowconfigure(0,weight=1)
+        self.rowconfigure(1,weight=1)
+
+
+    def main_view(self, model:RobotArm):
+        self.root.config(menu=self.menu_handler.view)
+        self.robot_model = model
+        self.add_handlers()
+        self.start_handler.kill_view()
+        #self.camera_view = CameraView(self.main_grid_frame)
+        self.add_notebook_tabs()
+        #self.check_btn_frame.grid(column=2, row=0, sticky='e')
+        self.robot_handler.view.grid(column=2, row=0, rowspan=2, sticky='nsew')
+        self.create_serial_subscriptions()
+        self.joint_table_handler.create_joint_entries(len(self.robot_model.links))
+        self.robot_handler.set_joints(self.robot_model.robot.q)
+
+        self.check_btn_frame = ttkb.Frame(self.robot_handler.view,style='Custom.TFrame')
         self.toggle_label = ttkb.Label(self.check_btn_frame, 
                                        textvariable=self.mode_string, 
                                        style='Custom.TLabel',
@@ -43,33 +64,7 @@ class MainContainer(ttkb.Frame):
         self.toggle_label.pack(side='left')
         self.toggle_mode_switch.pack(side='left', padx=10, pady=5)
         self.reset_btn.pack(padx=(5,0))
-
-        #configure the main grid layout
-        self.main_grid_frame.columnconfigure(0, weight=0)
-        self.main_grid_frame.columnconfigure(1, weight=1)
-        self.main_grid_frame.columnconfigure(2, weight=1)
-        self.main_grid_frame.columnconfigure(3, weight=1)
-
-        self.main_grid_frame.rowconfigure(0, weight=1)
-        self.main_grid_frame.rowconfigure(1, weight=1)
-        self.main_grid_frame.rowconfigure(2, weight=1)
-        self.main_grid_frame.rowconfigure(3, weight=1)
-
-
-
-    def main_view(self, model:RobotArm):
-        self.root.config(menu=self.menu_handler.view)
-        self.robot_model = model
-        self.add_handlers()
-        self.start_handler.kill_view()
-        self.camera_view = CameraView(self.main_grid_frame)
-        self.main_grid_frame.grid(column=0, row=0, rowspan=4, columnspan=4, sticky="nsew")
-        self.add_notebook_tabs()
-        self.check_btn_frame.grid(column=1, row=0, padx=10)
-        self.robot_handler.view.grid(column=2, row=0, columnspan=2,rowspan=3, sticky='nsew')
-        self.create_serial_subscriptions()
-        self.joint_table_handler.create_joint_entries(len(self.robot_model.links))
-        self.robot_handler.set_joints(self.robot_model.robot.q)
+        self.check_btn_frame.place(anchor='nw')
 
 
     def create_serial_subscriptions(self):
@@ -82,27 +77,18 @@ class MainContainer(ttkb.Frame):
 
     def add_handlers(self):
         #handlers
-        self.robot_handler = RobotHandler(self.root, 
-                                                self.main_grid_frame, 
-                                                self.serial_service,
-                                                self.robot_model)
-        self.joint_table_handler = JointTableHandler(self.root, 
-                                                           self.serial_service, 
-                                                           self.main_grid_frame)
-        self.serial_handler = SerialHandler(self.root,
-                                            self.serial_service, 
-                                            self.main_grid_frame)
-        self.controls_handler = ControlsHandler(self.root, 
-                                                      self.main_grid_frame, 
-                                                      self.robot_model)
-        self.points_handler = PointsHandler(self.root, self.main_grid_frame)
+        self.robot_handler = RobotHandler(self.root,self,self.serial_service,self.robot_model)
+        self.joint_table_handler = JointTableHandler(self.root,self.serial_service,self)
+        self.serial_handler = SerialHandler(self.root,self.serial_service, self)
+        self.controls_handler = ControlsHandler(self.root,self,self.robot_model)
+        self.points_handler = PointsHandler(self.root, self)
 
 
     def add_notebook_tabs(self):
-        self.serial_handler.view.grid(column=0, row=0, columnspan=1)
-        self.points_handler.view.grid(column=1, row=0, columnspan=1)
-        self.joint_table_handler.view.grid(column=0, row=1, columnspan=1)
-        self.controls_handler.view.grid(column=1, row=1)
+        self.serial_handler.view.grid(column=0, row=0, sticky='nsew')
+        self.points_handler.view.grid(column=1, row=0, sticky='nsew')
+        self.joint_table_handler.view.grid(column=0, row=1, sticky='nsew')
+        self.controls_handler.view.grid(column=1, row=1, sticky='nsew')
 
 #toggles robot to online/offline mode
 #online will allow robot motion

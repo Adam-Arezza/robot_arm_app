@@ -2,7 +2,7 @@ import ttkbootstrap as ttkb
 from ttkbootstrap.constants import *
 from src.views.main_cointainer import MainContainer
 from src.robot_model import RobotArm
-from src.handlers.robot_handler import RobotHandler
+#from src.handlers.robot_handler import RobotHandler
 from src.views.robot_view import RobotView
 from src.views.styles import create_style_set
 
@@ -17,8 +17,6 @@ class App(ttkb.Window):
         create_style_set()
         self.main_container = MainContainer(self)
         self.main_container.pack(padx=0, pady=0, fill='both', expand=True)
-        self.main_container.columnconfigure(0, weight=1)
-        self.main_container.rowconfigure(1, weight=1)
         self.online_mode = False
 
 
