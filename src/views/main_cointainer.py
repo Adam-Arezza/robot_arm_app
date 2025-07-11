@@ -36,9 +36,7 @@ class MainContainer(ttkb.Frame):
         self.robot_model = model
         self.add_handlers()
         self.start_handler.kill_view()
-        #self.camera_view = CameraView(self.main_grid_frame)
         self.add_notebook_tabs()
-        #self.check_btn_frame.grid(column=2, row=0, sticky='e')
         self.robot_handler.view.grid(column=2, row=0, rowspan=2, sticky='nsew')
         self.create_serial_subscriptions()
         self.joint_table_handler.create_joint_entries(len(self.robot_model.links))
@@ -106,10 +104,9 @@ class MainContainer(ttkb.Frame):
     def reset(self):
         print("resetting")
         self.robot_handler.model.set_joint_states(self.robot_handler.model.default_state)
-        sliders = self.controls_handler.view.sliders
-        for i in range(len(sliders)):
-            sliders[i].slider_value.set(self.robot_handler.model.default_state[i])
-            sliders[i].slider.set(self.robot_handler.model.default_state[i])
+        joints = self.controls_handler.view.joints
+        for i in range(len(joints)):
+            joints[i].joint_value.set(self.robot_handler.model.default_state[i])
         if not self.root.online_mode:
             self.root.update_robot_state()
         else:

@@ -109,7 +109,7 @@ class RobotView(ttkb.Frame):
         ee_text = "".join(ee_text)
         self.ee_pose = None
         x = 0.025
-        y = 0.96
+        y = 0.05
         #ee_frame = axis drawn on the end effector point representing its orientation
         self.ee_pose = self.fig.text(x=x, y=y, s=f'End Effector: {ee_text}',color='lime',fontsize='x-large')
 

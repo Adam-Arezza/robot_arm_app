@@ -13,11 +13,10 @@ class ControlsHandler:
         self.root = root
         self.model = model
         self.view = JointControls(parent, cb=self.slider_callback, links=self.model.links, default_state=self.model.default_state)
-
     
     def slider_callback(self, slider_idx:int):
         joint_angles = to_degrees(self.model.get_joints())
-        joint_angles[slider_idx] = self.view.sliders[slider_idx].slider_value.get()
+        joint_angles[slider_idx] = self.view.joints[slider_idx].joint_value.get()
         self.model.set_joint_states(joint_angles)
         self.root.update_robot_state()
 

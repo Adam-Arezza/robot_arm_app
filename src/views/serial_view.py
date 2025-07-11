@@ -1,13 +1,13 @@
 import ttkbootstrap as ttkb
 from tkinter.scrolledtext import *
-from ttkbootstrap.constants import END, GROOVE
+from ttkbootstrap.constants import END
 from src.views.components.button_group import ButtonGroup
 from ttkbootstrap.dialogs.dialogs import Messagebox
 
 
 class SerialView(ttkb.Frame):
     def __init__(self, parent, handler):
-        super().__init__(parent, relief=GROOVE, borderwidth=2)
+        super().__init__(parent)
         self.handler = handler
         self.name = 'serial_view'
         self.ser_port = ttkb.StringVar()
